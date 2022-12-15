@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">FeelVibe</string>
+
+    <!-- Main Menu Titles -->
+    <string name="main_home">Home</string>
+    <string name="main_library">Library</string>
+    <string name="main_create">Create</string>
+    <string name="main_settings">Settings</string>
+
+    <!-- Home Menu Titles -->
+    <string name="home_explore">Explore</string>
+    <string name="home_profile">Profile</string>
+
+    <!-- Library Menu Titles -->
+    <string name="library_playlist">Playlists</string>
+    <string name="library_album">Albums</string>
+    <string name="library_artist">Artists</string>
+    <string name="library_tag">Tags</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Image Descriptions -->
+    <string name="simple_item_image_desc">Album disk as cover-art placeholder</string>
+    <string name="app_icon">Two paint brush leaning upwards beside a play icon</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+
+    <!-- Account Login/Register -->
+    <string name="login_failed">"Login failed"</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="click_here_to_login"> Click here to login</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up_now">Sign up now</string>
+
+    <!-- OnBoarding -->
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="skip">Skip</string>
+
+    <!-- Misc. -->
+    <string name="untitled">Untitled</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="permission_context">To bring optimal user experience, FeelVibe requires certain permissions to operate. File access permission is required to read local file music.</string>
+    <string name="grant_permission">Grant Permission</string>
+
+
+
+</resources>
