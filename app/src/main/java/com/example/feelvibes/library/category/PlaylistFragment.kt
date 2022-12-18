@@ -1,19 +1,13 @@
 package com.example.feelvibes.library.category
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.example.feelvibes.R
+import com.example.feelvibes.FragmentBind
+import com.example.feelvibes.databinding.FragmentPlaylistBinding
 
-class PlaylistFragment : Fragment() {
+class PlaylistFragment : FragmentBind<FragmentPlaylistBinding>(FragmentPlaylistBinding::inflate) {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playlist, container, false)
+    override fun onReady() {
+
+        binding.createPlaylistThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
     }
+
 }

@@ -13,9 +13,6 @@ class AccountFeatureFragment : FragmentBind<FragmentAccountFeatureBinding>(Fragm
         binding.skip.setOnClickListener{
             onBoardingFinish()
             findNavController().navigate(R.id.action_onBoardingFragment_to_mainFragment)
-            val viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
-            // Update/Collect music data
-            viewModel.updateMusicDataList(MusicDataHandler.Collect(requireActivity()).data)
         }
     }
 

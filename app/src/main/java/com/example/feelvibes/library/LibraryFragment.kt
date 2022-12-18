@@ -44,8 +44,4 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
             }
         })
     }
-
-    private fun buildRows(){
-        //add the building of rows.
-    }
 }

@@ -1,30 +1,20 @@
 package com.example.feelvibes.library.category
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.feelvibes.FragmentBind
+import com.example.feelvibes.MainActivityViewModel
 import com.example.feelvibes.databinding.FragmentAlbumBinding
+import com.example.feelvibes.library.LibraryRecyclerAdapter
+import com.example.feelvibes.model.PlaylistModel
+import com.example.feelvibes.utils.MusicDataHandler
 
+class AlbumFragment : FragmentBind<FragmentAlbumBinding>(FragmentAlbumBinding::inflate) {
 
-class AlbumFragment : Fragment() {
-
-    private var _binding: FragmentAlbumBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAlbumBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun onReady() {
+        val viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        viewModel.updateAlbumPlaylistDataList(MusicDataHandler.Collect(requireActivity(), PlaylistModel.Type.ALBUM, true).sortedData)
+        binding.albumRecView.adapter = LibraryRecyclerAdapter(requireActivity(), viewModel.albumPlaylistDataList)
+        binding.albumRecView.layoutManager = LinearLayoutManager(requireActivity())
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 }

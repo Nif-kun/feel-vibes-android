@@ -6,16 +6,19 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.JsonReader
+import android.util.JsonWriter
 import androidx.lifecycle.ViewModelProvider
 import com.example.feelvibes.utils.MusicDataHandler
 import com.example.feelvibes.utils.PermissionHandler
+import java.io.File
+import java.io.Reader
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
         // Check and request permission
         if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
@@ -23,10 +26,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestPermission(PermissionHandler.ReadExternalStorage(this, true))
         }
-
-        // TODO Ref:0
-        // This won't trigger on first-time installs due to lack of permissions.
-        viewModel.updateMusicDataList(MusicDataHandler.Collect(this).data)
     }
 
     private fun requestPermission(permission : PermissionHandler.Permission){
