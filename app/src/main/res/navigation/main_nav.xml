@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.feelvibes.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.example.feelvibes.library.LibraryFragment"
+        android:label="fragment_library"
+        tools:layout="@layout/fragment_library" >
+        <action
+            android:id="@+id/action_libraryFragment_to_selected_playlist"
+            app:destination="@id/selected_playlist" />
+    </fragment>
+    <fragment
+        android:id="@+id/createFragment"
+        android:name="com.example.feelvibes.create.CreateFragment"
+        android:label="fragment_create"
+        tools:layout="@layout/fragment_create" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.feelvibes.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <navigation android:id="@+id/selected_playlist"
+        app:startDestination="@id/libraryPlaylistFragment">
+        <fragment
+            android:id="@+id/libraryPlaylistFragment"
+            android:name="com.example.feelvibes.library.LibraryPlaylistFragment"
+            android:label="fragment_library_playlist"
+            tools:layout="@layout/fragment_library_playlist" />
+        <action
+            android:id="@+id/action_global_libraryFragment"
+            app:destination="@id/libraryFragment" />
+    </navigation>
+</navigation>

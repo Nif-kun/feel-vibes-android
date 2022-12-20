@@ -1,18 +1,17 @@
 package com.example.feelvibes.onboarding.page
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.feelvibes.*
+import com.example.feelvibes.FragmentBind
+import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentAccountFeatureBinding
-import com.example.feelvibes.utils.MusicDataHandler
 
 class AccountFeatureFragment : FragmentBind<FragmentAccountFeatureBinding>(FragmentAccountFeatureBinding::inflate) {
 
     override fun onReady() {
         binding.skip.setOnClickListener{
             onBoardingFinish()
-            findNavController().navigate(R.id.action_onBoardingFragment_to_mainFragment)
+            findNavController().navigate(R.id.action_onBoardingFragment_to_main_nav)
         }
     }
 

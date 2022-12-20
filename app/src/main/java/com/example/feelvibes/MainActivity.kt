@@ -4,21 +4,24 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.JsonReader
-import android.util.JsonWriter
-import androidx.lifecycle.ViewModelProvider
-import com.example.feelvibes.utils.MusicDataHandler
+import android.util.Log
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.feelvibes.databinding.ActivityMainBinding
 import com.example.feelvibes.utils.PermissionHandler
-import java.io.File
-import java.io.Reader
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         // Check and request permission
         if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
@@ -26,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestPermission(PermissionHandler.ReadExternalStorage(this, true))
         }
+
+        setupMainMenu()
     }
 
     private fun requestPermission(permission : PermissionHandler.Permission){
@@ -42,4 +47,29 @@ class MainActivity : AppCompatActivity() {
                 }.show()
         }
     }
+
+
+    private fun setupMainMenu() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_nav_host)
+        if (navHostFragment != null) {
+            Log.d("ThisHappened", "FRFR GODDAMNIT")
+            val navController = navHostFragment.findNavController()
+            binding.mainFragNav.setupWithNavController(navController)
+        }
+    }
+
+    fun showToolBar() {
+        binding.customToolbar.toolBar.visibility = View.VISIBLE
+    }
+    fun hideToolBar() {
+        binding.customToolbar.toolBar.visibility = View.GONE
+    }
+
+    fun showMainMenu() {
+        binding.mainFragNav.visibility = View.VISIBLE
+    }
+    fun hideMainMenu() {
+        binding.mainFragNav.visibility = View.GONE
+    }
+
 }

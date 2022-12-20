@@ -14,6 +14,7 @@ abstract class FragmentBind<VB : ViewBinding>(
 
     private var _binding: VB? = null
     val binding get() : VB = _binding as VB
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,16 +32,20 @@ abstract class FragmentBind<VB : ViewBinding>(
         _binding = null
     }
 
+    fun isActionBarVisible(): Boolean {
+        return (activity as AppCompatActivity).supportActionBar!!.isShowing
+    }
+
     fun hideActionBar(){
-        (requireActivity() as AppCompatActivity).supportActionBar!!.hide()
+        (activity as AppCompatActivity).supportActionBar!!.hide()
     }
 
     fun showActionbar(){
-        (requireActivity() as AppCompatActivity).supportActionBar!!.show()
+        (activity as AppCompatActivity).supportActionBar!!.show()
     }
 
     fun renameActionBar(title : String){
-        (requireActivity() as AppCompatActivity).supportActionBar!!.title = title
+        (activity as AppCompatActivity).supportActionBar!!.title = title
     }
 
     open fun onReady() {}

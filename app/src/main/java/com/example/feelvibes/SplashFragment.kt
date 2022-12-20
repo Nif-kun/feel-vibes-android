@@ -25,10 +25,15 @@ class SplashFragment : FragmentBind<FragmentSplashBinding>(FragmentSplashBinding
     }
 
     private fun displayOnBoarding(flag : Boolean){
-        if (flag)
-            findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
-        else
+        if (flag) {
+            findNavController().navigate(R.id.action_splashFragment_to_main_nav)
+            val reqActivity = requireActivity() as MainActivity
+            reqActivity.showToolBar()
+            reqActivity.showMainMenu()
+        }
+        else {
             findNavController().navigate(R.id.action_splashFragment_to_onBoardingFragment)
+        }
     }
 
 }

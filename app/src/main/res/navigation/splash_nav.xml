@@ -14,8 +14,8 @@
             android:id="@+id/action_splashFragment_to_onBoardingFragment"
             app:destination="@id/onBoardingFragment" />
         <action
-            android:id="@+id/action_splashFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            android:id="@+id/action_splashFragment_to_main_nav"
+            app:destination="@id/main_nav" />
     </fragment>
     <fragment
         android:id="@+id/onBoardingFragment"
@@ -23,12 +23,8 @@
         android:label="fragment_onboarding"
         tools:layout="@layout/fragment_onboarding" >
         <action
-            android:id="@+id/action_onBoardingFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            android:id="@+id/action_onBoardingFragment_to_main_nav"
+            app:destination="@id/main_nav" />
     </fragment>
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.feelvibes.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+    <include app:graph="@navigation/main_nav" />
 </navigation>

@@ -7,13 +7,12 @@ import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Size
-import com.example.feelvibes.MainActivity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class MusicModel(
     val path: String,
-    val track : String,
+    val track : String?,
     val title: String,
     val duration: String,
     val artist: String? = null,
@@ -29,7 +28,9 @@ class MusicModel(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 albumId!!
             )
-            thumbnail = activity.contentResolver.loadThumbnail(contentUri, Size(480, 480), null)
+            thumbnail = try {
+                activity.contentResolver.loadThumbnail(contentUri, Size(480, 480), null)
+            } catch (_:Exception) { null }
         }
     }
 

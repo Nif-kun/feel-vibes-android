@@ -1,8 +1,6 @@
 package com.example.feelvibes.library
 
 import android.app.Activity
-import android.opengl.Visibility
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +8,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.feelvibes.R
+import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.model.PlaylistModel
 
 class LibraryRecyclerAdapter(
     private val activity : Activity,
+    private val recyclerItemClick : RecyclerItemClick,
     private val playlistDataList : ArrayList<PlaylistModel>,
     private val textOnly : Boolean = false
 ) : RecyclerView.Adapter<LibraryRecyclerAdapter.LibraryViewHolder>() {
@@ -35,11 +35,13 @@ class LibraryRecyclerAdapter(
             val thumbnail = playlistDataList[position].thumbnail
             if (thumbnail != null)
                 holder.imageViewThumbnail.setImageBitmap(playlistDataList[position].thumbnail)
-            else if (isAlbumType) {
-                holder.imageViewThumbnail.setImageResource(R.drawable.ic_album_24)
-                holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
-            } else {
-                holder.imageViewThumbnail.setImageResource(R.drawable.ic_account_circle_24)
+            else {
+                if (isAlbumType) {
+                    holder.imageViewThumbnail.setImageResource(R.drawable.ic_album_24)
+
+                } else {
+                    holder.imageViewThumbnail.setImageResource(R.drawable.ic_account_circle_24)
+                }
                 holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
             }
         }
@@ -50,8 +52,16 @@ class LibraryRecyclerAdapter(
         return playlistDataList.size
     }
 
-    class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val imageViewThumbnail : ImageView = itemView.findViewById(R.id.simple_item_row_thumbnail)
         val textViewTitle : TextView = itemView.findViewById(R.id.simple_item_row_title)
+
+        init {
+            itemView.setOnClickListener() {
+                val pos = absoluteAdapterPosition
+                if (pos != RecyclerView.NO_POSITION)
+                    recyclerItemClick.onItemClick(pos)
+            }
+        }
     }
 }
