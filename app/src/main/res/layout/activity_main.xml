@@ -8,15 +8,17 @@
     tools:context=".MainActivity">
 
     <include
-        layout="@layout/custom_toolbar"
         android:id="@+id/custom_toolbar"
+        layout="@layout/custom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/main_nav_host"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_nav_host"

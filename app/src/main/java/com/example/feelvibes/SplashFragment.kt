@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.databinding.FragmentSplashBinding
+import com.example.feelvibes.viewbinds.FragmentBind
 
 class SplashFragment : FragmentBind<FragmentSplashBinding>(FragmentSplashBinding::inflate) {
 
@@ -27,9 +28,9 @@ class SplashFragment : FragmentBind<FragmentSplashBinding>(FragmentSplashBinding
     private fun displayOnBoarding(flag : Boolean){
         if (flag) {
             findNavController().navigate(R.id.action_splashFragment_to_main_nav)
-            val reqActivity = requireActivity() as MainActivity
-            reqActivity.showToolBar()
-            reqActivity.showMainMenu()
+            mainActivity.showToolBar()
+            mainActivity.showMainMenu()
+            mainActivity.padMainView()
         }
         else {
             findNavController().navigate(R.id.action_splashFragment_to_onBoardingFragment)

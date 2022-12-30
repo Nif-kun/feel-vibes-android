@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".library.playlist.LibraryPlaylistBottomSheetFragment"
+    android:orientation="vertical">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bottom_sheet_favorite_btn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        app:iconTint="@color/design_default_color_primary"
+        app:icon="@drawable/ic_favorite_border_24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:textColor="@color/design_default_color_primary"
+        android:textAlignment="textStart"
+        android:text="@string/favorite"
+        app:cornerRadius="20dp"/>
+</LinearLayout>

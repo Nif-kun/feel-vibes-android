@@ -3,9 +3,9 @@ package com.example.feelvibes.library
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.example.feelvibes.FragmentBind
 import com.example.feelvibes.MainActivityViewModel
 import com.example.feelvibes.databinding.FragmentLibraryBinding
+import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
@@ -28,6 +28,7 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
 
     override fun onReady(){
         buildTabs()
+        mainActivity.renameToolBar("Library")
     }
 
     private fun buildTabs(){

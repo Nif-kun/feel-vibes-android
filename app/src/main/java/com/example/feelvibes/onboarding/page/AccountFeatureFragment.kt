@@ -2,9 +2,9 @@ package com.example.feelvibes.onboarding.page
 
 import android.content.Context
 import androidx.navigation.fragment.findNavController
-import com.example.feelvibes.FragmentBind
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentAccountFeatureBinding
+import com.example.feelvibes.viewbinds.FragmentBind
 
 class AccountFeatureFragment : FragmentBind<FragmentAccountFeatureBinding>(FragmentAccountFeatureBinding::inflate) {
 
@@ -12,6 +12,9 @@ class AccountFeatureFragment : FragmentBind<FragmentAccountFeatureBinding>(Fragm
         binding.skip.setOnClickListener{
             onBoardingFinish()
             findNavController().navigate(R.id.action_onBoardingFragment_to_main_nav)
+            mainActivity.showToolBar()
+            mainActivity.showMainMenu()
+            mainActivity.padMainView()
         }
     }
 

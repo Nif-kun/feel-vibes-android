@@ -55,6 +55,9 @@
     <string name="permission_context">To bring optimal user experience, FeelVibe requires certain permissions to operate. File access permission is required to read local file music.</string>
     <string name="grant_permission">Grant Permission</string>
     <string name="create_playlist">Create playlist</string>
+    <string name="favorites">Favorites</string>
+    <string name="favorite">Favorite</string>
+    <string name="unfavorite">Unfavorite</string>
 
 
 </resources>

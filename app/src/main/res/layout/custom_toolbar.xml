@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/tool_bar_back_btn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ic_arrow_back_24"
@@ -26,22 +26,23 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
             tools:ignore="ContentDescription"/>
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/tool_bar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="TextView"
+            android:text="@string/untitled"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageButton3"
+            app:layout_constraintStart_toEndOf="@+id/tool_bar_back_btn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/imageButton4"
+            android:id="@+id/tool_bar_settings_btn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ic_settings_24"

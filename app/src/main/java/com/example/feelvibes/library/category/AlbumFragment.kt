@@ -9,7 +9,7 @@ import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentAlbumBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.LibraryCategoryFragment
-import com.example.feelvibes.library.LibraryRecyclerAdapter
+import com.example.feelvibes.library.recycler.adapters.LibraryRecyclerAdapter
 import com.example.feelvibes.model.PlaylistModel
 import com.example.feelvibes.utils.MusicDataHandler
 
@@ -41,7 +41,9 @@ class AlbumFragment :
     }
 
     override fun onItemClick(pos: Int) {
-        mainActivityViewModel.selectedPlaylist = mainActivityViewModel.albumPlaylistDataList[pos]
+        val selectedPlaylist = mainActivityViewModel.albumPlaylistDataList[pos]
+        mainActivityViewModel.selectedPlaylist = selectedPlaylist
+        mainActivity.renameToolBar(selectedPlaylist.name)
         findNavController().navigate(R.id.action_libraryFragment_to_selected_playlist)
     }
 }

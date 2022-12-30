@@ -7,8 +7,8 @@ import androidx.core.view.marginTop
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.example.feelvibes.FragmentBind
 import com.example.feelvibes.library.category.CategoryViewModelHandler
+import com.example.feelvibes.viewbinds.FragmentBind
 
 abstract class LibraryCategoryFragment<VB : ViewBinding>(
     private val bindingInflater: (inflater: LayoutInflater) -> VB,

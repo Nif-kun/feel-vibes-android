@@ -15,7 +15,9 @@ class PlaylistModel(
 ) : Parcelable {
 
     object Type {
+        const val BUTTON = "button"
         const val NONE = "null"
+        const val DEFAULT = "default"
         const val PLAYLIST = "playlist"
         const val ALBUM = "album"
         const val ARTIST = "artist"

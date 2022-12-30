@@ -9,7 +9,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.feelvibes.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.example.feelvibes.library.LibraryFragment"
@@ -18,26 +22,53 @@
         <action
             android:id="@+id/action_libraryFragment_to_selected_playlist"
             app:destination="@id/selected_playlist" />
+        <action
+            android:id="@+id/action_libraryFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createFragment"
         android:name="com.example.feelvibes.create.CreateFragment"
         android:label="fragment_create"
-        tools:layout="@layout/fragment_create" />
+        tools:layout="@layout/fragment_create" >
+        <action
+            android:id="@+id/action_createFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.feelvibes.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
     <navigation android:id="@+id/selected_playlist"
         app:startDestination="@id/libraryPlaylistFragment">
         <fragment
             android:id="@+id/libraryPlaylistFragment"
-            android:name="com.example.feelvibes.library.LibraryPlaylistFragment"
+            android:name="com.example.feelvibes.library.playlist.LibraryPlaylistFragment"
             android:label="fragment_library_playlist"
-            tools:layout="@layout/fragment_library_playlist" />
+            tools:layout="@layout/fragment_library_playlist" >
+            <action
+                android:id="@+id/action_libraryPlaylistFragment_to_libraryPlaylistBottomSheetFragment"
+                app:destination="@id/libraryPlaylistBottomSheetFragment" />
+        </fragment>
         <action
             android:id="@+id/action_global_libraryFragment"
             app:destination="@id/libraryFragment" />
+        <dialog
+            android:id="@+id/libraryPlaylistBottomSheetFragment"
+            android:name="com.example.feelvibes.library.playlist.LibraryPlaylistBottomSheetFragment"
+            android:label="LibraryPlaylistBottomSheetFragment" >
+            <action
+                android:id="@+id/action_libraryPlaylistBottomSheetFragment_to_libraryPlaylistFragment"
+                app:destination="@id/libraryPlaylistFragment" />
+        </dialog>
     </navigation>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.feelvibes.settings.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

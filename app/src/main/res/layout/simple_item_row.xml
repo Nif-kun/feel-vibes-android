@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     android:theme="@style/Theme.FeelVibes"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,7 +8,6 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
-    android:orientation="horizontal"
     tools:ignore="UseCompoundDrawables">
 
     <ImageView
@@ -16,18 +15,42 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:contentDescription="@string/simple_item_image_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_album_24" />
 
     <TextView
         android:id="@+id/simple_item_row_title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
         android:text="@string/untitled"
         android:textSize="20sp"
-        android:ellipsize="end"
-        android:maxLines="1"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/simple_item_row_more"
+        app:layout_constraintStart_toEndOf="@+id/simple_item_row_thumbnail"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/simple_item_row_more"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/simple_item_row_title"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/ic_more_horiz_24"
+        android:backgroundTint="@color/neutral"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        tools:ignore="ContentDescription"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

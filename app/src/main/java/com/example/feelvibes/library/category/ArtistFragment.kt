@@ -2,12 +2,14 @@ package com.example.feelvibes.library.category
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.feelvibes.MainActivityViewModel
+import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentArtistBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.LibraryCategoryFragment
-import com.example.feelvibes.library.LibraryRecyclerAdapter
+import com.example.feelvibes.library.recycler.adapters.LibraryRecyclerAdapter
 import com.example.feelvibes.model.PlaylistModel
 import com.example.feelvibes.utils.MusicDataHandler
 
@@ -39,6 +41,9 @@ class ArtistFragment :
     }
 
     override fun onItemClick(pos: Int) {
-        mainActivityViewModel.selectedPlaylist = mainActivityViewModel.artistPlaylistDataList[pos]
+        val selectedPlaylist = mainActivityViewModel.artistPlaylistDataList[pos]
+        mainActivityViewModel.selectedPlaylist = selectedPlaylist
+        mainActivity.renameToolBar(selectedPlaylist.name)
+        findNavController().navigate(R.id.action_libraryFragment_to_selected_playlist)
     }
 }

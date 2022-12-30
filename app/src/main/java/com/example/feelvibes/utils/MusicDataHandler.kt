@@ -1,13 +1,9 @@
 package com.example.feelvibes.utils
 
 import android.app.Activity
-import android.content.ContentUris
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Size
 import com.example.feelvibes.model.MusicModel
 import com.example.feelvibes.model.PlaylistModel
 import java.io.File
@@ -78,10 +74,12 @@ class MusicDataHandler {
                     albumId = cursor.getLong(7)
                 )
                 if (File(musicData.path).exists()) {
-                    if (sortFilter != PlaylistModel.Type.NONE) { // Creates default categories for sortedData
+                    if (sortFilter == PlaylistModel.Type.PLAYLIST) {
+                        // TODO LOAD PRESET PLAYLIST HERE
+                    } else if (sortFilter != PlaylistModel.Type.NONE) { // Creates default categories for sortedData
                         val playlistName = musicData.getValueByPlaylistType(sortFilter)
-                        val isGenreType = sortFilter == PlaylistModel.Type.GENRE
                         val isNullString = playlistName == PlaylistModel.Type.NONE
+                        val isGenreType = sortFilter == PlaylistModel.Type.GENRE
                         var playlist : PlaylistModel? = playlistDataList.find {
                                 playlistModel -> playlistModel.name.equals(playlistName, true)
                         }

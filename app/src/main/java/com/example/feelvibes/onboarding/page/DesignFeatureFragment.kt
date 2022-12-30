@@ -1,9 +1,9 @@
 package com.example.feelvibes.onboarding.page
 
 import androidx.viewpager2.widget.ViewPager2
-import com.example.feelvibes.FragmentBind
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentDesignFeatureBinding
+import com.example.feelvibes.viewbinds.FragmentBind
 
 class DesignFeatureFragment : FragmentBind<FragmentDesignFeatureBinding>(FragmentDesignFeatureBinding::inflate) {
     override fun onReady() {
