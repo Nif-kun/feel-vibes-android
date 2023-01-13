@@ -36,10 +36,25 @@ class MusicModel(
 
     fun getValueByPlaylistType(type : String): String {
         return when(type) {
-            PlaylistModel.Type.ARTIST -> artist.toString()
-            PlaylistModel.Type.ALBUM -> album.toString()
-            PlaylistModel.Type.GENRE -> genre.toString()
-            else -> { PlaylistModel.Type.NONE}
+            PlaylistModel.Type.ARTIST -> {
+                return when(artist != null) {
+                    true -> artist.toString()
+                    else -> PlaylistModel.Type.NONE
+                }
+            }
+            PlaylistModel.Type.ALBUM -> {
+                return when(album != null) {
+                    true -> album.toString()
+                    else -> PlaylistModel.Type.NONE
+                }
+            }
+            PlaylistModel.Type.GENRE -> {
+                return when(genre != null) {
+                    true -> genre.toString()
+                    else -> PlaylistModel.Type.NONE
+                }
+            }
+            else -> { PlaylistModel.Type.NONE }
         }
     }
 

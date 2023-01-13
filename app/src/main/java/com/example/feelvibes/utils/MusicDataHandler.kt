@@ -2,9 +2,12 @@ package com.example.feelvibes.utils
 
 import android.app.Activity
 import android.database.Cursor
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import com.example.feelvibes.model.MusicModel
+import com.example.feelvibes.model.PlaylistCapsuleModel
 import com.example.feelvibes.model.PlaylistModel
 import java.io.File
 
@@ -14,7 +17,7 @@ class MusicDataHandler {
         private val activity : Activity,
         private val sortFilter: String = PlaylistModel.Type.NONE,
         private val sortedOnly : Boolean = false,
-        private val playlistPreset : MutableMap<String, ArrayList<String>>? = null) {
+        private val playlistPreset : ArrayList<PlaylistCapsuleModel>? = null) {
 
         val data = ArrayList<MusicModel>()
         val sortedData = ArrayList<PlaylistModel>()
@@ -32,15 +35,24 @@ class MusicDataHandler {
         private fun collect() {
             val musicDataList = ArrayList<MusicModel>()
             val playlistDataList = ArrayList<PlaylistModel>()
-            //TODO
-            // Use playlistPreset to create PlaylistModel items to be added in playlistDataList.
-            // Example below shows how to filter the playlist preset
-            // playlistPreset!!.filterValues { i: ArrayList<String> ->  i.contains("wow")}
-            // In process:
-            //    create playlist from preset >
-            //    use filter to find if song exists in the preset >
-            //    using the key of the filtered map, filter the playlistDataList >
-            //    from the filtered playlistDataList, store the musicData for each.
+
+            if (playlistPreset != null) {
+                for (preset in playlistPreset) {
+                    var thumbnailUri : Uri? = null
+                    if (preset.thumbnailUri != null && preset.thumbnailUri.isNotEmpty()) {
+                        thumbnailUri = Uri.parse(preset.thumbnailUri)
+                    }
+                    playlistDataList.add(
+                        PlaylistModel(preset.name, PlaylistModel.Type.PLAYLIST, null, ArrayList(), preset.paths, thumbnailUri)
+                    )
+                }
+            }
+
+            // TODO
+            //  playlistDataList will be populated if playlistPreset exists, it will refer PlaylistModel value from it.
+            //  If already implemented, playlistModel should have a settable preset array of Strings to store paths.
+            //  Or better yet, have the playlistModel load then use it as playlistPreset, turning playlistDataList into a var
+            //  Refer to PlaylistFragment ^^^
 
             // Construct cursor arguments
             val projection = arrayListOf(
@@ -75,19 +87,21 @@ class MusicDataHandler {
                 )
                 if (File(musicData.path).exists()) {
                     if (sortFilter == PlaylistModel.Type.PLAYLIST) {
-                        // TODO LOAD PRESET PLAYLIST HERE
+                        playlistDataList.forEach {
+                            if (it.containsPreset(musicData.path))
+                                it.add(musicData)
+                        }
                     } else if (sortFilter != PlaylistModel.Type.NONE) { // Creates default categories for sortedData
                         val playlistName = musicData.getValueByPlaylistType(sortFilter)
                         val isNullString = playlistName == PlaylistModel.Type.NONE
-                        val isGenreType = sortFilter == PlaylistModel.Type.GENRE
                         var playlist : PlaylistModel? = playlistDataList.find {
                                 playlistModel -> playlistModel.name.equals(playlistName, true)
                         }
                         if (playlist != null) {
-                            playlist.musicDataList.add(musicData)
-                        } else if (!(isGenreType && isNullString)){
+                            playlist.add(musicData)
+                        } else if (!isNullString){
                             playlist = PlaylistModel(playlistName, sortFilter)
-                            playlist.musicDataList.add(musicData)
+                            playlist.add(musicData)
                             playlistDataList.add(playlist)
                         }
                     }

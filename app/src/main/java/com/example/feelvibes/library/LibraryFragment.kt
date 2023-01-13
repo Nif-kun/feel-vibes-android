@@ -3,7 +3,7 @@ package com.example.feelvibes.library
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.example.feelvibes.MainActivityViewModel
+import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.databinding.FragmentLibraryBinding
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.android.material.tabs.TabLayout
@@ -12,7 +12,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
 class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBinding::inflate) {
 
-    private lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var libraryViewModel: LibraryViewModel
 
     companion object {
         const val PLAYLISTS = 0
@@ -23,7 +23,7 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivityViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
     }
 
     override fun onReady(){
@@ -37,7 +37,7 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
         binding.libraryTabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 binding.libraryViewPager.currentItem = tab.position
-                mainActivityViewModel.currentLibraryTab = tab.position
+                libraryViewModel.currentLibraryTab = tab.position
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
@@ -53,9 +53,9 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
     }
 
     private fun restoreTab() {
-        if (mainActivityViewModel.currentLibraryTab != PLAYLISTS) {
-            binding.libraryTabLayout.getTabAt(mainActivityViewModel.currentLibraryTab)!!.select()
-            binding.libraryViewPager.setCurrentItem(mainActivityViewModel.currentLibraryTab, false)
+        if (libraryViewModel.currentLibraryTab != PLAYLISTS) {
+            binding.libraryTabLayout.getTabAt(libraryViewModel.currentLibraryTab)!!.select()
+            binding.libraryViewPager.setCurrentItem(libraryViewModel.currentLibraryTab, false)
         }
     }
 }

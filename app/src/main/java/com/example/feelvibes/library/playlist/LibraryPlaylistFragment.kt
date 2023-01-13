@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.feelvibes.MainActivityViewModel
+import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentLibraryPlaylistBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
@@ -20,12 +20,11 @@ class LibraryPlaylistFragment :
     RecyclerItemClick {
 
     private var onMoreClickPos = -1
-    private lateinit var mainActivityViewModel : MainActivityViewModel
-
+    private lateinit var libraryViewModel : LibraryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivityViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
     }
 
     override fun onReady() {
@@ -34,18 +33,18 @@ class LibraryPlaylistFragment :
     }
 
     private fun setupRecyclerAdapter() {
-        if (mainActivityViewModel.selectedPlaylist != null) {
+        if (libraryViewModel.selectedPlaylist != null) {
             binding.libraryPlaylistRecView.adapter = PlaylistRecyclerAdapter(
                 requireActivity(),
                 this,
-                mainActivityViewModel.selectedPlaylist!!.musicDataList)
+                libraryViewModel.selectedPlaylist!!.list)
             binding.libraryPlaylistRecView.layoutManager = LinearLayoutManager(requireActivity())
         }
     }
 
     override fun onItemClick(pos: Int) {
-        if (mainActivityViewModel.selectedPlaylist != null) {
-            Log.d("SelectedMusic", mainActivityViewModel.selectedPlaylist!!.musicDataList[pos].title)
+        if (libraryViewModel.selectedPlaylist != null) {
+            Log.d("SelectedMusic", libraryViewModel.selectedPlaylist!!.list[pos].title)
             // Do the music player nav here
         }
     }
@@ -53,13 +52,13 @@ class LibraryPlaylistFragment :
     override fun onMoreClick(pos: Int) {
         super.onMoreClick(pos)
         onMoreClickPos = pos
-        if (mainActivityViewModel.selectedPlaylist != null) {
-            mainActivityViewModel.selectedMusic = mainActivityViewModel.selectedPlaylist!!.musicDataList[pos]
-            val isPlaylist = mainActivityViewModel.selectedPlaylist!!.type == PlaylistModel.Type.PLAYLIST
-            val isDefault = mainActivityViewModel.selectedPlaylist!!.type == PlaylistModel.Type.DEFAULT
+        if (libraryViewModel.selectedPlaylist != null) {
+            libraryViewModel.selectedMusic = libraryViewModel.selectedPlaylist!!.list[pos]
+            val isPlaylist = libraryViewModel.selectedPlaylist!!.type == PlaylistModel.Type.PLAYLIST
+            val isDefault = libraryViewModel.selectedPlaylist!!.type == PlaylistModel.Type.DEFAULT
             if (isPlaylist || isDefault) {
-                mainActivityViewModel.selectedAdapter = binding.libraryPlaylistRecView.adapter as ItemRecyclerAdapter
-                mainActivityViewModel.selectedAdapterPos = pos
+                libraryViewModel.selectedAdapter = binding.libraryPlaylistRecView.adapter as ItemRecyclerAdapter
+                libraryViewModel.selectedAdapterPos = pos
             }
         }
         findNavController().navigate(R.id.action_libraryPlaylistFragment_to_libraryPlaylistBottomSheetFragment)
@@ -74,7 +73,5 @@ class LibraryPlaylistFragment :
         super.onPause()
         mainActivity.hideToolBarBack()
     }
-
-
 
 }

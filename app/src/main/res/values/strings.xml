@@ -59,5 +59,18 @@
     <string name="favorite">Favorite</string>
     <string name="unfavorite">Unfavorite</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="select_image">Select image</string>
+
+    <string name="cover_art_a">Cover art:</string>
+
+    <string name="title_a">Title</string>
+    <string name="title_b">Title:</string>
+    <string name="playlist_title_already_taken">Playlist title already taken!</string>
+    <string name="playlist_requires_a_title">Playlist requires a title!</string>
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
+
 
 </resources>

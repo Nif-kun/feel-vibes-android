@@ -2,6 +2,7 @@ package com.example.feelvibes.library.recycler.adapters
 
 import android.app.Activity
 import android.graphics.Bitmap
+import android.graphics.ColorFilter
 import android.view.View
 import android.widget.ImageView
 import com.example.feelvibes.R
@@ -13,11 +14,12 @@ class LibraryRecyclerAdapter(
     private val activity : Activity,
     recyclerItemClick : RecyclerItemClick,
     private val playlistDataList : ArrayList<PlaylistModel>,
-    private val textOnly : Boolean = false
+    private val textOnly : Boolean = false,
+    private val hideMore : Boolean = true,
 ) : ItemRecyclerAdapter(activity, recyclerItemClick) {
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        hideMoreButton(true, holder)
+        moreButtonVisibility(hideMore, holder, position)
         loadThumbnail(textOnly, holder, position)
         holder.textViewTitle.text = playlistDataList[position].name
     }
@@ -26,9 +28,14 @@ class LibraryRecyclerAdapter(
         return playlistDataList.size
     }
 
-    private fun hideMoreButton(hide : Boolean, holder: ItemViewHolder) {
-        if (hide && holder.moreButton.visibility == View.VISIBLE)
+    private fun moreButtonVisibility(hide : Boolean, holder: ItemViewHolder, position: Int) {
+        if (hide && holder.moreButton.visibility == View.VISIBLE) {
             holder.moreButton.visibility = View.GONE
+        } else if (!hide && holder.moreButton.visibility == View.GONE || holder.moreButton.visibility == View.INVISIBLE) {
+            if (playlistDataList[position].type == PlaylistModel.Type.PLAYLIST) {
+                holder.moreButton.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun loadThumbnail(textOnly: Boolean, holder: ItemViewHolder, position: Int) {
@@ -42,21 +49,24 @@ class LibraryRecyclerAdapter(
             PlaylistModel.Type.BUTTON -> loadCustomButtonThumbnail(holder, position)
             else -> {
                 val thumbnail = loadCustomThumbnail(playlistDataList[position])
-                if (thumbnail != null && !isFavorite(playlistDataList[position]))
+                if (thumbnail != null && !isFavorite(playlistDataList[position])) {
                     holder.imageViewThumbnail.setImageBitmap(thumbnail)
-                else
+                    holder.imageViewThumbnail.clearColorFilter()
+                } else {
                     loadDefaultThumbnail(playlistDataList[position], holder)
+                }
             }
         }
     }
 
     private fun loadCustomButtonThumbnail(holder: ItemViewHolder, position: Int) {
         val thumbnail = playlistDataList[position].thumbnail
-        if (thumbnail != null)
+        if (thumbnail != null) {
             holder.imageViewThumbnail.setImageBitmap(thumbnail)
-        else if (playlistDataList[position].name.equals(activity.getString(R.string.create_playlist), true))
+        } else if (playlistDataList[position].name.equals(activity.getString(R.string.create_playlist), true)) {
             holder.imageViewThumbnail.setImageResource(R.drawable.ic_baseline_add_box_24)
-        holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
+            holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
+        }
     }
 
     private fun loadCustomThumbnail(playlistModel : PlaylistModel) : Bitmap?{

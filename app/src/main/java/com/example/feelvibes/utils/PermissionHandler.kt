@@ -35,4 +35,11 @@ class PermissionHandler {
 
     class WriteExternalStorage(activity: Activity, request: Boolean = false) :
         Permission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, request, 3)
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    class ReadMediaImages(activity: Activity, request: Boolean = false) :
+        Permission(activity, Manifest.permission.READ_MEDIA_IMAGES, request, 4)
+
+    class ManageDocuments(activity: Activity, request: Boolean = false) :
+        Permission(activity, Manifest.permission.MANAGE_DOCUMENTS, request, 5)
 }

@@ -5,13 +5,19 @@ import android.content.DialogInterface
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.feelvibes.databinding.ActivityMainBinding
+import com.example.feelvibes.model.MusicModel
+import com.example.feelvibes.model.PlaylistCollectionModel
+import com.example.feelvibes.model.PlaylistModel
 import com.example.feelvibes.utils.PermissionHandler
+import com.example.feelvibes.view_model.LibraryViewModel
 
 class MainActivity : AppCompatActivity() {
 

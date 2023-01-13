@@ -1,6 +1,7 @@
 package com.example.feelvibes.library
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.marginTop
@@ -35,6 +36,13 @@ abstract class LibraryCategoryFragment<VB : ViewBinding>(
         super.onResume()
         loadScrollState()
     }
+
+    // TODO
+    //  Scroll saving and loading has been a pain in the ass because Google can't be bothered to make a system that works.
+    //  In the end, it can only partially work. It worked before, but then it didn't. I can't figure out Google's messy system.
+    //  Too many inconsistencies, deprecation, and just undeniably unnecessary complexity that could've been easily avoided.
+    //  Fuck Google and its many fucking bullshit. This is the reason why Android Studio tutorials are hit and miss, outdated garbage.
+    //  Even the documentation has little to no sample codes nor proper description and usage.
 
     private fun saveScrollState() {
         if (recyclerView != null && categoryViewModel != null) {

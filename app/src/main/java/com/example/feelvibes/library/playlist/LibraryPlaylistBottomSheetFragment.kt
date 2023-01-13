@@ -3,7 +3,7 @@ package com.example.feelvibes.library.playlist
 import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.feelvibes.MainActivityViewModel
+import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentLibraryPlaylistBottomSheetBinding
 import com.example.feelvibes.model.PlaylistModel
@@ -13,12 +13,12 @@ import com.example.feelvibes.viewbinds.FragmentBottomSheetDialogBind
 class LibraryPlaylistBottomSheetFragment : FragmentBottomSheetDialogBind<FragmentLibraryPlaylistBottomSheetBinding>(
     FragmentLibraryPlaylistBottomSheetBinding::inflate) {
 
-    private lateinit var mainActivityViewModel : MainActivityViewModel
+    private lateinit var libraryViewModel : LibraryViewModel
     private var updateAdapter = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivityViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
     }
 
     override fun onReady() {
@@ -34,21 +34,28 @@ class LibraryPlaylistBottomSheetFragment : FragmentBottomSheetDialogBind<Fragmen
             if (isChecked) {
                 button.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_24, null)
                 button.text = getString(R.string.unfavorite)
-                if (mainActivityViewModel.selectedMusic != null) {
-                    mainActivityViewModel.addFavoritePlaylist(mainActivityViewModel.selectedMusic!!)
+                if (libraryViewModel.selectedMusic != null) {
+                    libraryViewModel.customCollection.addIn(
+                        resources.getString(R.string.favorites),
+                        libraryViewModel.selectedMusic!!
+                    )
 
                     // If inside Favorites playlist
-                    if (mainActivityViewModel.selectedPlaylist?.type == PlaylistModel.Type.DEFAULT)
+                    // Note: it is false as it does not matter when inside Favorites playlist; It's already inside.
+                    if (libraryViewModel.selectedPlaylist?.type == PlaylistModel.Type.DEFAULT)
                         updateAdapter = false
                 }
             } else {
                 button.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_border_24, null)
                 button.text = getString(R.string.favorite)
-                if (mainActivityViewModel.selectedMusic != null) {
-                    mainActivityViewModel.removeFavoritePlaylist(mainActivityViewModel.selectedMusic!!)
+                if (libraryViewModel.selectedMusic != null) {
+                    libraryViewModel.customCollection.removeIn(
+                        resources.getString(R.string.favorites),
+                        libraryViewModel.selectedMusic!!
+                    )
 
                     // If inside Favorites playlist
-                    if (mainActivityViewModel.selectedPlaylist?.type == PlaylistModel.Type.DEFAULT)
+                    if (libraryViewModel.selectedPlaylist?.type == PlaylistModel.Type.DEFAULT)
                         updateAdapter = true
                 }
             }
@@ -56,10 +63,9 @@ class LibraryPlaylistBottomSheetFragment : FragmentBottomSheetDialogBind<Fragmen
     }
 
     private fun isFavorite(): Boolean {
-        val musicModel = mainActivityViewModel.favoritePlaylistModel.musicDataList.find {
-                i -> i.path == mainActivityViewModel.selectedMusic?.path
-        }
-        return musicModel != null
+        return libraryViewModel.customCollection
+            .find(resources.getString(R.string.favorites))
+            ?.has(libraryViewModel.selectedMusic?.path ?: "") ?: false
     }
 
     override fun onResume() {
@@ -70,14 +76,17 @@ class LibraryPlaylistBottomSheetFragment : FragmentBottomSheetDialogBind<Fragmen
     override fun onStop() {
         super.onStop()
 
+        // Saves Favorites on fragment close
+        libraryViewModel.customCollection.find(resources.getString(R.string.favorites))?.save(mainActivity)
+
         // This can only occur if selected playlist is PLAYLIST or DEFAULT type.
         if (updateAdapter) {
-            mainActivityViewModel.selectedAdapter!!.notifyItemRemoved(mainActivityViewModel.selectedAdapterPos)
-            mainActivityViewModel.selectedAdapter = null
-            mainActivityViewModel.selectedAdapterPos = -1
+            libraryViewModel.selectedAdapter!!.notifyItemRemoved(libraryViewModel.selectedAdapterPos)
+            libraryViewModel.selectedAdapter = null
+            libraryViewModel.selectedAdapterPos = -1
             updateAdapter = false
         }
-        mainActivityViewModel.selectedMusic = null
+        libraryViewModel.selectedMusic = null
     }
 
 }

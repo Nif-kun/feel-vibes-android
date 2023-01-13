@@ -4,60 +4,86 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.feelvibes.MainActivityViewModel
+import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentPlaylistBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.LibraryCategoryFragment
+import com.example.feelvibes.library.LibraryCreatePlaylistDialog
 import com.example.feelvibes.library.recycler.adapters.LibraryRecyclerAdapter
+import com.example.feelvibes.model.MusicModel
 import com.example.feelvibes.model.PlaylistModel
-import com.example.feelvibes.utils.MusicDataHandler
+import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 
 class PlaylistFragment :
     LibraryCategoryFragment<FragmentPlaylistBinding>(FragmentPlaylistBinding::inflate),
     RecyclerItemClick {
 
-    private lateinit var mainActivityViewModel : MainActivityViewModel
+    private lateinit var libraryViewModel : LibraryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivityViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
         categoryViewModel = ViewModelProvider(requireActivity())[CategoryViewModelHandler.PlaylistViewModel::class.java]
-        mainActivityViewModel.updateCustomPlaylistDataList(
-            MusicDataHandler.Collect(
-                requireActivity(),
-                PlaylistModel.Type.PLAYLIST,
-                true)
-                .sortedData,
-            resources)
+        libraryViewModel.customCollection.populateFromStored(requireActivity())
+        setupCreatePlaylistButton()
+        setupFavoritesPlaylist()
     }
 
     override fun onReady() {
         setupRecyclerAdapter()
     }
 
-    override fun onItemClick(pos: Int) {
-        val selectedPlaylist = mainActivityViewModel.customPlaylistDataList[pos]
-        val isCustomButton = selectedPlaylist.type == PlaylistModel.Type.BUTTON
-        val isCreateButton = isCustomButton && selectedPlaylist.name.equals(getString(R.string.create_playlist), true)
-        if (isCreateButton) {
-            mainActivityViewModel.addCustomCreatedPlaylist(PlaylistModel(
-                "FOR FUCK SAKES",
-                PlaylistModel.Type.PLAYLIST))
-            binding.playlistRecView.adapter?.notifyItemInserted(mainActivityViewModel.customPlaylistDataList.size-1)
-        } else {
-            mainActivityViewModel.selectedPlaylist = selectedPlaylist
-            mainActivity.renameToolBar(selectedPlaylist.name)
-            findNavController().navigate(R.id.action_libraryFragment_to_selected_playlist)
-        }
+    private fun setupCreatePlaylistButton() {
+        libraryViewModel.customCollection.push(PlaylistModel(
+            resources.getString(R.string.create_playlist),
+            PlaylistModel.Type.BUTTON
+        ))
+    }
+
+    private fun setupFavoritesPlaylist() {
+        // Check from shared preferences to populate the playlist
+        libraryViewModel.customCollection.push(PlaylistModel(
+            resources.getString(R.string.favorites),
+            PlaylistModel.Type.DEFAULT
+        ), true, 1)
+        // Load Favorites playlist data
+        libraryViewModel.customCollection.find(resources.getString(R.string.favorites))?.load(mainActivity)
     }
 
     private fun setupRecyclerAdapter() {
         binding.playlistRecView.adapter = LibraryRecyclerAdapter(
             requireActivity(),
             this,
-            mainActivityViewModel.customPlaylistDataList)
+            libraryViewModel.customCollection.list,
+            textOnly = false,
+            hideMore = false
+        )
         binding.playlistRecView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView = binding.playlistRecView
+    }
+
+
+    override fun onItemClick(pos: Int) {
+        val selectedPlaylist = libraryViewModel.customCollection.list[pos]
+        val isCustomButton = selectedPlaylist.type == PlaylistModel.Type.BUTTON
+        val isCreateButton = isCustomButton && selectedPlaylist.name.equals(getString(R.string.create_playlist), true)
+        if (isCreateButton) {
+            val dialog = LibraryCreatePlaylistDialog()
+            dialog.show(mainActivity.supportFragmentManager, "createPlaylistDialog")
+        } else {
+            libraryViewModel.selectedPlaylist = selectedPlaylist
+            mainActivity.renameToolBar(selectedPlaylist.name)
+            findNavController().navigate(R.id.action_libraryFragment_to_selected_playlist)
+        }
+    }
+
+    override fun onMoreClick(pos: Int) {
+        super.onMoreClick(pos)
+        libraryViewModel.selectedPlaylistCollection = libraryViewModel.customCollection
+        libraryViewModel.selectedPlaylist = libraryViewModel.customCollection.list[pos]
+        libraryViewModel.selectedAdapter = binding.playlistRecView.adapter as ItemRecyclerAdapter
+        libraryViewModel.selectedAdapterPos = pos
+        findNavController().navigate(R.id.action_libraryFragment_to_libraryBottomSheet)
     }
 }

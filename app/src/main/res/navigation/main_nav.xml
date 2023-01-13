@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_libraryFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_libraryBottomSheet"
+            app:destination="@id/libraryBottomSheet" />
     </fragment>
     <fragment
         android:id="@+id/createFragment"
@@ -71,4 +74,9 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.feelvibes.settings.SettingsFragment"
         android:label="SettingsFragment" />
+    <dialog
+        android:id="@+id/libraryBottomSheet"
+        android:name="com.example.feelvibes.library.LibraryBottomSheet"
+        android:label="fragment_library_bottom_sheet"
+        tools:layout="@layout/fragment_library_bottom_sheet" />
 </navigation>
