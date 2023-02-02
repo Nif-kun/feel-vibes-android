@@ -6,13 +6,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.R
-import com.example.feelvibes.databinding.FragmentAlbumBinding
+import com.example.feelvibes.databinding.FragmentArtistBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.LibraryCategoryFragment
+import com.example.feelvibes.library.LibraryCategoryHandler
 import com.example.feelvibes.library.recycler.adapters.LibraryRecyclerAdapter
 
-class AlbumFragment :
-    LibraryCategoryFragment<FragmentAlbumBinding>(FragmentAlbumBinding::inflate),
+class ArtistCategory :
+    LibraryCategoryFragment<FragmentArtistBinding>(FragmentArtistBinding::inflate),
     RecyclerItemClick {
 
     private lateinit var libraryViewModel : LibraryViewModel
@@ -20,8 +21,8 @@ class AlbumFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
-        categoryViewModel = ViewModelProvider(requireActivity())[CategoryViewModelHandler.AlbumViewModel::class.java]
-        libraryViewModel.albumCollection.populateFromLocal(requireActivity())
+        categoryViewModel = ViewModelProvider(requireActivity())[LibraryCategoryHandler.ArtistViewModel::class.java]
+        libraryViewModel.artistCollection.populateFromLocal(requireActivity())
     }
 
     override fun onReady() {
@@ -29,16 +30,16 @@ class AlbumFragment :
     }
 
     private fun setupRecyclerAdapter() {
-        binding.albumRecView.adapter = LibraryRecyclerAdapter(
+        binding.artistRecView.adapter = LibraryRecyclerAdapter(
             requireActivity(),
             this,
-            libraryViewModel.albumCollection.list)
-        binding.albumRecView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView = binding.albumRecView
+            libraryViewModel.artistCollection.list)
+        binding.artistRecView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView = binding.artistRecView
     }
 
     override fun onItemClick(pos: Int) {
-        val selectedPlaylist = libraryViewModel.albumCollection.list[pos]
+        val selectedPlaylist = libraryViewModel.artistCollection.list[pos]
         libraryViewModel.selectedPlaylist = selectedPlaylist
         mainActivity.renameToolBar(selectedPlaylist.name)
         findNavController().navigate(R.id.action_libraryFragment_to_selected_playlist)

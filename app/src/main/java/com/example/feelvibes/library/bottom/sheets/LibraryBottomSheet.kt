@@ -1,15 +1,12 @@
-package com.example.feelvibes.library
+package com.example.feelvibes.library.bottom.sheets
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentLibraryBottomSheetBinding
-import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
+import com.example.feelvibes.library.LibraryCreatePlaylistDialog
 import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.viewbinds.FragmentBottomSheetDialogBind
 
@@ -17,13 +14,14 @@ import com.example.feelvibes.viewbinds.FragmentBottomSheetDialogBind
 class LibraryBottomSheet : FragmentBottomSheetDialogBind<FragmentLibraryBottomSheetBinding>(
     FragmentLibraryBottomSheetBinding::inflate) {
 
-    private lateinit var libraryViewModel : LibraryViewModel
-    private var updateStored = false
-
-    private object layoutStateTypes {
+    private object LayoutStateTypes {
         const val DEFAULT = 0
         const val EDITING = 1
     }
+
+    private lateinit var libraryViewModel : LibraryViewModel
+    private var updateStored = false
+    private var isEditing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +38,15 @@ class LibraryBottomSheet : FragmentBottomSheetDialogBind<FragmentLibraryBottomSh
     }
 
     private fun setupEditButton() {
-        // if clicked:
-        //  updateStored = true
         binding.libraryBottomSheetEditBtn.setOnClickListener {
             if (libraryViewModel.selectedPlaylist != null) {
-                updateStored = true
-                // make edit visible.
+                // Commenting out functions below due to time constraints:
+                //layoutState(layoutStateTypes.EDITING)
+                //updateStored = true
+                findNavController().popBackStack()
+                val dialog = LibraryCreatePlaylistDialog()
+                isEditing = true
+                dialog.show(mainActivity.supportFragmentManager, "createPlaylistDialog")
             }
         }
     }
@@ -63,19 +64,22 @@ class LibraryBottomSheet : FragmentBottomSheetDialogBind<FragmentLibraryBottomSh
 
     private fun layoutState(state : Int) {
         when(state) {
-            layoutStateTypes.EDITING -> {  } //show editing layout
-            else -> {
+            LayoutStateTypes.EDITING -> {
+                hideDefaultLayout()
+                showEditLayout()
+            } else -> {
+                hideEditLayout()
                 showDefaultLayout()
             }
         }
     }
 
     private fun showEditLayout() {
-        // Create a layout and use include in xml
+        binding.includeCreatePlaylist.createPlaylistLayout.visibility = View.VISIBLE
     }
 
     private fun hideEditLayout() {
-
+        binding.includeCreatePlaylist.createPlaylistLayout.visibility = View.GONE
     }
 
     private fun showDefaultLayout() {
@@ -88,6 +92,8 @@ class LibraryBottomSheet : FragmentBottomSheetDialogBind<FragmentLibraryBottomSh
         binding.libraryBottomSheetRemoveBtn.visibility = View.GONE
     }
 
+    // Commenting out functions below due to time constraints:
+    /*
     override fun onResume() {
         super.onResume()
         // Set playlist data to views when editing
@@ -105,5 +111,20 @@ class LibraryBottomSheet : FragmentBottomSheetDialogBind<FragmentLibraryBottomSh
         libraryViewModel.selectedAdapterPos = -1
         libraryViewModel.selectedPlaylist = null
     }
+    */
 
+    override fun onStop() {
+        super.onStop()
+        if (updateStored) {
+            libraryViewModel.customCollection.saveToStored(
+                requireActivity(),
+                arrayListOf(resources.getString(R.string.favorites), resources.getString(R.string.create_playlist)))
+        }
+        libraryViewModel.selectedPlaylistCollection = null
+        if (!isEditing) {
+            libraryViewModel.selectedAdapter = null
+            libraryViewModel.selectedAdapterPos = -1
+            libraryViewModel.selectedPlaylist = null
+        }
+    }
 }

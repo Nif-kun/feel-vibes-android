@@ -1,20 +1,28 @@
-package com.example.feelvibes.library
+package com.example.feelvibes.create
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.marginTop
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.example.feelvibes.library.LibraryCategoryHandler
 import com.example.feelvibes.utils.CategoryViewModelHandler
 import com.example.feelvibes.viewbinds.FragmentBind
 
-abstract class LibraryCategoryFragment<VB : ViewBinding>(
+abstract class CreateCategoryFragment<VB : ViewBinding>(
     bindingInflater: (inflater: LayoutInflater) -> VB,
 ) : FragmentBind<VB>(bindingInflater) {
-    var categoryViewModel : CategoryViewModelHandler.CategoryViewModel? = null
+
+    private var categoryViewModel : CategoryViewModelHandler.CategoryViewModel? = null
     var recyclerView : RecyclerView? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        categoryViewModel = ViewModelProvider(requireActivity())[LibraryCategoryHandler.PlaylistViewModel::class.java]
+    }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)

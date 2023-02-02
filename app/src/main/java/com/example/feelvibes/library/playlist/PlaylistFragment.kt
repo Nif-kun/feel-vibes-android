@@ -15,7 +15,7 @@ import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 import com.example.feelvibes.viewbinds.FragmentBind
 
 
-class LibraryPlaylistFragment :
+class PlaylistFragment :
     FragmentBind<FragmentLibraryPlaylistBinding>(FragmentLibraryPlaylistBinding::inflate),
     RecyclerItemClick {
 

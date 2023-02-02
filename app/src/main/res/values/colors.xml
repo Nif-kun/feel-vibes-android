@@ -10,4 +10,5 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="neutral">#8F9193</color>
     <color name="warn_red">#FF4444</color>
+    <color name="favorite_red">#FF5B5B</color>
 </resources>

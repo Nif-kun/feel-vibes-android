@@ -51,7 +51,7 @@
         app:startDestination="@id/libraryPlaylistFragment">
         <fragment
             android:id="@+id/libraryPlaylistFragment"
-            android:name="com.example.feelvibes.library.playlist.LibraryPlaylistFragment"
+            android:name="com.example.feelvibes.library.playlist.PlaylistFragment"
             android:label="fragment_library_playlist"
             tools:layout="@layout/fragment_library_playlist" >
             <action
@@ -63,11 +63,23 @@
             app:destination="@id/libraryFragment" />
         <dialog
             android:id="@+id/libraryPlaylistBottomSheetFragment"
-            android:name="com.example.feelvibes.library.playlist.LibraryPlaylistBottomSheetFragment"
+            android:name="com.example.feelvibes.library.playlist.PlaylistBottomSheet"
             android:label="LibraryPlaylistBottomSheetFragment" >
             <action
                 android:id="@+id/action_libraryPlaylistBottomSheetFragment_to_libraryPlaylistFragment"
                 app:destination="@id/libraryPlaylistFragment" />
+            <action
+                android:id="@+id/action_libraryPlaylistBottomSheetFragment_to_playlistBottomSheetPlaylists"
+                app:destination="@id/playlistBottomSheetPlaylists" />
+        </dialog>
+        <dialog
+            android:id="@+id/playlistBottomSheetPlaylists"
+            android:name="com.example.feelvibes.library.playlist.PlaylistBottomSheetSearch"
+            android:label="fragment_playlist_bottom_sheet_playlists"
+            tools:layout="@layout/fragment_playlist_bottom_sheet_search" >
+            <action
+                android:id="@+id/action_playlistBottomSheetPlaylists_to_libraryPlaylistBottomSheetFragment"
+                app:destination="@id/libraryPlaylistBottomSheetFragment" />
         </dialog>
     </navigation>
     <fragment
@@ -76,7 +88,7 @@
         android:label="SettingsFragment" />
     <dialog
         android:id="@+id/libraryBottomSheet"
-        android:name="com.example.feelvibes.library.LibraryBottomSheet"
+        android:name="com.example.feelvibes.library.bottom.sheets.LibraryBottomSheet"
         android:label="fragment_library_bottom_sheet"
         tools:layout="@layout/fragment_library_bottom_sheet" />
 </navigation>

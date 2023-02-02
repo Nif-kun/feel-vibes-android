@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class PlaylistModel(
-    val name: String,
+    var name: String,
     val type: String = Type.NONE,
     var thumbnail: Bitmap? = null,
     val list: ArrayList<MusicModel> = ArrayList(),

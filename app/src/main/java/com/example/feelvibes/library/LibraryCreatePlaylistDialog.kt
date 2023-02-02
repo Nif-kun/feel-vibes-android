@@ -1,5 +1,6 @@
 package com.example.feelvibes.library
 
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -20,6 +21,7 @@ import com.example.feelvibes.viewbinds.FragmentDialogBind
 class LibraryCreatePlaylistDialog :
     FragmentDialogBind<CreatePlaylistDialogBinding>(CreatePlaylistDialogBinding::inflate) {
 
+    private var previousName : String? = null
 
     object WarnState {
         const val DEFAULT = 0
@@ -38,12 +40,21 @@ class LibraryCreatePlaylistDialog :
         setupPickMedia()
     }
 
-
     override fun onReady() {
         binding.createPlaylistTopRow.visibility = View.GONE // Disabling cover art for now until [setupPickMedia : A1] is resolved.
         hideImageView()
         hideWarning()
+        dialogTitle(libraryViewModel.selectedPlaylist == null) // Should occur when Edit in LibraryBottomSheet is clicked
+        populateInputs()
         setupDialogButtons()
+    }
+
+    fun dialogTitle(isCreate: Boolean = true) {
+        if (isCreate) {
+            binding.createPlaylistDialogTitle.setText(R.string.create_playlist)
+        } else {
+            binding.createPlaylistDialogTitle.setText(R.string.edit_playlist)
+        }
     }
 
     private fun setupPickMedia() {
@@ -64,8 +75,6 @@ class LibraryCreatePlaylistDialog :
                 Log.d("PhotoPicker", "No media selected")
                 null
             }
-
-
         }
     }
 
@@ -107,8 +116,6 @@ class LibraryCreatePlaylistDialog :
         }
     }
 
-
-
     private fun setupSelectImageButton() {
         // check if media access is allowed, ask if not.
         // if allowed, open up gallery to select an image
@@ -130,39 +137,80 @@ class LibraryCreatePlaylistDialog :
 
     private fun setupConfirmButton() {
         binding.createPlaylistConfirmBtn.setOnClickListener {
+
             val title = binding.createPlaylistEditText.text.toString()
             val playlistTitles = ArrayList<String>()
+            // Populates playlistTitles
+            for (playlist in libraryViewModel.customCollection.list) {
+                if (previousName?.equals(playlist.name, true) == true) { // Skips already set name.
+                    continue
+                } else {
+                    playlistTitles.add(playlist.name.lowercase())
+                }
+            }
             val thumbnailBitmap : Bitmap? = if (binding.createPlaylistImageView.visibility == View.VISIBLE) {
                 binding.createPlaylistImageView.drawable.toBitmap(480, 480)
             } else {
                 null
             }
-            libraryViewModel.customCollection.list.forEach { playlistTitles.add(it.name) }
+
             if (title.isEmpty()) {
                 warningState(WarnState.EMPTY_TITLE)
-            } else if (playlistTitles.contains(title)) {
+            } else if (playlistTitles.contains(title.lowercase())) {
                 warningState(WarnState.SAME_TITLE)
             } else {
-                warningState(WarnState.DEFAULT)
-                val incremented = libraryViewModel.customCollection.add(PlaylistModel(
-                    title,
-                    PlaylistModel.Type.PLAYLIST,
-                    thumbnailBitmap,
-                    ArrayList(),
-                    null,
-                    imageUri,
-                ))
-                if (incremented) {
-                    libraryViewModel.selectedAdapter?.notifyItemInserted(libraryViewModel.customCollection.list.size-1)
-                    libraryViewModel.customCollection.saveToStored(
-                        requireActivity(),
-                        arrayListOf(resources.getString(R.string.favorites), resources.getString(R.string.create_playlist)))
+                if (libraryViewModel.selectedPlaylist == null) {
+                    confirmCreate(title, thumbnailBitmap)
+                } else {
+                    confirmEdit(title, thumbnailBitmap)
                 }
-                dismiss()
             }
         }
     }
 
+    private fun populateInputs() {
+        if (libraryViewModel.selectedPlaylist != null) {
+            previousName = libraryViewModel.selectedPlaylist?.name
+            binding.createPlaylistEditText.setText(previousName)
+        }
+    }
 
+    private fun confirmCreate(title : String, thumbnailBitmap : Bitmap?) {
+        warningState(WarnState.DEFAULT)
+        val incremented = libraryViewModel.customCollection.add(PlaylistModel(
+            title,
+            PlaylistModel.Type.PLAYLIST,
+            thumbnailBitmap,
+            ArrayList(),
+            null,
+            imageUri,
+        ))
+        if (incremented) {
+            libraryViewModel.selectedAdapter?.notifyItemInserted(libraryViewModel.customCollection.list.size-1)
+            libraryViewModel.customCollection.saveToStored(
+                requireActivity(),
+                arrayListOf(resources.getString(R.string.favorites), resources.getString(R.string.create_playlist)))
+        }
+        dismiss()
+    }
+
+    private fun confirmEdit(title : String, thumbnailBitmap: Bitmap?) {
+        libraryViewModel.selectedPlaylist?.name = title
+        libraryViewModel.selectedPlaylist?.thumbnail = thumbnailBitmap
+        libraryViewModel.customCollection.saveToStored(
+            requireActivity(),
+            arrayListOf(resources.getString(R.string.favorites), resources.getString(R.string.create_playlist)))
+        if (libraryViewModel.selectedAdapterPos > -1) {
+            libraryViewModel.selectedAdapter?.notifyItemChanged(libraryViewModel.selectedAdapterPos)
+        }
+        dismiss()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        libraryViewModel.selectedAdapter = null
+        libraryViewModel.selectedAdapterPos = -1
+        libraryViewModel.selectedPlaylist = null
+    }
 
 }

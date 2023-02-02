@@ -33,6 +33,9 @@ class LibraryRecyclerAdapter(
             holder.moreButton.visibility = View.GONE
         } else if (!hide && holder.moreButton.visibility == View.GONE || holder.moreButton.visibility == View.INVISIBLE) {
             if (playlistDataList[position].type == PlaylistModel.Type.PLAYLIST) {
+                // TODO
+                //  This does not work when going beyond three items. I'm unsure why but fuck Google's shitty system.
+                //  My theory is that position is not accurate and repeats only from 0-2 index.
                 holder.moreButton.visibility = View.VISIBLE
             }
         }

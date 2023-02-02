@@ -1,32 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".library.LibraryBottomSheet"
-    android:orientation="vertical">
+    tools:context=".library.bottom.sheets.LibraryBottomSheet">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/libraryBottomSheetEditBtn"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        app:iconTint="@color/design_default_color_primary"
-        app:icon="@drawable/ic_create_24"
+
+    <include
+        android:id="@+id/includeCreatePlaylist"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/design_default_color_primary"
-        android:textAlignment="textStart"
-        android:text="@string/edit"/>
+        android:layout_marginVertical="13dp"
+        android:layout_marginHorizontal="20dp"
+        layout="@layout/library_bottom_sheet_edit" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/libraryBottomSheetRemoveBtn"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        app:iconTint="@color/warn_red"
-        app:icon="@drawable/ic_remove_circle_24"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/warn_red"
-        android:textAlignment="textStart"
-        android:text="@string/remove"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginVertical="13dp"
+        android:layout_marginHorizontal="8dp">
 
-</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/libraryBottomSheetEditBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            app:iconTint="@color/purple_200"
+            app:icon="@drawable/ic_create_24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/purple_200"
+            android:textAlignment="textStart"
+            android:text="@string/edit"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/libraryBottomSheetRemoveBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            app:iconTint="@color/warn_red"
+            app:icon="@drawable/ic_remove_circle_24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/warn_red"
+            android:textAlignment="textStart"
+            android:text="@string/remove"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

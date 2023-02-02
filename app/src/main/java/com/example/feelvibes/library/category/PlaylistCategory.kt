@@ -9,23 +9,30 @@ import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentPlaylistBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.LibraryCategoryFragment
+import com.example.feelvibes.library.LibraryCategoryHandler
 import com.example.feelvibes.library.LibraryCreatePlaylistDialog
 import com.example.feelvibes.library.recycler.adapters.LibraryRecyclerAdapter
-import com.example.feelvibes.model.MusicModel
 import com.example.feelvibes.model.PlaylistModel
 import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 
-class PlaylistFragment :
+class PlaylistCategory :
     LibraryCategoryFragment<FragmentPlaylistBinding>(FragmentPlaylistBinding::inflate),
     RecyclerItemClick {
 
     private lateinit var libraryViewModel : LibraryViewModel
 
+    // TODO
+    //  Unplanned: thumbnail is automatically applied if there is a musicModel
+    //  inside the playlistModel, and is initially using the default thumbnail.
+    //  For now, this will be considered as feature. Hilariously.
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
-        categoryViewModel = ViewModelProvider(requireActivity())[CategoryViewModelHandler.PlaylistViewModel::class.java]
+        // Parent class handles categoryViewModel, just needs to be initialized.
+        categoryViewModel = ViewModelProvider(requireActivity())[LibraryCategoryHandler.PlaylistViewModel::class.java]
         libraryViewModel.customCollection.populateFromStored(requireActivity())
+        // The buttons were setup here before the adapter to ensure that they are placed on the top.
         setupCreatePlaylistButton()
         setupFavoritesPlaylist()
     }

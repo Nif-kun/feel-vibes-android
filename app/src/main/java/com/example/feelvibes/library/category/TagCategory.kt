@@ -1,7 +1,6 @@
 package com.example.feelvibes.library.category
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,9 +9,10 @@ import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentTagBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.LibraryCategoryFragment
+import com.example.feelvibes.library.LibraryCategoryHandler
 import com.example.feelvibes.library.recycler.adapters.LibraryRecyclerAdapter
 
-class TagFragment :
+class TagCategory :
     LibraryCategoryFragment<FragmentTagBinding>(FragmentTagBinding::inflate),
     RecyclerItemClick {
 
@@ -21,7 +21,7 @@ class TagFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
-        categoryViewModel = ViewModelProvider(requireActivity())[CategoryViewModelHandler.TagViewModel::class.java]
+        categoryViewModel = ViewModelProvider(requireActivity())[LibraryCategoryHandler.TagViewModel::class.java]
         libraryViewModel.tagCollection.populateFromLocal(requireActivity())
     }
 

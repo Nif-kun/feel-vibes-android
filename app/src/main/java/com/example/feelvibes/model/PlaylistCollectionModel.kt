@@ -2,6 +2,7 @@ package com.example.feelvibes.model
 
 import android.app.Activity
 import android.os.Parcelable
+import android.util.Log
 import com.example.feelvibes.utils.GsonHandler
 import com.example.feelvibes.utils.MusicDataHandler
 import com.google.gson.reflect.TypeToken
@@ -120,7 +121,24 @@ class PlaylistCollectionModel(
         find(name)?.remove(path)
     }
 
+    fun listExcept(filter: ArrayList<String>): ArrayList<PlaylistModel> {
+        val newList = arrayListOf<PlaylistModel>()
+        for (playlist in list) {
+            var sameName = false
+            for (name in filter) {
+                if (playlist.name.equals(name, true)) { // not equals
+                    sameName = true
+                    break
+                }
+            }
+            if (!sameName) {
+                newList.add(playlist)
+                Log.d("Playlists", playlist.name)
+            }
+        }
 
+        return newList
+    }
 
     // do save and load if has id
 
