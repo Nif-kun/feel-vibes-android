@@ -68,7 +68,7 @@ class LibraryRecyclerAdapter(
             holder.imageViewThumbnail.setImageBitmap(thumbnail)
         } else if (playlistDataList[position].name.equals(activity.getString(R.string.create_playlist), true)) {
             holder.imageViewThumbnail.setImageResource(R.drawable.ic_baseline_add_box_24)
-            holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
+            //holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
         }
     }
 
@@ -87,7 +87,7 @@ class LibraryRecyclerAdapter(
                     holder.imageViewThumbnail.setImageResource(R.drawable.ic_favorite_24)
             }
         }
-        holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
+        //holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
     }
 
     private fun isFavorite(playlistModel: PlaylistModel): Boolean {

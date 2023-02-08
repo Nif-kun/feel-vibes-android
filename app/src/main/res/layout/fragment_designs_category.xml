@@ -7,25 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".create.category.DesignsCategory">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/designsRecView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/createDesignButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/createDesignButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="5dp"
         android:text="@string/create_design"
-        app:layout_constraintBottom_toTopOf="@+id/designsRecView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/designsRecView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createDesignButton" />
+        app:layout_constraintTop_toBottomOf="@+id/designsRecView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

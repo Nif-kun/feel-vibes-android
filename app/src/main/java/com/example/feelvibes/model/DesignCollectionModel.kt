@@ -16,22 +16,43 @@ class DesignCollectionModel(
 
 
     fun populateFromStored(activity: Activity) {
-        val designModelListType : Type = object : TypeToken<ArrayList<DesignModel>>() {}.type
-        val designModels = GsonHandler.Load(activity, id, "").data<ArrayList<DesignModel>>(designModelListType)
-        Log.d("DesignModels", designModels.toString())
-        if (designModels != null) {
-            update(designModels)
+        val designCapsuleModelListType : Type = object : TypeToken<ArrayList<DesignCapsuleModel>>() {}.type
+        val designCapsuleModels = GsonHandler.Load(activity, id, "").data<ArrayList<DesignCapsuleModel>>(designCapsuleModelListType)
+        Log.d("DesignModels", designCapsuleModels.toString())
+        if (designCapsuleModels != null) {
+            val newList = arrayListOf<DesignModel>()
+            for (model in designCapsuleModels) {
+                newList.add(DesignModel(
+                    model.id,
+                    model.name,
+                    model.backgroundColor,
+                    model.backgroundImagePath,
+                    model.foregroundImagePath
+                ))
+            }
+            update(newList)
         }
     }
 
     fun saveToStored(activity: Activity) {
-        if (list.isNotEmpty())
-            GsonHandler.Save(activity, id, list)
+        val data = arrayListOf<DesignCapsuleModel>()
+        if (list.isNotEmpty()) {
+            for (model in list) {
+                if (model is DesignModel) {
+                    data.add(model.getCapsuleModel())
+                }
+            }
+        }
+        GsonHandler.Save(activity, id, data)
     }
 
     fun update(newList : ArrayList<DesignModel>) {
         list.clear()
         list.addAll(newList)
+    }
+
+    fun remove(model: DesignModel): Boolean {
+        return list.remove(model)
     }
 
 }

@@ -24,7 +24,7 @@ class SearchRecyclerAdapter(
             holder.imageViewThumbnail.setImageBitmap(playlists[position].thumbnail)
         } else {
             holder.imageViewThumbnail.setImageResource(R.drawable.ic_album_24)
-            holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
+            //holder.imageViewThumbnail.setColorFilter(com.google.android.material.R.color.design_default_color_primary_variant)
         }
         holder.textViewTitle.text = playlists[position].name
     }

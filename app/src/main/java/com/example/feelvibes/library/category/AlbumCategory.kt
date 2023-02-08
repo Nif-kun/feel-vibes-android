@@ -42,6 +42,6 @@ class AlbumCategory :
         val selectedPlaylist = libraryViewModel.albumCollection.list[pos]
         libraryViewModel.selectedPlaylist = selectedPlaylist
         mainActivity.renameToolBar(selectedPlaylist.name)
-        findNavController().navigate(R.id.action_libraryFragment_to_selected_playlist)
+        findNavController().navigate(R.id.action_libraryFragment_to_libraryPlaylistFragment)
     }
 }

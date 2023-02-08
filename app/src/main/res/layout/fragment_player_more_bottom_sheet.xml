@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:maxHeight="700dp"
+    android:minHeight="600dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".player.bottom.sheets.PlayerMoreBottomSheet"
+    app:behavior_peekHeight="80dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <LinearLayout
+        android:id="@+id/playerMoreLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginVertical="13dp"
+        android:layout_marginHorizontal="20dp"
+        tools:ignore="UselessParent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:text="@string/design"/>
+
+            <ImageButton
+                android:id="@+id/designEditBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:src="@drawable/ic_drive_file_rename_outline_24"
+                app:tint="@color/white"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/selectedDesignLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:text="@string/untitled"
+            android:layout_marginBottom="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:text="@string/lyrics"/>
+
+            <ImageButton
+                android:id="@+id/lyricsEditBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:src="@drawable/ic_drive_file_rename_outline_24"
+                app:tint="@color/white"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/selectedLyricsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:text="@string/untitled"
+            android:layout_marginBottom="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:text="@string/chords"/>
+
+            <ImageButton
+                android:id="@+id/chordsEditBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:src="@drawable/ic_drive_file_rename_outline_24"
+                app:tint="@color/white"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/selectedChordsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:text="@string/untitled"
+            android:layout_marginBottom="5dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/playerMoreSearchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginVertical="13dp"
+        android:layout_marginHorizontal="20dp"
+        tools:ignore="UselessParent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="@string/untitled"
+            android:textAlignment="center"/>
+
+        <EditText
+            android:id="@+id/searchInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/rounded_edit_text_bg"
+            android:drawableStart="@drawable/ic_search_24"
+            android:drawablePadding="12dp"
+            android:ems="10"
+            android:hint="@string/search"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:minHeight="36dp"
+            android:paddingHorizontal="12dp"
+            android:textColorHint="#757575"
+            android:textColor="#1E1E1E"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/playlistRecView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="7dp"/>
+
+        <Button
+            android:id="@+id/cancelBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"/>
+
+    </LinearLayout>
+
+</FrameLayout>

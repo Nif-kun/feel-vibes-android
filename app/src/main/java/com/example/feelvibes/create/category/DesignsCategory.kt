@@ -2,14 +2,16 @@ package com.example.feelvibes.create.category
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.feelvibes.R
 import com.example.feelvibes.create.CreateCategoryFragment
 import com.example.feelvibes.create.recycler.CreateRecyclerAdapter
 import com.example.feelvibes.databinding.FragmentDesignsCategoryBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
-import com.example.feelvibes.library.LibraryCategoryHandler
+import com.example.feelvibes.model.DesignModel
+import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 import com.example.feelvibes.view_model.CreateViewModel
-import com.example.feelvibes.view_model.LibraryViewModel
 
 class DesignsCategory :
     CreateCategoryFragment<FragmentDesignsCategoryBinding>(FragmentDesignsCategoryBinding::inflate),
@@ -29,6 +31,7 @@ class DesignsCategory :
     }
 
     private fun setupRecyclerAdapter() {
+        createViewModel.designCollection.populateFromStored(mainActivity)
         binding.designsRecView.adapter = CreateRecyclerAdapter(
             requireActivity(),
             recyclerItemClick = this,
@@ -40,12 +43,15 @@ class DesignsCategory :
 
     private fun onCreateDesignEvent() {
         binding.createDesignButton.setOnClickListener {
-
+            findNavController().navigate(R.id.action_createFragment_to_designEditorFragment)
         }
     }
 
     override fun onItemClick(pos: Int) {
-        // When clicked, opens bottom sheet, edit and delete, copy the library one.
+        createViewModel.selectedDesignModel = createViewModel.designCollection.list[pos] as DesignModel
+        createViewModel.selectedAdapter = binding.designsRecView.adapter as ItemRecyclerAdapter
+        createViewModel.selectedItemPos = pos
+        findNavController().navigate(R.id.action_createFragment_to_createBottomSheet)
     }
 
 }

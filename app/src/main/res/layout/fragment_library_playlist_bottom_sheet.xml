@@ -30,12 +30,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bottomSheetAddToPlaylistButton"
             style="@style/Widget.AppCompat.Button.Borderless"
-            app:iconTint="@color/purple_200"
             app:icon="@drawable/ic_playlist_add_24"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checkable="true"
-            android:textColor="@color/purple_200"
             android:textAlignment="textStart"
             android:text="@string/add_to_playlist"
             app:cornerRadius="20dp"/>
@@ -43,12 +40,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bottomSheetRemoveFromPlaylistButton"
             style="@style/Widget.AppCompat.Button.Borderless"
-            app:iconTint="@color/purple_200"
             app:icon="@drawable/ic_playlist_remove_24"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checkable="true"
-            android:textColor="@color/purple_200"
             android:textAlignment="textStart"
             android:text="@string/remove_from_playlist"
             app:cornerRadius="20dp"/>

@@ -19,8 +19,9 @@ class PlaylistFragment :
     FragmentBind<FragmentLibraryPlaylistBinding>(FragmentLibraryPlaylistBinding::inflate),
     RecyclerItemClick {
 
-    private var onMoreClickPos = -1
     private lateinit var libraryViewModel : LibraryViewModel
+    private var onMoreClickPos = -1
+    private var selectedMusic = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +45,10 @@ class PlaylistFragment :
 
     override fun onItemClick(pos: Int) {
         if (libraryViewModel.selectedPlaylist != null) {
-            Log.d("SelectedMusic", libraryViewModel.selectedPlaylist!!.list[pos].title)
-            // Do the music player nav here
+            libraryViewModel.selectedMusic = libraryViewModel.selectedPlaylist!!.list[pos]
+            libraryViewModel.selectedMusicPos = pos
+            selectedMusic = true
+            findNavController().navigate(R.id.action_libraryPlaylistFragment_to_playerFragment)
         }
     }
 
@@ -72,6 +75,13 @@ class PlaylistFragment :
     override fun onPause() {
         super.onPause()
         mainActivity.hideToolBarBack()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (!selectedMusic && !libraryViewModel.navFromSticky) {
+            libraryViewModel.selectedPlaylist = null
+        }
     }
 
 }

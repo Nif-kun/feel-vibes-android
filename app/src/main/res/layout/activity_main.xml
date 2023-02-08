@@ -32,6 +32,17 @@
         app:layout_constraintTop_toBottomOf="@+id/custom_toolbar"
         app:navGraph="@navigation/splash_nav" />
 
+
+    <include
+        android:id="@+id/stickyPlayerInclude"
+        layout="@layout/sticky_player_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/main_nav_host"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main_frag_nav"
         android:layout_width="match_parent"
@@ -41,6 +52,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

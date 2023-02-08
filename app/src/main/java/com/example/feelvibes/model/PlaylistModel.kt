@@ -146,6 +146,34 @@ class PlaylistModel(
         return preset?.find { i -> i == path } != null
     }
 
+    fun match(playlistModel: PlaylistModel?): Boolean {
+        if (playlistModel != null) {
+            val sameName = name.equals(playlistModel.name, true)
+            val sameType = type == playlistModel.type
+            return (sameName && sameType)
+        }
+        return false
+    }
+
+    fun getOnIndex(index: Int): MusicModel? {
+        val size = list.size - 1
+        return if (index > - 1 && index <= size)
+            list[index]
+        else
+            null
+    }
+
+    fun indexOf(musicModel: MusicModel): Int {
+        var index = 0
+        for (model in list) {
+            if (model.path.equals(musicModel.path, true)) {
+                return index
+            }
+            index++
+        }
+        return index
+    }
+
     // create a save function which constructs a preset
     //create a read function that sets the list based on the given json or config data.
 

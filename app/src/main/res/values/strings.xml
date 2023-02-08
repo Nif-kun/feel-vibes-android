@@ -79,6 +79,13 @@
     <string name="lyrics">Lyrics</string>
     <string name="chords">Chords</string>
     <string name="create_design">Create design</string>
+    <string name="save">Save</string>
+    <string name="select_background">Select background</string>
+    <string name="select_foreground">Select foreground</string>
+    <string name="n_a">N/A</string>
+    <string name="timeStampPlaceHolder">00:00</string>
+    <string name="design">Design</string>
+    <string name="longTextTest">Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here.</string>
 
 
 </resources>

@@ -24,6 +24,9 @@ class LibraryViewModel : ViewModel() {
 
     var selectedPlaylistCollection : PlaylistCollectionModel? = null
     var selectedPlaylist : PlaylistModel? = null
+    var selectedMusicPos : Int = 0
     var selectedMusic : MusicModel? = null
+
+    var navFromSticky = false
 
 }

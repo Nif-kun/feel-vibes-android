@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".player.PlayerFragment">
+
+    <include
+        android:id="@+id/designInclude"
+        layout="@layout/design_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/coverArtView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:maxWidth="300dp"
+        android:maxHeight="300dp"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
+        tools:ignore="ContentDescription" />
+
+    <ScrollView
+        android:id="@+id/textScrollLayout"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginHorizontal="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.12"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingStart="15dp"
+            tools:ignore="RtlSymmetry">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/untitled" />
+
+                <TextView
+                    android:id="@+id/artistLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/n_a" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/moreBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_more_vert_24"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:maxHeight="20dp"
+            android:paddingHorizontal="0dp"
+            android:paddingVertical="7dp"
+            android:progressDrawable="@drawable/seekbar_background"
+            android:thumb="@drawable/seekbar_thumb" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="15dp">
+
+            <TextView
+                android:id="@+id/currentTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/timeStampPlaceHolder"
+                android:textAlignment="textStart" />
+
+            <TextView
+                android:id="@+id/maxTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/timeStampPlaceHolder"
+                android:textAlignment="textEnd" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/widgetLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/skipPreviousBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_skip_previous_24"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/shuffleBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:checkable="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_shuffle_24"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/playBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="84dp"
+                android:layout_height="84dp"
+                android:checkable="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_play_arrow_24"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/repeatBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:checkable="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_repeat_24"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/skipNextBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_skip_next_24"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/showPlaylistBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/ic_list_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98"
+        app:tint="@color/white"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+    <ImageButton
+        android:id="@+id/switchCoverView"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_sync_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98"
+        app:tint="@color/white"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

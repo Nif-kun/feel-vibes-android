@@ -5,10 +5,10 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class DesignModel(
     override val id:String,
-    override val name:String,
+    override var name:String,
     val backgroundColor:String = "#FFFFFF",
-    val backgroundImagePath:String = "",
-    val foregroundImagePath:String = ""
+    var backgroundImagePath:String = "",
+    var foregroundImagePath:String = ""
 ) : ProjectModel(id, name) {
 
     override fun getData(): MutableMap<String, MutableMap<String, String>> {
@@ -19,6 +19,16 @@ class DesignModel(
                 "backgroundImagePath" to backgroundImagePath,
                 "foregroundImagePath" to foregroundImagePath
             )
+        )
+    }
+
+    fun getCapsuleModel(): DesignCapsuleModel {
+        return DesignCapsuleModel(
+            id,
+            name,
+            backgroundColor,
+            backgroundImagePath,
+            foregroundImagePath
         )
     }
 }

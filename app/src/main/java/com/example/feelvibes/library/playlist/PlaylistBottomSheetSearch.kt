@@ -1,9 +1,7 @@
 package com.example.feelvibes.library.playlist
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -22,7 +20,6 @@ class PlaylistBottomSheetSearch : FragmentBottomSheetDialogBind<FragmentPlaylist
 
     private lateinit var libraryViewModel : LibraryViewModel
     private var rawPlaylists = arrayListOf<PlaylistModel>()
-    private var searchPlaylists = arrayListOf<PlaylistModel>()
     private var playlists = arrayListOf<PlaylistModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +42,7 @@ class PlaylistBottomSheetSearch : FragmentBottomSheetDialogBind<FragmentPlaylist
     private fun setupRecyclerAdapter() {
         playlists = rawPlaylists.filter {
             libraryViewModel.selectedMusic != null && !it.has(libraryViewModel.selectedMusic!!.path)
-        } as ArrayList<PlaylistModel>
+        } as ArrayList<PlaylistModel> // Only gets the Playlists that does not have the music.
         binding.playlistRecView.adapter = SearchRecyclerAdapter(
             requireActivity(),
             this,
@@ -81,7 +78,7 @@ class PlaylistBottomSheetSearch : FragmentBottomSheetDialogBind<FragmentPlaylist
 
     private fun onCancelEvent() {
         binding.cancelButton.setOnClickListener {
-            findNavController().popBackStack()
+            dismiss()
         }
     }
 

@@ -20,14 +20,14 @@
         android:label="fragment_library"
         tools:layout="@layout/fragment_library" >
         <action
-            android:id="@+id/action_libraryFragment_to_selected_playlist"
-            app:destination="@id/selected_playlist" />
-        <action
             android:id="@+id/action_libraryFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
             android:id="@+id/action_libraryFragment_to_libraryBottomSheet"
             app:destination="@id/libraryBottomSheet" />
+        <action
+            android:id="@+id/action_libraryFragment_to_libraryPlaylistFragment"
+            app:destination="@id/libraryPlaylistFragment" />
     </fragment>
     <fragment
         android:id="@+id/createFragment"
@@ -37,6 +37,12 @@
         <action
             android:id="@+id/action_createFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_createFragment_to_createBottomSheet"
+            app:destination="@id/createBottomSheet" />
+        <action
+            android:id="@+id/action_createFragment_to_designEditorFragment"
+            app:destination="@id/designEditorFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -47,41 +53,6 @@
             android:id="@+id/action_searchFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
-    <navigation android:id="@+id/selected_playlist"
-        app:startDestination="@id/libraryPlaylistFragment">
-        <fragment
-            android:id="@+id/libraryPlaylistFragment"
-            android:name="com.example.feelvibes.library.playlist.PlaylistFragment"
-            android:label="fragment_library_playlist"
-            tools:layout="@layout/fragment_library_playlist" >
-            <action
-                android:id="@+id/action_libraryPlaylistFragment_to_libraryPlaylistBottomSheetFragment"
-                app:destination="@id/libraryPlaylistBottomSheetFragment" />
-        </fragment>
-        <action
-            android:id="@+id/action_global_libraryFragment"
-            app:destination="@id/libraryFragment" />
-        <dialog
-            android:id="@+id/libraryPlaylistBottomSheetFragment"
-            android:name="com.example.feelvibes.library.playlist.PlaylistBottomSheet"
-            android:label="LibraryPlaylistBottomSheetFragment" >
-            <action
-                android:id="@+id/action_libraryPlaylistBottomSheetFragment_to_libraryPlaylistFragment"
-                app:destination="@id/libraryPlaylistFragment" />
-            <action
-                android:id="@+id/action_libraryPlaylistBottomSheetFragment_to_playlistBottomSheetPlaylists"
-                app:destination="@id/playlistBottomSheetPlaylists" />
-        </dialog>
-        <dialog
-            android:id="@+id/playlistBottomSheetPlaylists"
-            android:name="com.example.feelvibes.library.playlist.PlaylistBottomSheetSearch"
-            android:label="fragment_playlist_bottom_sheet_playlists"
-            tools:layout="@layout/fragment_playlist_bottom_sheet_search" >
-            <action
-                android:id="@+id/action_playlistBottomSheetPlaylists_to_libraryPlaylistBottomSheetFragment"
-                app:destination="@id/libraryPlaylistBottomSheetFragment" />
-        </dialog>
-    </navigation>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.feelvibes.settings.SettingsFragment"
@@ -91,4 +62,91 @@
         android:name="com.example.feelvibes.library.bottom.sheets.LibraryBottomSheet"
         android:label="fragment_library_bottom_sheet"
         tools:layout="@layout/fragment_library_bottom_sheet" />
+    <fragment
+        android:id="@+id/designEditorFragment"
+        android:name="com.example.feelvibes.create.editor.DesignEditorFragment"
+        android:label="fragment_design_editor"
+        tools:layout="@layout/fragment_design_editor" >
+        <action
+            android:id="@+id/action_designEditorFragment_to_designEditorBottomSheet"
+            app:destination="@id/designEditorBottomSheet" />
+    </fragment>
+    <dialog
+        android:id="@+id/designEditorBottomSheet"
+        android:name="com.example.feelvibes.create.editor.DesignEditorBottomSheet"
+        android:label="fragment_design_editor_bottom_sheet"
+        tools:layout="@layout/fragment_design_editor_bottom_sheet" >
+        <action
+            android:id="@+id/action_designEditorBottomSheet_to_designEditorFragment"
+            app:destination="@id/designEditorFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/createBottomSheet"
+        android:name="com.example.feelvibes.create.CreateBottomSheet"
+        android:label="fragment_create_bottom_sheet"
+        tools:layout="@layout/fragment_create_bottom_sheet" >
+        <action
+            android:id="@+id/action_createBottomSheet_to_createFragment"
+            app:destination="@id/createFragment" />
+        <action
+            android:id="@+id/action_createBottomSheet_to_designEditorBottomSheet"
+            app:destination="@id/designEditorBottomSheet" />
+        <action
+            android:id="@+id/action_createBottomSheet_to_designEditorFragment"
+            app:destination="@id/designEditorFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/libraryPlaylistFragment"
+        android:name="com.example.feelvibes.library.playlist.PlaylistFragment"
+        android:label="fragment_library_playlist"
+        tools:layout="@layout/fragment_library_playlist">
+        <action
+            android:id="@+id/action_libraryPlaylistFragment_to_libraryPlaylistBottomSheetFragment"
+            app:destination="@id/libraryPlaylistBottomSheetFragment" />
+        <action
+            android:id="@+id/action_libraryPlaylistFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_libraryPlaylistFragment_to_libraryFragment"
+            app:destination="@id/libraryFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/libraryPlaylistBottomSheetFragment"
+        android:name="com.example.feelvibes.library.playlist.PlaylistBottomSheet"
+        android:label="LibraryPlaylistBottomSheetFragment">
+        <action
+            android:id="@+id/action_libraryPlaylistBottomSheetFragment_to_playlistBottomSheetPlaylists"
+            app:destination="@id/playlistBottomSheetPlaylists" />
+    </dialog>
+    <dialog
+        android:id="@+id/playlistBottomSheetPlaylists"
+        android:name="com.example.feelvibes.library.playlist.PlaylistBottomSheetSearch"
+        android:label="fragment_playlist_bottom_sheet_playlists"
+        tools:layout="@layout/fragment_playlist_bottom_sheet_search"/>
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.example.feelvibes.player.PlayerFragment"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player">
+        <action
+            android:id="@+id/action_playerFragment_to_libraryPlaylistFragment"
+            app:destination="@id/libraryPlaylistFragment" />
+        <action
+            android:id="@+id/action_playerFragment_to_playerPlaylistBottomSheet"
+            app:destination="@id/playerPlaylistBottomSheet" />
+        <action
+            android:id="@+id/action_playerFragment_to_playerMoreBottomSheet"
+            app:destination="@id/playerMoreBottomSheet" />
+    </fragment>
+    <dialog
+        android:id="@+id/playerPlaylistBottomSheet"
+        android:name="com.example.feelvibes.player.bottom.sheets.PlayerPlaylistBottomSheet"
+        android:label="fragment_player_playlist_bottom_sheet"
+        tools:layout="@layout/fragment_player_playlist_bottom_sheet"/>
+    <action android:id="@+id/action_global_playerFragment" app:destination="@id/playerFragment" />
+    <dialog
+        android:id="@+id/playerMoreBottomSheet"
+        android:name="com.example.feelvibes.player.bottom.sheets.PlayerMoreBottomSheet"
+        android:label="fragment_player_more_bottom_sheet"
+        tools:layout="@layout/fragment_player_more_bottom_sheet" />
 </navigation>
