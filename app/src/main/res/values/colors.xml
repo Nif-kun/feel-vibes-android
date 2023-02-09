@@ -12,4 +12,7 @@
     <color name="neutral">#8F9193</color>
     <color name="warn_red">#FF4444</color>
     <color name="favorite_red">#FF5B5B</color>
+
+    <color name="background_color_night_mode">#303030</color>
+    <color name="text_color_night_mode">#BFBFBF</color>
 </resources>

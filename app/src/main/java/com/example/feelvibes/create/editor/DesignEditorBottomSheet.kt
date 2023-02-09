@@ -3,23 +3,19 @@ package com.example.feelvibes.create.editor
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.databinding.FragmentDesignEditorBottomSheetBinding
 import com.example.feelvibes.model.DesignModel
-import com.example.feelvibes.model.MusicModel
 import com.example.feelvibes.utils.InternalStorageHandler
 import com.example.feelvibes.view_model.CreateViewModel
 import com.example.feelvibes.viewbinds.FragmentBottomSheetDialogBind
 import pl.droidsonroids.gif.GifDrawable
-import java.io.File
 
 class DesignEditorBottomSheet : FragmentBottomSheetDialogBind<FragmentDesignEditorBottomSheetBinding>(
     FragmentDesignEditorBottomSheetBinding::inflate

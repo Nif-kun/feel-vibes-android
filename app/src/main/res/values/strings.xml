@@ -86,6 +86,12 @@
     <string name="timeStampPlaceHolder">00:00</string>
     <string name="design">Design</string>
     <string name="longTextTest">Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here.</string>
+    <string name="create_lyrics">Create lyrics</string>
+    <string name="create_chords">Create chords</string>
+    <string name="clear">Clear</string>
+
+
+    <!-- Notification channels -->
 
 
 </resources>

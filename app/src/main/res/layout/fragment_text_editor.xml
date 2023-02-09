@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".create.editor.TextEditorFragment"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/textEdit"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:background="@null"
+        android:textCursorDrawable="@null"
+        android:inputType="textMultiLine"
+        android:isScrollContainer="true"
+        android:scrollHorizontally="false"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="insideInset"
+        android:gravity="top"
+        android:hint="Start writting here!"
+        tools:ignore="Autofill" />
+
+    <EditText
+        android:id="@+id/titleInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/rounded_edittext"
+        android:drawableStart="@drawable/ic_drive_file_rename_outline_24"
+        android:drawableTint="@color/text_color_night_mode"
+        android:drawablePadding="12dp"
+        android:ems="10"
+        android:hint="@string/untitled"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:minHeight="36dp"
+        android:paddingHorizontal="12dp"
+        android:textColorHint="#757575"
+        android:textColor="@color/text_color_night_mode"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancelBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/cancel"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/save"
+            style="?android:attr/buttonBarButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

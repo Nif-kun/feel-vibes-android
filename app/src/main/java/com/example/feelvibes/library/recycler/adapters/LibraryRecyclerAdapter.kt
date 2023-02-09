@@ -2,7 +2,6 @@ package com.example.feelvibes.library.recycler.adapters
 
 import android.app.Activity
 import android.graphics.Bitmap
-import android.graphics.ColorFilter
 import android.view.View
 import android.widget.ImageView
 import com.example.feelvibes.R

@@ -42,4 +42,8 @@ class PermissionHandler {
 
     class ManageDocuments(activity: Activity, request: Boolean = false) :
         Permission(activity, Manifest.permission.MANAGE_DOCUMENTS, request, 5)
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    class Notification(activity: Activity, request: Boolean = false) :
+        Permission(activity, Manifest.permission.POST_NOTIFICATIONS, request, 6)
 }

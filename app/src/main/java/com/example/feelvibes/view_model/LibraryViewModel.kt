@@ -6,7 +6,6 @@ import com.example.feelvibes.model.MusicModel
 import com.example.feelvibes.model.PlaylistCollectionModel
 import com.example.feelvibes.model.PlaylistModel
 import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
-import java.util.Dictionary
 
 class LibraryViewModel : ViewModel() {
 

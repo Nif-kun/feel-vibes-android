@@ -1,17 +1,16 @@
 package com.example.feelvibes.library.playlist
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentLibraryPlaylistBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.recycler.adapters.PlaylistRecyclerAdapter
 import com.example.feelvibes.model.PlaylistModel
 import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
+import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 
 

@@ -2,8 +2,6 @@ package com.example.feelvibes.player.recycler
 
 import android.app.Activity
 import android.view.View
-import com.example.feelvibes.MainActivity
-import com.example.feelvibes.R
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.model.ProjectModel
 import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter

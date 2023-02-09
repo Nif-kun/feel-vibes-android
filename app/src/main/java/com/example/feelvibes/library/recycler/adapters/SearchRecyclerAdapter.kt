@@ -4,7 +4,6 @@ import android.app.Activity
 import android.view.View
 import com.example.feelvibes.R
 import com.example.feelvibes.interfaces.RecyclerItemClick
-import com.example.feelvibes.model.MusicModel
 import com.example.feelvibes.model.PlaylistModel
 import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 

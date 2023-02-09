@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentAlbumBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.LibraryCategoryFragment
 import com.example.feelvibes.library.LibraryCategoryHandler
 import com.example.feelvibes.library.recycler.adapters.LibraryRecyclerAdapter
+import com.example.feelvibes.view_model.LibraryViewModel
 
 class AlbumCategory :
     LibraryCategoryFragment<FragmentAlbumBinding>(FragmentAlbumBinding::inflate),

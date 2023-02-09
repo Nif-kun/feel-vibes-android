@@ -1,10 +1,12 @@
 package com.example.feelvibes.library
 
+import android.os.Build
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.databinding.FragmentLibraryBinding
+import com.example.feelvibes.utils.PermissionHandler
+import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -24,6 +26,11 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
+        // Check and request permission for media storage or storage in general if lower version.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            PermissionHandler.ReadMediaAudio(requireActivity(), true).check()
+        else
+            PermissionHandler.ReadExternalStorage(requireActivity(), true).check()
     }
 
     override fun onReady(){

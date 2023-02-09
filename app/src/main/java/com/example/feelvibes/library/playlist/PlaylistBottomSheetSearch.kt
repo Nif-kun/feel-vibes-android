@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentPlaylistBottomSheetSearchBinding

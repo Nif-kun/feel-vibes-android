@@ -31,7 +31,6 @@ class DesignsCategory :
     }
 
     private fun setupRecyclerAdapter() {
-        createViewModel.designCollection.populateFromStored(mainActivity)
         binding.designsRecView.adapter = CreateRecyclerAdapter(
             requireActivity(),
             recyclerItemClick = this,

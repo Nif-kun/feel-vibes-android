@@ -1,20 +1,18 @@
 package com.example.feelvibes.player
 
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
-import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentPlayerBinding
 import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.model.MusicPropModel
-import com.example.feelvibes.utils.InternalStorageHandler
+import com.example.feelvibes.model.TextModel
+import com.example.feelvibes.utils.PermissionHandler
 import com.example.feelvibes.utils.ShortLib
 import com.example.feelvibes.view_model.CreateViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
@@ -29,17 +27,35 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
     //  > Select and show design/lyrics/chords
     //  > Have it show in notification
 
+    companion object {
+        const val missingLyrics = "This music does not have any lyrics set!"
+        const val missingChords = "This music does not have any chords set!"
+    }
+
     private lateinit var createViewModel: CreateViewModel
     private lateinit var libraryViewModel: LibraryViewModel
     private lateinit var playerViewModel: PlayerViewModel
     private var awake = false // Just follow the usage, tl;dr it is meant to stop updating views when unfocused.
 
+    private var musicPropModel: MusicPropModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
         createViewModel = ViewModelProvider(requireActivity())[CreateViewModel::class.java]
         playerViewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
+        if (createViewModel.designCollection.list.size < 1) {
+            createViewModel.designCollection.populateFromStored(requireActivity())
+        }
+        if (createViewModel.lyricsCollection.list.size < 1) {
+            createViewModel.lyricsCollection.populateFromStored(requireActivity())
+        }
+        if (createViewModel.chordsCollection.list.size < 1) {
+            createViewModel.chordsCollection.populateFromStored(requireActivity())
+        }
+        // Asks for notification permission.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            PermissionHandler.Notification(requireActivity(), true).check()
     }
 
     override fun onReady() {
@@ -56,6 +72,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
             libraryViewModel.currentMusic = libraryViewModel.selectedMusic
         if (!isCurrentPlaylist)
             libraryViewModel.currentPlaylist = libraryViewModel.selectedPlaylist
+
         autoPlay(isCurrentMusic, isCurrentPlaylist)
 
         updateViews()
@@ -165,7 +182,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
         }
     }
 
-    private fun updateViews() {
+    fun updateViews() {
         if (mainActivity.musicPlayer?.currentMusic != null) {
             libraryViewModel.currentMusic = mainActivity.musicPlayer?.currentMusic
         }
@@ -192,28 +209,64 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
     }
 
     private fun setupMusicProp() {
-        if (mainActivity.musicPlayer?.currentMusic != null) {
-            val musicPropModel = MusicPropModel(mainActivity.musicPlayer?.currentMusic!!.path)
-            musicPropModel.loadFromStored(requireActivity())
-            if (createViewModel.designCollection.list.size < 1) {
-                createViewModel.designCollection.populateFromStored(requireActivity())
-            }
+        // Defaulter to ensure that the ones without value return to default
+        // TODO: This doesn't work tbh, idk anymore fuck it.
 
-            var designModel : DesignModel? = null
-            for (model in createViewModel.designCollection.list) {
-                if (musicPropModel.matchDesign(model as DesignModel)) {
-                    designModel = model
-                    break
-                }
+        // Value Setter
+        if (mainActivity.musicPlayer?.currentMusic != null) {
+            musicPropModel = MusicPropModel(mainActivity.musicPlayer?.currentMusic!!.path)
+            if (musicPropModel?.loadFromStored(requireActivity()) == true) {
+                setupDesignModel()
+                setupChordsModel()
+                setupLyricsModel()
+            } else { // Defaults
+                if (playerViewModel.textOnChords)
+                    binding.textView.text = missingChords
+                else
+                    binding.textView.text = missingLyrics
+                binding.designInclude.backgroundImageView.setImageDrawable(null)
+                binding.designInclude.foregroundImageView.setImageResource(R.drawable.ic_app_icon)
             }
-            designModel?.let {
-                ShortLib.viewImageSetter(requireActivity(), binding.designInclude.backgroundImageView, designModel.backgroundImagePath)
-                ShortLib.viewImageSetter(requireActivity(), binding.designInclude.foregroundImageView, designModel.foregroundImagePath)
+        }
+    }
+
+    private fun setupDesignModel() {
+        val model: DesignModel? = createViewModel.designCollection.find(musicPropModel)
+        if (model != null) {
+            ShortLib.viewImageSetter(requireActivity(), binding.designInclude.backgroundImageView, model.backgroundImagePath)
+            ShortLib.viewImageSetter(requireActivity(), binding.designInclude.foregroundImageView, model.foregroundImagePath)
+        } else {
+            binding.designInclude.backgroundImageView.setImageDrawable(null)
+            binding.designInclude.foregroundImageView.setImageResource(R.drawable.ic_app_icon)
+        }
+    }
+
+    private fun setupLyricsModel() {
+        if (!playerViewModel.textOnChords) {
+            binding.textView.text = missingLyrics // Default setter
+            val model: TextModel? = createViewModel.lyricsCollection.findLyrics(musicPropModel)
+            if (model != null) {
+                binding.textView.text = model.text
+            } else {
+                binding.textView.text = missingLyrics
+            }
+        }
+    }
+
+    private fun setupChordsModel() {
+        if (playerViewModel.textOnChords) {
+            binding.textView.text = missingChords // Default setter
+            val model: TextModel? = createViewModel.chordsCollection.findChords(musicPropModel)
+            if (model != null) {
+                binding.textView.text = model.text
+            } else {
+                binding.textView.text = missingChords
             }
         }
     }
 
     private fun setupDesign(forcePause: Boolean = false) {
+        // Do a default for none ones here
         if (binding.designInclude.backgroundImageView.drawable is GifDrawable) {
             if (mainActivity.musicPlayer?.isPlaying() == true && !forcePause) {
                 (binding.designInclude.backgroundImageView.drawable as GifDrawable).start()
@@ -236,17 +289,17 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
             } else if (binding.designInclude.designLayout.visibility == View.VISIBLE) {
                 binding.designInclude.designLayout.visibility = View.GONE
                 binding.textScrollLayout.visibility = View.VISIBLE
-                // change/get value here
-                binding.textView.text = "This is on lyrics"
                 playerViewModel.textOnChords = false
+                musicPropModel?.loadFromStored(requireActivity()) // This is to ensure that new data is loaded when switching.
+                setupLyricsModel()
             } else if (binding.textScrollLayout.visibility == View.VISIBLE) {
                 if (playerViewModel.textOnChords) {
                     binding.textScrollLayout.visibility = View.GONE
                     binding.coverArtView.visibility = View.VISIBLE
                 } else {
                     playerViewModel.textOnChords = true
-                    // change/get value here
-                    binding.textView.text = "This is on chords"
+                    musicPropModel?.loadFromStored(requireActivity()) // This is to ensure that new data is loaded when switching.
+                    setupChordsModel()
                 }
             }
         }
@@ -273,6 +326,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
                 libraryViewModel.currentMusic = mainActivity.musicPlayer!!.currentMusic
                 setupLabels()
                 setupCoverArt()
+                setupMusicProp()
             } else
                 Toast.makeText(mainActivity, "This is the first!", Toast.LENGTH_SHORT).show()
         }
@@ -284,6 +338,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
                 libraryViewModel.currentMusic = mainActivity.musicPlayer!!.currentMusic
                 setupLabels()
                 setupCoverArt()
+                setupMusicProp()
             } else
                 Toast.makeText(mainActivity, "This is the last!", Toast.LENGTH_SHORT).show()
         }
@@ -334,21 +389,26 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
         if (mainActivity.musicPlayer != null && mainActivity.musicPlayer!!.isPlaying()) {
             binding.playBtn.setImageResource(R.drawable.ic_pause_24)
         }
+
+         // Autoplay occurs first and sets the value for the currentMusic. This is for when view is being made.
+        musicPropModel = MusicPropModel(mainActivity.musicPlayer?.currentMusic!!.path)
+        musicPropModel?.loadFromStored(requireActivity())
     }
 
     private fun onShowPlaylistEvent() {
         binding.showPlaylistBtn.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_playerPlaylistBottomSheet)
+            playerViewModel.playerFragment = this
         }
-        // show bottomFragment for playlist
     }
 
     private fun onMoreEvent() {
         binding.moreBtn.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_playerMoreBottomSheet)
+            // check here
             playerViewModel.backgroundView = binding.designInclude.backgroundImageView
             playerViewModel.foregroundView = binding.designInclude.foregroundImageView
-            playerViewModel.selectedDesignModel = null
+            playerViewModel.textView = binding.textView
         }
     }
 

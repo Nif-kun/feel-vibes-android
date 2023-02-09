@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import android.view.View
 import android.widget.ImageView
 import java.io.FileDescriptor
 import java.io.IOException

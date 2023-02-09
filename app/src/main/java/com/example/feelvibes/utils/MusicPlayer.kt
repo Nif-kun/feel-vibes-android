@@ -1,22 +1,29 @@
 package com.example.feelvibes.utils
 
 import android.content.Context
-import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import com.example.feelvibes.model.MusicModel
 import com.example.feelvibes.model.PlaylistModel
+import com.example.feelvibes.player.notification.PlayerNotification
 
 class MusicPlayer(
     var context: Context
 ) {
     var player : MediaPlayer? = null
+    var notification = PlayerNotification(
+        context,
+        101,
+        "FV_MP_APP",
+        "FeelVibeApp",
+        "FeelVibe notification channel."
+    )
 
+    private var randIndexGen : ShortLib.RandomIndexGenerator? = null
     var currentPlaylist: PlaylistModel? = null
-    private var currentIndex = 0
+    var currentIndex = 0
     var currentMusic: MusicModel? = null
-    var randIndexGen : ShortLib.RandomIndexGenerator? = null
     var shuffling = false
 
     private val onPreparedListeners = mutableListOf<() -> Unit>()
@@ -28,6 +35,10 @@ class MusicPlayer(
 
     fun onCompletionListener(listener: () -> Unit) {
         onCompletionListeners.add(listener)
+    }
+
+    fun buildNotification() {
+        notification.build()
     }
 
     fun play() {
@@ -123,6 +134,7 @@ class MusicPlayer(
                     player?.start()
                     Log.d("MusicPlayer", "Currently playing ${currentMusic?.title}...")
                 }
+                currentMusic?.let { notification.update(it) }
                 return true
             }
         }
@@ -151,4 +163,5 @@ class MusicPlayer(
             listener()
         }
     }
+
 }

@@ -30,29 +30,62 @@ class CreateBottomSheet : FragmentBottomSheetDialogBind<FragmentCreateBottomShee
     private fun onEditEvent() {
         binding.libraryBottomSheetEditBtn.setOnClickListener {
             editing = true
-            findNavController().navigate(R.id.action_createBottomSheet_to_designEditorFragment)
+            when(createViewModel.currentCreateTab) {
+                CreateFragment.DESIGNS -> findNavController().navigate(R.id.action_createBottomSheet_to_designEditorFragment)
+                CreateFragment.LYRICS -> findNavController().navigate(R.id.action_createBottomSheet_to_textEditorFragment)
+                CreateFragment.CHORDS -> findNavController().navigate(R.id.action_createBottomSheet_to_textEditorFragment)
+            }
         }
     }
 
     private fun onRemoveEvent() {
         binding.libraryBottomSheetRemoveBtn.setOnClickListener {
-            if (createViewModel.selectedDesignModel != null) {
-                val removed = createViewModel.designCollection.remove(createViewModel.selectedDesignModel!!)
-                Log.d("Item Removed", removed.toString())
-                if (createViewModel.selectedDesignModel!!.backgroundImagePath.isNotEmpty())
-                    InternalStorageHandler.deleteImage(
-                        mainActivity,
-                        createViewModel.selectedDesignModel!!.id+"_bg",
-                        arrayListOf("gif", "jpg", "jpeg", "png"))
-                if (createViewModel.selectedDesignModel!!.foregroundImagePath.isNotEmpty())
-                    InternalStorageHandler.deleteImage(
-                        mainActivity,
-                        createViewModel.selectedDesignModel!!.id+"_fg",
-                        arrayListOf("gif", "jpg", "jpeg", "png"))
-                createViewModel.selectedDesignModel = null
+            when (createViewModel.currentCreateTab) {
+                CreateFragment.DESIGNS -> {
+                    if (createViewModel.selectedDesignModel != null) {
+                        val removed = createViewModel.designCollection.remove(createViewModel.selectedDesignModel!!)
+                        Log.d("CreateFragment", "${createViewModel.selectedDesignModel!!.name} has been removed!")
+                        if (removed) {
+                            if (createViewModel.selectedDesignModel!!.backgroundImagePath.isNotEmpty())
+                                InternalStorageHandler.deleteImage(
+                                    mainActivity,
+                                    createViewModel.selectedDesignModel!!.id+"_bg",
+                                    arrayListOf("gif", "jpg", "jpeg", "png"))
+                            if (createViewModel.selectedDesignModel!!.foregroundImagePath.isNotEmpty())
+                                InternalStorageHandler.deleteImage(
+                                    mainActivity,
+                                    createViewModel.selectedDesignModel!!.id+"_fg",
+                                    arrayListOf("gif", "jpg", "jpeg", "png"))
+                            createViewModel.selectedDesignModel = null
+                            createViewModel.designCollection.saveToStored(mainActivity)
+                            createViewModel.selectedAdapter?.notifyItemRemoved(createViewModel.selectedItemPos)
+                        }
+                    }
+                }
+                CreateFragment.LYRICS -> {
+                    if (createViewModel.selectedTextModel != null) {
+                        val removed = createViewModel.lyricsCollection.remove(createViewModel.selectedTextModel!!)
+                        Log.d("CreateFragment", "${createViewModel.selectedTextModel!!.name} has been removed!")
+                        if (removed) {
+                            createViewModel.selectedTextModel = null
+                            createViewModel.lyricsCollection.saveToStored(mainActivity)
+                            createViewModel.selectedAdapter?.notifyItemRemoved(createViewModel.selectedItemPos)
+                        }
+                    }
+
+                }
+                CreateFragment.CHORDS -> {
+                    if (createViewModel.selectedTextModel != null) {
+                        val removed = createViewModel.chordsCollection.remove(createViewModel.selectedTextModel!!)
+                        Log.d("CreateFragment", "${createViewModel.selectedTextModel!!.name} has been removed!")
+                        if (removed) {
+                            createViewModel.selectedTextModel = null
+                            createViewModel.chordsCollection.saveToStored(mainActivity)
+                            createViewModel.selectedAdapter?.notifyItemRemoved(createViewModel.selectedItemPos)
+                        }
+                    }
+                }
             }
-            createViewModel.designCollection.saveToStored(mainActivity)
-            createViewModel.selectedAdapter?.notifyItemRemoved(createViewModel.selectedItemPos)
             dismiss()
         }
     }
@@ -62,6 +95,7 @@ class CreateBottomSheet : FragmentBottomSheetDialogBind<FragmentCreateBottomShee
 
         if (!editing) {
             createViewModel.selectedDesignModel = null
+            createViewModel.selectedTextModel = null
         }
         createViewModel.selectedAdapter = null
         createViewModel.selectedItemPos = -1

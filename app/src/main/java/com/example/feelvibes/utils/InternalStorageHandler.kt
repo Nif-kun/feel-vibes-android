@@ -3,15 +3,15 @@ package com.example.feelvibes.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
 import android.net.Uri
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import pl.droidsonroids.gif.GifDrawable
-import java.io.*
+import java.io.BufferedInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
 
 
 class InternalStorageHandler {

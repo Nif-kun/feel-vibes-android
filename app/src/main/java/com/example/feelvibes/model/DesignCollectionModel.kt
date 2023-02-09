@@ -55,4 +55,15 @@ class DesignCollectionModel(
         return list.remove(model)
     }
 
+    fun find(musicPropModel: MusicPropModel?): DesignModel? {
+        if (musicPropModel == null)
+            return null
+        for (model in list) {
+            if (musicPropModel.matchDesign(model as DesignModel)) {
+                return model
+            }
+        }
+        return null
+    }
+
 }

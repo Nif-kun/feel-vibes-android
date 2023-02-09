@@ -2,8 +2,6 @@ package com.example.feelvibes
 
 import android.app.AlertDialog
 import android.content.*
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
@@ -54,17 +52,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); // force dark mode.
+        supportActionBar?.hide()
         binding = ActivityMainBinding.inflate(layoutInflater)
         libraryViewModel = ViewModelProvider(this)[LibraryViewModel::class.java]
         val view = binding.root
         setContentView(view)
-        // Check and request permission
-        if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
-            requestPermission(PermissionHandler.ReadMediaAudio(this, true))
-        } else {
-            requestPermission(PermissionHandler.ReadExternalStorage(this, true))
-        }
         createMainViewFunctions()
+        musicPlayer?.notification?.build()
+    }
+
+    override fun onActivityReenter(resultCode: Int, data: Intent?) {
+        super.onActivityReenter(resultCode, data)
     }
 
     override fun onStart() {
@@ -74,6 +72,8 @@ class MainActivity : AppCompatActivity() {
         }
         awake = true
         setupStickyPlayer()
+        if (musicPlayer?.notification?.visible() == true)
+            musicPlayer?.notification?.dismiss()
     }
 
     override fun onStop() {
@@ -81,14 +81,18 @@ class MainActivity : AppCompatActivity() {
         unbindService(connection)
         // backgroundSoundServiceBounded = false
         awake = false
+        if (musicPlayer?.isPlaying() == true)
+            musicPlayer?.notification?.show()
     }
 
     private fun requestPermission(permission : PermissionHandler.Permission){
         if (!permission.hasPermission) {
             AlertDialog.Builder(permission.activity)
                 .setTitle("Requesting permission")
-                .setMessage("FeelVibe requires storage access to collect music locally. " +
-                        "You may also grant the required permissions inside application or system Settings.")
+                .setMessage("FeelVibe requires the following permissions:\n" +
+                        "• Storage access to collect music locally, and\n" +
+                        "• Notifications to display currently playing music.\n\n" +
+                        "Note: you may also grant the required permissions inside application or system Settings.")
                 .setCancelable(true)
                 .setPositiveButton("Accept") { _: DialogInterface, _: Int ->
                     permission.check()
@@ -119,7 +123,6 @@ class MainActivity : AppCompatActivity() {
             navController?.navigate(R.id.settingsFragment)
         }
     }
-
 
     fun padMainView() {
         binding.mainNavHost.setPadding(25, 0, 25, 0)

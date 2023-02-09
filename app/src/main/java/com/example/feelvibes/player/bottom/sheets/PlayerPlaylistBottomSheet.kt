@@ -1,24 +1,15 @@
 package com.example.feelvibes.player.bottom.sheets
 
-import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentPlayerPlaylistBottomSheetBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
-import com.example.feelvibes.library.recycler.adapters.PlaylistRecyclerAdapter
-import com.example.feelvibes.library.recycler.adapters.SearchRecyclerAdapter
 import com.example.feelvibes.model.MusicModel
-import com.example.feelvibes.model.PlaylistModel
 import com.example.feelvibes.player.recycler.PlayerPlaylistRecyclerAdapter
 import com.example.feelvibes.view_model.LibraryViewModel
-import com.example.feelvibes.viewbinds.FragmentBind
+import com.example.feelvibes.view_model.PlayerViewModel
 import com.example.feelvibes.viewbinds.FragmentBottomSheetDialogBind
 
 
@@ -26,12 +17,14 @@ class PlayerPlaylistBottomSheet : FragmentBottomSheetDialogBind<FragmentPlayerPl
     FragmentPlayerPlaylistBottomSheetBinding::inflate), RecyclerItemClick {
 
     private lateinit var libraryViewModel : LibraryViewModel
+    private lateinit var playerViewModel: PlayerViewModel
     private var musicList = arrayListOf<MusicModel>()
-    private var awake = false
+    private var awake = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
+        playerViewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
     }
 
     override fun onReady() {
@@ -39,13 +32,13 @@ class PlayerPlaylistBottomSheet : FragmentBottomSheetDialogBind<FragmentPlayerPl
         setupRecyclerAdapter()
         onSearchEvent()
         setupLabel()
+        onCompleteEvent()
     }
 
     private fun setupLabel() {
         mainActivity.musicPlayer?.let { model ->
             model.currentPlaylist?.let { binding.title.text = it.name }
         }
-
     }
 
     private fun setupRecyclerAdapter() {
@@ -71,21 +64,32 @@ class PlayerPlaylistBottomSheet : FragmentBottomSheetDialogBind<FragmentPlayerPl
                 } else
                     false
             } as ArrayList<MusicModel>
-
-            // TODO
-            //  This is such a dirty way of doing this but I couldn't care less when I'm deprived of life at this point.
             updateAdapter()
         }
     }
 
+    private fun onCompleteEvent() {
+        if (awake && mainActivity.musicPlayer != null) {
+            mainActivity.musicPlayer!!.onCompletionListener {
+                // Almost everytime a NullException will occur. It works. I just don't know why I'm getting it.
+                try {
+                    updateAdapter()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+            }
+        }
+    }
+
     override fun onItemClick(pos: Int) {
-        // This looks heavily convoluted and I tell you... it is, lmao.
-        // It basically takes the index value of musicList[Pos] inside currentPlaylist.
-        // It then uses the index to set the current music of musicPlayer.
-        // pos is quite inconsistent at times so I'd rather avoid.
-        mainActivity.musicPlayer?.currentPlaylist?.indexOf(musicList[pos])
-            ?.let { index -> mainActivity.musicPlayer?.setMusic(index) }
-        updateAdapter()
+        val safeIndex: Int? = mainActivity.musicPlayer?.currentPlaylist?.indexOf(musicList[pos])
+        if (safeIndex != null) {
+            mainActivity.musicPlayer?.setMusic(safeIndex)
+            mainActivity.musicPlayer?.currentIndex = safeIndex
+            playerViewModel.playerFragment?.updateViews()
+            updateAdapter()
+        }
     }
 
     override fun onResume() {
@@ -111,6 +115,6 @@ class PlayerPlaylistBottomSheet : FragmentBottomSheetDialogBind<FragmentPlayerPl
     override fun onDestroyView() {
         super.onDestroyView()
         awake = false
+        playerViewModel.playerFragment = null
     }
-
 }

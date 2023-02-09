@@ -2,7 +2,6 @@ package com.example.feelvibes.model
 
 import android.app.Activity
 import android.os.Parcelable
-import android.util.Log
 import com.example.feelvibes.utils.GsonHandler
 import com.google.gson.reflect.TypeToken
 import kotlinx.parcelize.Parcelize
@@ -14,9 +13,9 @@ class MusicPropModel(
     private var designId: String = "",
     var designName: String = "",
     private var lyricsId: String = "",
-    private var lyricsName: String = "",
+    var lyricsName: String = "",
     private var chordsId: String = "",
-    private var chordsName: String = ""
+    var chordsName: String = ""
 ) : Parcelable {
 
     private fun getPrefId(): String {
@@ -35,12 +34,31 @@ class MusicPropModel(
         return designId.equals(designModel.id, true) && designName.equals(designModel.name, true)
     }
 
-    fun matchLyrics(id: String, name: String): Boolean {
-        return lyricsId.equals(id, true) && lyricsName.equals(name, true)
+    fun matchLyrics(textModel: TextModel): Boolean {
+        return matchProject(textModel, lyricsName, lyricsId)
     }
 
-    fun matchChords(id: String, name: String): Boolean {
-        return chordsId.equals(id, true) && chordsName.equals(name, true)
+    fun matchChords(textModel: TextModel): Boolean {
+        return matchProject(textModel, chordsName, chordsId)
+    }
+
+    private fun matchProject(projectModel: ProjectModel, name: String, id:String): Boolean {
+        return name.equals(projectModel.name, true) && id.equals(projectModel.id, true)
+    }
+
+    fun changeDesign(designModel: DesignModel) {
+        designId = designModel.id
+        designName = designModel.name
+    }
+
+    fun changeLyrics(textModel: TextModel) {
+        lyricsId = textModel.id
+        lyricsName = textModel.name
+    }
+
+    fun changeChords(textModel: TextModel) {
+        chordsId = textModel.id
+        chordsName = textModel.name
     }
 
     fun saveToStored(activity: Activity) {

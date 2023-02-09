@@ -11,17 +11,6 @@ class DesignModel(
     var foregroundImagePath:String = ""
 ) : ProjectModel(id, name) {
 
-    override fun getData(): MutableMap<String, MutableMap<String, String>> {
-        return mutableMapOf(
-            "id" to mutableMapOf(
-                "name" to name,
-                "backgroundColor" to backgroundColor,
-                "backgroundImagePath" to backgroundImagePath,
-                "foregroundImagePath" to foregroundImagePath
-            )
-        )
-    }
-
     fun getCapsuleModel(): DesignCapsuleModel {
         return DesignCapsuleModel(
             id,

@@ -1,6 +1,5 @@
 package com.example.feelvibes.create.editor
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -106,7 +105,8 @@ class DesignEditorFragment : FragmentBind<FragmentDesignEditorBinding>(FragmentD
         mainActivity.showToolBar()
         mainActivity.showMainMenu()
         mainActivity.padMainView()
-        mainActivity.showStickyPlayer()
+        if (mainActivity.musicPlayer?.isPlaying() == true)
+            mainActivity.showStickyPlayer()
 
         // Cleanup
         createViewModel.selectedDesignModel = null

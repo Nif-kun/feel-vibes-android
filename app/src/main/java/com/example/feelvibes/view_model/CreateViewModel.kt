@@ -2,18 +2,19 @@ package com.example.feelvibes.view_model
 
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.feelvibes.create.CreateFragment
-import com.example.feelvibes.library.LibraryFragment
 import com.example.feelvibes.model.DesignCollectionModel
 import com.example.feelvibes.model.DesignModel
+import com.example.feelvibes.model.TextCollectionModel
+import com.example.feelvibes.model.TextModel
 import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 import pl.droidsonroids.gif.GifDrawable
-import java.io.File
 
 class CreateViewModel: ViewModel() {
 
     val designCollection = DesignCollectionModel("DESIGN_COLLECTION")
+    val lyricsCollection = TextCollectionModel("LYRICS_COLLECTION")
+    val chordsCollection = TextCollectionModel("CHORDS_COLLECTION")
     // lyricsCollection
     // chordsCollection
 
@@ -23,8 +24,7 @@ class CreateViewModel: ViewModel() {
     var selectedItemPos: Int = -1
 
     var selectedDesignModel: DesignModel? = null
-    // selectedLyric
-    // selectedChord
+    var selectedTextModel: TextModel? = null
 
     // On Editor
     var selectedBackgroundBitmap: Bitmap? = null

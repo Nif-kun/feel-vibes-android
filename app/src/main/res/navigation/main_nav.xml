@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_createFragment_to_designEditorFragment"
             app:destination="@id/designEditorFragment" />
+        <action
+            android:id="@+id/action_createFragment_to_textEditorFragment"
+            app:destination="@id/textEditorFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -94,6 +97,9 @@
         <action
             android:id="@+id/action_createBottomSheet_to_designEditorFragment"
             app:destination="@id/designEditorFragment" />
+        <action
+            android:id="@+id/action_createBottomSheet_to_textEditorFragment"
+            app:destination="@id/textEditorFragment" />
     </dialog>
     <fragment
         android:id="@+id/libraryPlaylistFragment"
@@ -149,4 +155,9 @@
         android:name="com.example.feelvibes.player.bottom.sheets.PlayerMoreBottomSheet"
         android:label="fragment_player_more_bottom_sheet"
         tools:layout="@layout/fragment_player_more_bottom_sheet" />
+    <fragment
+        android:id="@+id/textEditorFragment"
+        android:name="com.example.feelvibes.create.editor.TextEditorFragment"
+        android:label="fragment_text_editor"
+        tools:layout="@layout/fragment_text_editor" />
 </navigation>

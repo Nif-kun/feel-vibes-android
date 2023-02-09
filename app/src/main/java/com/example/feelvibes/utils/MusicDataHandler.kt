@@ -5,7 +5,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import com.example.feelvibes.model.MusicModel
 import com.example.feelvibes.model.PlaylistCapsuleModel
 import com.example.feelvibes.model.PlaylistModel
