@@ -1,6 +1,7 @@
 package com.example.feelvibes.library
 
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.marginTop
@@ -15,6 +16,7 @@ abstract class LibraryCategoryFragment<VB : ViewBinding>(
     bindingInflater: (inflater: LayoutInflater) -> VB,
 ) : FragmentBind<VB>(bindingInflater) {
     var categoryViewModel : CategoryViewModelHandler.CategoryViewModel? = null
+    var searchBarTextWatcher: TextWatcher? = null
     var recyclerView : RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,4 +69,8 @@ abstract class LibraryCategoryFragment<VB : ViewBinding>(
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        mainActivity.getSearchBar().removeTextChangedListener(searchBarTextWatcher)
+    }
 }

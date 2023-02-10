@@ -9,7 +9,6 @@ import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentPlaylistBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.LibraryCategoryFragment
-import com.example.feelvibes.library.LibraryCategoryHandler
 import com.example.feelvibes.library.LibraryCreatePlaylistDialog
 import com.example.feelvibes.library.recycler.adapters.LibraryRecyclerAdapter
 import com.example.feelvibes.model.PlaylistModel
@@ -75,18 +74,24 @@ class PlaylistCategory :
     }
 
     private fun onSearchEvent() {
-        mainActivity.searchBar?.doOnTextChanged { text, start, before, count ->
-            if (text?.isNotEmpty() == true) {
-                val playlistCollection = libraryViewModel.customCollection.listExcept(arrayListOf(
-                    resources.getString(R.string.create_playlist))
-                )
-                val newList = playlistCollection.filter {
-                    it.name.contains(text, true)
-                } as ArrayList<PlaylistModel>
-                updateAdapter(newList)
-            } else {
-                updateAdapter(libraryViewModel.customCollection.list)
-            }
+        if (mainActivity.getSearchBar().text.isNotEmpty())
+            search(mainActivity.getSearchBar().text)
+        searchBarTextWatcher = mainActivity.getSearchBar().doOnTextChanged { text, _, _, _ ->
+            search(text)
+        }
+    }
+
+    private fun search(text: CharSequence?) {
+        if (text?.isNotEmpty() == true) {
+            val playlistCollection = libraryViewModel.customCollection.listExcept(arrayListOf(
+                resources.getString(R.string.create_playlist))
+            )
+            val newList = playlistCollection.filter {
+                it.name.contains(text, true)
+            } as ArrayList<PlaylistModel>
+            updateAdapter(newList)
+        } else {
+            updateAdapter(libraryViewModel.customCollection.list)
         }
     }
 

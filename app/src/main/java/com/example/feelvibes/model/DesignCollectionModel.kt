@@ -2,7 +2,6 @@ package com.example.feelvibes.model
 
 import android.app.Activity
 import android.os.Parcelable
-import android.util.Log
 import com.example.feelvibes.utils.GsonHandler
 import com.google.gson.reflect.TypeToken
 import kotlinx.parcelize.Parcelize
@@ -18,7 +17,6 @@ class DesignCollectionModel(
     fun populateFromStored(activity: Activity) {
         val designCapsuleModelListType : Type = object : TypeToken<ArrayList<DesignCapsuleModel>>() {}.type
         val designCapsuleModels = GsonHandler.Load(activity, id, "").data<ArrayList<DesignCapsuleModel>>(designCapsuleModelListType)
-        Log.d("DesignModels", designCapsuleModels.toString())
         if (designCapsuleModels != null) {
             val newList = arrayListOf<DesignModel>()
             for (model in designCapsuleModels) {

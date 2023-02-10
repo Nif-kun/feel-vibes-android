@@ -26,8 +26,10 @@ class PlayerNotification(
 ) {
 
     private var musicModel: MusicModel? = null
+    private var onGoing: Boolean = false
 
-    fun update(newModel: MusicModel) {
+    fun update(newModel: MusicModel, onGoing: Boolean) {
+        this.onGoing = onGoing
         musicModel = newModel
         show(true)
     }
@@ -43,12 +45,17 @@ class PlayerNotification(
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        var title = "Title"
-        var artist = "Artist"
+        var title = "FeelVibe "
+        var content = "Content"
         var thumbnail: Bitmap? = null
         musicModel?.let { model ->
-            title = model.title
-            model.artist?.let { artist = it }
+            if (onGoing) {
+                title += "(Playing)"
+                content = "${model.title}\n${model.artist}"
+            } else {
+                title += "(Paused)"
+                content = "${model.title}\n${model.artist}"
+            }
             thumbnail = model.thumbnail
         }
 
@@ -56,11 +63,12 @@ class PlayerNotification(
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setSmallIcon(R.drawable.ic_app_icon)
             .setContentTitle(title)
-            .setContentText(artist)
+            .setContentText(content)
             .setContentIntent(activityPendingIntent)
             .setLargeIcon(thumbnail)
             .setAutoCancel(true)
             .setSilent(true)
+            .setOngoing(onGoing)
             .build()
     }
 }

@@ -1,6 +1,7 @@
 package com.example.feelvibes.create.category
 
 import android.os.Bundle
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +10,7 @@ import com.example.feelvibes.create.CreateCategoryFragment
 import com.example.feelvibes.create.recycler.CreateRecyclerAdapter
 import com.example.feelvibes.databinding.FragmentChordsCategoryBinding
 import com.example.feelvibes.interfaces.RecyclerItemClick
+import com.example.feelvibes.model.ProjectModel
 import com.example.feelvibes.model.TextModel
 import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 import com.example.feelvibes.view_model.CreateViewModel
@@ -28,16 +30,40 @@ class ChordsCategory :
     override fun onReady() {
         onCreateChordsEvent()
         setupRecyclerAdapter()
+        onSearchEvent()
     }
 
-    private fun setupRecyclerAdapter() {
+    private fun updateAdapter(projectModels: ArrayList<ProjectModel>) {
         binding.chordsRecView.adapter = CreateRecyclerAdapter(
             requireActivity(),
             recyclerItemClick = this,
-            createViewModel.chordsCollection.list
+            projectModels
         )
+    }
+
+    private fun setupRecyclerAdapter() {
+        updateAdapter(createViewModel.chordsCollection.list)
         binding.chordsRecView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView = binding.chordsRecView
+    }
+
+    private fun onSearchEvent() {
+        if (mainActivity.getSearchBar().text.isNotEmpty())
+            search(mainActivity.getSearchBar().text)
+        searchBarTextWatcher = mainActivity.getSearchBar().doOnTextChanged { text, _, _, _ ->
+            search(text)
+        }
+    }
+
+    private fun search(text: CharSequence?) {
+        if (text?.isNotEmpty() == true) {
+            val newList = createViewModel.chordsCollection.list.filter {
+                it.name.contains(text, true)
+            } as ArrayList<ProjectModel>
+            updateAdapter(newList)
+        } else {
+            updateAdapter(createViewModel.chordsCollection.list)
+        }
     }
 
     private fun onCreateChordsEvent() {

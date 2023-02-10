@@ -48,15 +48,6 @@
             app:destination="@id/textEditorFragment" />
     </fragment>
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.feelvibes.search.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_searchFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.feelvibes.settings.SettingsFragment"
         android:label="SettingsFragment" />

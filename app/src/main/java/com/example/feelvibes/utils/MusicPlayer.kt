@@ -30,7 +30,7 @@ class MusicPlayer(
     private val onCompletionListeners = mutableListOf<() -> Unit>()
 
     fun onPreparedListener(listener: () -> Unit) {
-        onCompletionListeners.add(listener)
+        onPreparedListeners.add(listener)
     }
 
     fun onCompletionListener(listener: () -> Unit) {
@@ -104,7 +104,6 @@ class MusicPlayer(
     }
 
     fun setPlaylist(playlistModel: PlaylistModel, index: Int) {
-        val musicModel = playlistModel.list[index]
         currentPlaylist = playlistModel
         currentIndex = index
         setMusic(index)
@@ -134,7 +133,7 @@ class MusicPlayer(
                     player?.start()
                     Log.d("MusicPlayer", "Currently playing ${currentMusic?.title}...")
                 }
-                currentMusic?.let { notification.update(it) }
+                currentMusic?.let { notification.update(it, isPlaying()) }
                 return true
             }
         }
@@ -158,6 +157,7 @@ class MusicPlayer(
     private fun onCompleteEvent() {
         if (!next()) { // Is last
             player?.seekTo(0)
+            currentMusic?.let { notification.update(it, isPlaying()) }
         }
         for (listener in onCompletionListeners) {
             listener()

@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -28,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     //private var backgroundSoundServiceBounded: Boolean = false
     private var navController: NavController? = null
     private var awake = false // onStart/onStop identifier
-    var searchBar: EditText? = null
     var musicPlayer: MusicPlayer? = null
 
     companion object {
@@ -54,18 +52,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); // force dark mode.
-        supportActionBar?.hide()
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // force dark mode.
         libraryViewModel = ViewModelProvider(this)[LibraryViewModel::class.java]
+        supportActionBar?.hide()
+
+        // Binding process
+        binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        // Extra on-load/setup
         createMainViewFunctions()
         musicPlayer?.notification?.build()
-    }
-
-    override fun onActivityReenter(resultCode: Int, data: Intent?) {
-        super.onActivityReenter(resultCode, data)
     }
 
     override fun onStart() {
@@ -131,7 +129,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Search Button
-        searchBar = binding.searchBar
         binding.customToolbar.toolBarSearchBtn.setOnClickListener {
             if (binding.searchBar.visibility == View.VISIBLE) {
                 hideSearchBar()
@@ -160,7 +157,11 @@ class MainActivity : AppCompatActivity() {
         binding.searchBar.visibility = View.VISIBLE
     }
     fun hideSearchBar() {
+        binding.searchBar.text.clear()
         binding.searchBar.visibility = View.GONE
+    }
+    fun getSearchBar(): EditText {
+        return binding.searchBar
     }
 
     fun renameToolBar(title : String) {

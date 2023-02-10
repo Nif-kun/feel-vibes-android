@@ -13,8 +13,4 @@
         android:id="@+id/createFragment"
         android:icon="@drawable/ic_create_24"
         android:title="@string/main_create" />
-    <item
-        android:id="@+id/searchFragment"
-        android:icon="@drawable/ic_search_24"
-        android:title="@string/main_search" />
 </menu>

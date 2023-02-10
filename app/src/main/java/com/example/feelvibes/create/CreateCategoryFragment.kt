@@ -1,6 +1,7 @@
 package com.example.feelvibes.create
 
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.marginTop
@@ -8,20 +9,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.example.feelvibes.library.LibraryCategoryHandler
 import com.example.feelvibes.utils.CategoryViewModelHandler
 import com.example.feelvibes.viewbinds.FragmentBind
 
 abstract class CreateCategoryFragment<VB : ViewBinding>(
     bindingInflater: (inflater: LayoutInflater) -> VB,
 ) : FragmentBind<VB>(bindingInflater) {
-
-    private var categoryViewModel : CategoryViewModelHandler.CategoryViewModel? = null
+    var categoryViewModel : CategoryViewModelHandler.CategoryViewModel? = null
+    var searchBarTextWatcher: TextWatcher? = null
     var recyclerView : RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        categoryViewModel = ViewModelProvider(requireActivity())[LibraryCategoryHandler.PlaylistViewModel::class.java]
+        categoryViewModel = ViewModelProvider(requireActivity())[CategoryViewModelHandler.CategoryViewModel::class.java]
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -69,4 +69,8 @@ abstract class CreateCategoryFragment<VB : ViewBinding>(
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        mainActivity.getSearchBar().removeTextChangedListener(searchBarTextWatcher)
+    }
 }
