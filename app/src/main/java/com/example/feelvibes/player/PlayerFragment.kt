@@ -23,10 +23,6 @@ import pl.droidsonroids.gif.GifDrawable
 
 class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding::inflate) {
 
-    // TODO
-    //  > Select and show design/lyrics/chords
-    //  > Have it show in notification
-
     companion object {
         const val missingLyrics = "This music does not have any lyrics set!"
         const val missingChords = "This music does not have any chords set!"
