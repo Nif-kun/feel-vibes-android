@@ -10,8 +10,9 @@ import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 class PlaylistRecyclerAdapter(
     private val activity: Activity,
     recyclerItemClick: RecyclerItemClick,
-    private val musicDataList : ArrayList<MusicModel>
-) : ItemRecyclerAdapter(activity, recyclerItemClick) {
+    private val musicDataList : ArrayList<MusicModel>,
+    id: Int = -1
+) : ItemRecyclerAdapter(id, activity, recyclerItemClick) {
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         if (holder.moreButton.visibility == View.GONE)

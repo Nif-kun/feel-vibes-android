@@ -9,8 +9,9 @@ import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 class ProjectRecyclerAdapter(
     private var activity : Activity,
     recyclerItemClick : RecyclerItemClick,
-    private val projectList : ArrayList<ProjectModel>
-) : ItemRecyclerAdapter(activity, recyclerItemClick){
+    private val projectList : ArrayList<ProjectModel>,
+    id: Int = -1
+) : ItemRecyclerAdapter(id, activity, recyclerItemClick){
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         viewVisibility(holder.imageViewThumbnail, 0)

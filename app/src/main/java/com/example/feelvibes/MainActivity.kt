@@ -5,9 +5,11 @@ import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -24,8 +26,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var backgroundSoundService: BackgroundSoundService
     private lateinit var libraryViewModel: LibraryViewModel
     //private var backgroundSoundServiceBounded: Boolean = false
-    private var navController:  NavController? = null
+    private var navController: NavController? = null
     private var awake = false // onStart/onStop identifier
+    var searchBar: EditText? = null
     var musicPlayer: MusicPlayer? = null
 
     companion object {
@@ -107,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment?.findNavController()
         setupMenuNavigation(navController)
         setupToolBar(navController)
+        onFragmentChanged()
     }
 
     private fun setupMenuNavigation(navController : NavController?) {
@@ -116,11 +120,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolBar(navController : NavController?) {
+        // Back Button
         binding.customToolbar.toolBarBackBtn.setOnClickListener {
             navController?.popBackStack()
         }
+
+        // Settings Button
         binding.customToolbar.toolBarSettingsBtn.setOnClickListener {
             navController?.navigate(R.id.settingsFragment)
+        }
+
+        // Search Button
+        searchBar = binding.searchBar
+        binding.customToolbar.toolBarSearchBtn.setOnClickListener {
+            if (binding.searchBar.visibility == View.VISIBLE) {
+                hideSearchBar()
+            } else {
+                showSearchBar()
+            }
         }
     }
 
@@ -139,6 +156,13 @@ class MainActivity : AppCompatActivity() {
         binding.customToolbar.toolBar.visibility = View.GONE
     }
 
+    fun showSearchBar() {
+        binding.searchBar.visibility = View.VISIBLE
+    }
+    fun hideSearchBar() {
+        binding.searchBar.visibility = View.GONE
+    }
+
     fun renameToolBar(title : String) {
         binding.customToolbar.toolBarTitle.text = title
     }
@@ -148,6 +172,13 @@ class MainActivity : AppCompatActivity() {
     }
     fun hideToolBarBack() {
         binding.customToolbar.toolBarBackBtn.visibility = View.GONE
+    }
+
+    fun showToolBarSearch() {
+        binding.customToolbar.toolBarSearchBtn.visibility = View.VISIBLE
+    }
+    fun hideToolBarSearch() {
+        binding.customToolbar.toolBarSearchBtn.visibility = View.GONE
     }
 
     fun showToolBarSettings() {
@@ -267,4 +298,11 @@ class MainActivity : AppCompatActivity() {
         binding.stickyPlayerInclude.stickyPlayerLayout.visibility = View.GONE
     }
 
+    private fun onFragmentChanged() {
+        navController?.addOnDestinationChangedListener { _, _, _ ->
+            if (binding.searchBar.visibility == View.VISIBLE) {
+                hideSearchBar()
+            }
+        }
+    }
 }

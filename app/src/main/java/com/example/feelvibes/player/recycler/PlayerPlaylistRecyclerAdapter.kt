@@ -11,8 +11,9 @@ import com.example.feelvibes.recycler.adapter.ItemRecyclerAdapter
 class PlayerPlaylistRecyclerAdapter (
     private val activity : Activity,
     recyclerItemClick : RecyclerItemClick,
-    private val musicDataList : ArrayList<MusicModel>
-) : ItemRecyclerAdapter(activity, recyclerItemClick){
+    private val musicDataList : ArrayList<MusicModel>,
+    id: Int = -1
+) : ItemRecyclerAdapter(id, activity, recyclerItemClick){
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         viewVisibility(holder.imageViewThumbnail, 0)

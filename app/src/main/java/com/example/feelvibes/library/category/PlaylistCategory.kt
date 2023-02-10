@@ -1,6 +1,7 @@
 package com.example.feelvibes.library.category
 
 import android.os.Bundle
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,8 +30,6 @@ class PlaylistCategory :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
-        // Parent class handles categoryViewModel, just needs to be initialized.
-        categoryViewModel = ViewModelProvider(requireActivity())[LibraryCategoryHandler.PlaylistViewModel::class.java]
         libraryViewModel.customCollection.populateFromStored(requireActivity())
         // The buttons were setup here before the adapter to ensure that they are placed on the top.
         setupCreatePlaylistButton()
@@ -39,6 +38,7 @@ class PlaylistCategory :
 
     override fun onReady() {
         setupRecyclerAdapter()
+        onSearchEvent()
     }
 
     private fun setupCreatePlaylistButton() {
@@ -58,18 +58,37 @@ class PlaylistCategory :
         libraryViewModel.customCollection.find(resources.getString(R.string.favorites))?.load(mainActivity)
     }
 
-    private fun setupRecyclerAdapter() {
+    private fun updateAdapter(playlists: ArrayList<PlaylistModel>) {
         binding.playlistRecView.adapter = LibraryRecyclerAdapter(
             requireActivity(),
             this,
-            libraryViewModel.customCollection.list,
+            playlists,
             textOnly = false,
             hideMore = false
         )
+    }
+
+    private fun setupRecyclerAdapter() {
+        updateAdapter(libraryViewModel.customCollection.list)
         binding.playlistRecView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView = binding.playlistRecView
     }
 
+    private fun onSearchEvent() {
+        mainActivity.searchBar?.doOnTextChanged { text, start, before, count ->
+            if (text?.isNotEmpty() == true) {
+                val playlistCollection = libraryViewModel.customCollection.listExcept(arrayListOf(
+                    resources.getString(R.string.create_playlist))
+                )
+                val newList = playlistCollection.filter {
+                    it.name.contains(text, true)
+                } as ArrayList<PlaylistModel>
+                updateAdapter(newList)
+            } else {
+                updateAdapter(libraryViewModel.customCollection.list)
+            }
+        }
+    }
 
     override fun onItemClick(pos: Int) {
         val selectedPlaylist = libraryViewModel.customCollection.list[pos]

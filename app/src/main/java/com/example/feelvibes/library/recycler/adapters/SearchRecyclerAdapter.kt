@@ -12,8 +12,9 @@ class SearchRecyclerAdapter(
     recyclerItemClick: RecyclerItemClick,
     private val playlists: ArrayList<PlaylistModel>,
     private var textOnly: Boolean = false,
-    private var hideMore: Boolean = true
-) : ItemRecyclerAdapter(activity, recyclerItemClick) {
+    private var hideMore: Boolean = true,
+    id: Int = -1
+) : ItemRecyclerAdapter(id, activity, recyclerItemClick) {
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         viewVisibility(holder.imageViewThumbnail, !textOnly)

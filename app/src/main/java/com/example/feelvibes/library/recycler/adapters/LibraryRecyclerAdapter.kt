@@ -15,7 +15,8 @@ class LibraryRecyclerAdapter(
     private val playlistDataList : ArrayList<PlaylistModel>,
     private val textOnly : Boolean = false,
     private val hideMore : Boolean = true,
-) : ItemRecyclerAdapter(activity, recyclerItemClick) {
+    id: Int = -1
+) : ItemRecyclerAdapter(id, activity, recyclerItemClick) {
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         moreButtonVisibility(hideMore, holder, position)

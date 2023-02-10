@@ -13,6 +13,7 @@ import com.example.feelvibes.R
 import com.example.feelvibes.interfaces.RecyclerItemClick
 
 abstract class ItemRecyclerAdapter(
+    private val id: Int = -1,
     private val activity : Activity,
     private val recyclerItemClick : RecyclerItemClick,
 ) : RecyclerView.Adapter<ItemRecyclerAdapter.ItemViewHolder>() {
@@ -24,7 +25,6 @@ abstract class ItemRecyclerAdapter(
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val layout : ConstraintLayout = itemView.findViewById(R.id.recyclerItemLayout)
         val imageViewThumbnail : ImageView = itemView.findViewById(R.id.simple_item_row_thumbnail)
         val textViewTitle : TextView = itemView.findViewById(R.id.simple_item_row_title)
         val moreButton : ImageButton = itemView.findViewById(R.id.simple_item_row_more)
@@ -32,8 +32,10 @@ abstract class ItemRecyclerAdapter(
         init {
             itemView.setOnClickListener {
                 val pos = absoluteAdapterPosition
-                if (pos != RecyclerView.NO_POSITION)
+                if (pos != RecyclerView.NO_POSITION) {
                     recyclerItemClick.onItemClick(pos)
+                    recyclerItemClick.onItemClick(pos, id)
+                }
             }
 
             moreButton.setOnClickListener {

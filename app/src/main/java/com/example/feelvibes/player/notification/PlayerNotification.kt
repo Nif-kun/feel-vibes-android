@@ -1,26 +1,22 @@
 package com.example.feelvibes.player.notification
 
 import android.app.Notification
-import android.app.Notification.MediaStyle
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.media.MediaSession2Service.MediaNotification
 import androidx.core.app.NotificationCompat
 import com.example.feelvibes.MainActivity
 import com.example.feelvibes.R
 import com.example.feelvibes.model.MusicModel
-import com.example.feelvibes.services.BackgroundSoundService
 import com.example.feelvibes.utils.NotificationHandler
 
 class PlayerNotification(
     context: Context,
-    private val notificationId: Int,
+    notificationId: Int,
     private val channelId: String,
-    private val channelName: String,
-    private val channelDescription: String
+    channelName: String,
+    channelDescription: String
 ) : NotificationHandler(
     context,
     notificationId,
@@ -46,12 +42,6 @@ class PlayerNotification(
             activityIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
-        val prevPendingIntent = PendingIntent.getActivity(
-            context,
-            1,
-            Intent(context, MainActivity::class.java),
-            PendingIntent.FLAG_IMMUTABLE
-        )
 
         var title = "Title"
         var artist = "Artist"
@@ -69,12 +59,8 @@ class PlayerNotification(
             .setContentText(artist)
             .setContentIntent(activityPendingIntent)
             .setLargeIcon(thumbnail)
-            .addAction(R.drawable.ic_skip_previous_24, null, prevPendingIntent)
-            .addAction(R.drawable.ic_pause_24, null, prevPendingIntent)
-            .addAction(R.drawable.ic_skip_next_24, null, prevPendingIntent)
             .setAutoCancel(true)
             .setSilent(true)
             .build()
     }
-
 }

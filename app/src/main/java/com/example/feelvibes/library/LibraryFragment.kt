@@ -2,6 +2,7 @@ package com.example.feelvibes.library
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.example.feelvibes.databinding.FragmentLibraryBinding
