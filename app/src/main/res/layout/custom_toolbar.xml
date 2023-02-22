@@ -29,16 +29,25 @@
             android:visibility="gone"
             tools:ignore="ContentDescription"/>
 
+        <ImageView
+            android:id="@+id/appIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_app_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tool_bar_back_btn"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <TextView
             android:id="@+id/tool_bar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:text="@string/untitled"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tool_bar_back_btn"
+            app:layout_constraintStart_toEndOf="@+id/appIcon"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
@@ -50,18 +59,20 @@
             android:background="@drawable/ic_search_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tool_bar_settings_btn"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         <ImageButton
             android:id="@+id/tool_bar_settings_btn"
+            style="@style/BGTintDayNight"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:visibility="visible"
             android:background="@drawable/ic_settings_24"
-            style="@style/BGTintDayNight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

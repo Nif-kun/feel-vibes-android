@@ -29,6 +29,7 @@ class PlaylistFragment :
 
     override fun onReady() {
         mainActivity.showToolBarBack()
+        mainActivity.hideToolBarAppIcon()
         setupRecyclerAdapter()
     }
 
@@ -81,6 +82,7 @@ class PlaylistFragment :
         if (!selectedMusic && !libraryViewModel.navFromSticky) {
             libraryViewModel.selectedPlaylist = null
         }
+        mainActivity.showToolBarAppIcon()
     }
 
 }

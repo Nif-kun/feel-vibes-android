@@ -11,6 +11,12 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
+            android:id="@+id/action_homeFragment_to_homeLoginFragment"
+            app:destination="@id/homeLoginFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_homeRegisterFragment"
+            app:destination="@id/homeRegisterFragment" />
+        <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
@@ -20,23 +26,20 @@
         android:label="fragment_library"
         tools:layout="@layout/fragment_library" >
         <action
-            android:id="@+id/action_libraryFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-        <action
             android:id="@+id/action_libraryFragment_to_libraryBottomSheet"
             app:destination="@id/libraryBottomSheet" />
         <action
             android:id="@+id/action_libraryFragment_to_libraryPlaylistFragment"
             app:destination="@id/libraryPlaylistFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createFragment"
         android:name="com.example.feelvibes.create.CreateFragment"
         android:label="fragment_create"
         tools:layout="@layout/fragment_create" >
-        <action
-            android:id="@+id/action_createFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
         <action
             android:id="@+id/action_createFragment_to_createBottomSheet"
             app:destination="@id/createBottomSheet" />
@@ -46,11 +49,10 @@
         <action
             android:id="@+id/action_createFragment_to_textEditorFragment"
             app:destination="@id/textEditorFragment" />
+        <action
+            android:id="@+id/action_createFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.feelvibes.settings.SettingsFragment"
-        android:label="SettingsFragment" />
     <dialog
         android:id="@+id/libraryBottomSheet"
         android:name="com.example.feelvibes.library.bottom.sheets.LibraryBottomSheet"
@@ -151,4 +153,43 @@
         android:name="com.example.feelvibes.create.editor.TextEditorFragment"
         android:label="fragment_text_editor"
         tools:layout="@layout/fragment_text_editor" />
+    <fragment
+        android:id="@+id/homeLoginFragment"
+        android:name="com.example.feelvibes.account.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_homeLoginFragment_to_homeRegisterFragment"
+            app:destination="@id/homeRegisterFragment" />
+        <action
+            android:id="@+id/action_homeLoginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeRegisterFragment"
+        android:name="com.example.feelvibes.account.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_homeRegisterFragment_to_homeLoginFragment"
+            app:destination="@id/homeLoginFragment" />
+        <action
+            android:id="@+id/action_homeRegisterFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.feelvibes.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_libraryFragment"
+            app:destination="@id/libraryFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_createFragment"
+            app:destination="@id/createFragment" />
+    </fragment><action android:id="@+id/action_global_homeLoginFragment" app:destination="@id/homeLoginFragment"/>
 </navigation>

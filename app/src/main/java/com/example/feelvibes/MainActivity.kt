@@ -4,11 +4,14 @@ import android.app.AlertDialog
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.marginStart
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -17,13 +20,17 @@ import com.example.feelvibes.databinding.ActivityMainBinding
 import com.example.feelvibes.services.BackgroundSoundService
 import com.example.feelvibes.utils.MusicPlayer
 import com.example.feelvibes.utils.PermissionHandler
+import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var backgroundSoundService: BackgroundSoundService
     private lateinit var libraryViewModel: LibraryViewModel
+    private lateinit var accountViewModel : AccountViewModel
+    lateinit var mAuth: FirebaseAuth
     //private var backgroundSoundServiceBounded: Boolean = false
     private var navController: NavController? = null
     private var awake = false // onStart/onStop identifier
@@ -54,6 +61,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // force dark mode.
         libraryViewModel = ViewModelProvider(this)[LibraryViewModel::class.java]
+        accountViewModel = ViewModelProvider(this)[AccountViewModel::class.java]
+        mAuth = FirebaseAuth.getInstance()
         supportActionBar?.hide()
 
         // Binding process
@@ -75,6 +84,30 @@ class MainActivity : AppCompatActivity() {
         setupStickyPlayer()
         if (musicPlayer?.notification?.visible() == true)
             musicPlayer?.notification?.dismiss()
+
+        // Setup user
+        checkAuth()
+    }
+
+   fun checkAuth(navigate: Boolean = false) {
+        if (mAuth.currentUser != null) {
+            mAuth.currentUser?.reload()?.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    accountViewModel.currentUser = mAuth.currentUser
+                    Log.d("Authentication", "logging in as ${mAuth.currentUser}")
+                }
+            }?.addOnFailureListener { e ->
+                e.printStackTrace()
+                accountViewModel.currentUser = null
+                if (navigate) {
+                    navController?.navigate(R.id.action_global_homeLoginFragment)
+                    hideToolBar()
+                }
+            }
+        } else if (navigate) {
+            navController?.navigate(R.id.action_global_homeLoginFragment)
+            hideToolBar()
+        }
     }
 
     override fun onStop() {
@@ -118,16 +151,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolBar(navController : NavController?) {
+        /*--Default ToolBar--*/
         // Back Button
         binding.customToolbar.toolBarBackBtn.setOnClickListener {
             navController?.popBackStack()
         }
-
         // Settings Button
         binding.customToolbar.toolBarSettingsBtn.setOnClickListener {
             navController?.navigate(R.id.settingsFragment)
         }
-
         // Search Button
         binding.customToolbar.toolBarSearchBtn.setOnClickListener {
             if (binding.searchBar.visibility == View.VISIBLE) {
@@ -135,6 +167,24 @@ class MainActivity : AppCompatActivity() {
             } else {
                 showSearchBar()
             }
+        }
+
+        /*--Home ToolBar--*/
+        // Profile Button
+        binding.homeToolbar.profileBtn.setOnClickListener {
+
+        }
+        // Search Button
+        binding.homeToolbar.searchBtn.setOnClickListener {
+            if (binding.searchBar.visibility == View.VISIBLE) {
+                hideSearchBar()
+            } else {
+                showSearchBar()
+            }
+        }
+        // Logo Button
+        binding.homeToolbar.logoBtn.setOnClickListener {
+
         }
     }
 
@@ -146,11 +196,37 @@ class MainActivity : AppCompatActivity() {
         binding.mainNavHost.setPadding(0, 0, 0, 0)
     }
 
-    fun showToolBar() {
-        binding.customToolbar.toolBar.visibility = View.VISIBLE
+    fun isToolBarVisible(isHome: Boolean = false): Boolean {
+        if (binding.toolBarLayout.visibility == View.VISIBLE) {
+            if (isHome && binding.homeToolbar.toolBar.visibility == View.VISIBLE) {
+                return true
+            }
+            if (binding.customToolbar.toolBar.visibility == View.VISIBLE) {
+                return true
+            }
+        }
+        return false
     }
-    fun hideToolBar() {
-        binding.customToolbar.toolBar.visibility = View.GONE
+    fun showToolBar(isHome: Boolean = false) {
+        if (binding.toolBarLayout.visibility == View.GONE)
+            binding.toolBarLayout.visibility = View.VISIBLE
+        if (isHome) {
+            if (isToolBarVisible())
+                hideToolBar(isHome = false, includeLayout = false)
+            binding.homeToolbar.toolBar.visibility = View.VISIBLE
+        } else {
+            if (isToolBarVisible(true))
+                hideToolBar(isHome = true, includeLayout = false)
+            binding.customToolbar.toolBar.visibility = View.VISIBLE
+        }
+    }
+    fun hideToolBar(isHome: Boolean = false, includeLayout: Boolean = true) {
+        if (includeLayout)
+            binding.toolBarLayout.visibility = View.GONE
+        if (isHome)
+            binding.homeToolbar.toolBar.visibility = View.GONE
+        else
+            binding.customToolbar.toolBar.visibility = View.GONE
     }
 
     fun showSearchBar() {
@@ -166,6 +242,15 @@ class MainActivity : AppCompatActivity() {
 
     fun renameToolBar(title : String) {
         binding.customToolbar.toolBarTitle.text = title
+    }
+
+    fun showToolBarAppIcon() {
+        binding.customToolbar.appIcon.visibility = View.VISIBLE
+        binding.customToolbar.toolBarTitle.setPadding(0,0,0,0)
+    }
+    fun hideToolBarAppIcon() {
+        binding.customToolbar.appIcon.visibility = View.GONE
+        binding.customToolbar.toolBarTitle.setPadding(15,0,0,0)
     }
 
     fun showToolBarBack() {

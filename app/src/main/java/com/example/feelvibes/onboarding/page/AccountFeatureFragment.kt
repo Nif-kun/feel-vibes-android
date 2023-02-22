@@ -12,7 +12,6 @@ class AccountFeatureFragment : FragmentBind<FragmentAccountFeatureBinding>(Fragm
         binding.skip.setOnClickListener{
             onBoardingFinish()
             findNavController().navigate(R.id.action_onBoardingFragment_to_main_nav)
-            mainActivity.showToolBar()
             mainActivity.showMainMenu()
             mainActivity.padMainView()
         }

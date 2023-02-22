@@ -5,7 +5,4 @@ import com.example.feelvibes.viewbinds.FragmentBind
 
 class AccountFragment : FragmentBind<FragmentAccountBinding>(FragmentAccountBinding::inflate) {
 
-    override fun onReady() {
-    }
-
 }

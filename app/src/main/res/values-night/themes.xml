@@ -22,4 +22,7 @@
     <style name="BGTintDayNight" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:backgroundTint">@color/white</item>
     </style>
+    <style name="TintDayNight" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:tint">@color/white</item>
+    </style>
 </resources>

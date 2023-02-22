@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "554338069018",
+    "project_id": "feelvibe-8ed29",
+    "storage_bucket": "feelvibe-8ed29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554338069018:android:03fa5b03ead6281c493fa3",
+        "android_client_info": {
+          "package_name": "com.example.feelvibes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554338069018-q993vj3cofii2cjh4j0slpj4a03b2deg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBVo6pyV2_gkH_xdzI31voVIO9MPgvmdU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "554338069018-q993vj3cofii2cjh4j0slpj4a03b2deg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

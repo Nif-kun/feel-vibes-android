@@ -29,6 +29,9 @@ class CreateFragment : FragmentBind<FragmentCreateBinding>(FragmentCreateBinding
     override fun onReady() {
         buildTabs()
         mainActivity.renameToolBar("Create")
+        if (!mainActivity.isToolBarVisible()) {
+            mainActivity.showToolBar()
+        }
     }
 
     private fun buildTabs(){

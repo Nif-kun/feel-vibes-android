@@ -1,19 +1,33 @@
 package com.example.feelvibes.settings
 
 import android.os.Bundle
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceFragmentCompat
-import com.example.feelvibes.R
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.feelvibes.databinding.FragmentSettingsBinding
+import com.example.feelvibes.view_model.AccountViewModel
+import com.example.feelvibes.viewbinds.FragmentBind
 
-class SettingsFragment : PreferenceFragmentCompat() {
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.root_preferences, rootKey)
+class SettingsFragment : FragmentBind<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
+
+    private lateinit var accountViewModel : AccountViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        accountViewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as AppCompatActivity).supportActionBar!!.title = "Settings"
+    override fun onReady() {
+        super.onReady()
+        onLogoutEvent()
     }
+
+    private fun onLogoutEvent() {
+        binding.signOutBtn.setOnClickListener {
+            mainActivity.mAuth.signOut()
+            accountViewModel.currentUser = null
+            findNavController().popBackStack()
+        }
+    }
+
 }

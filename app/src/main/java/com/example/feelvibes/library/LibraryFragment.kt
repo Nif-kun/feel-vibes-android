@@ -36,6 +36,9 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
     override fun onReady(){
         buildTabs()
         mainActivity.renameToolBar("Library")
+        if (!mainActivity.isToolBarVisible()) {
+            mainActivity.showToolBar()
+        }
     }
 
     private fun buildTabs(){
