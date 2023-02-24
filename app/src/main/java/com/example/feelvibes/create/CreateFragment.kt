@@ -6,6 +6,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.feelvibes.databinding.FragmentCreateBinding
 import com.example.feelvibes.library.LibraryFragment
 import com.example.feelvibes.view_model.CreateViewModel
+import com.example.feelvibes.view_model.HomeViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.android.material.tabs.TabLayout
 
@@ -14,6 +15,7 @@ class CreateFragment : FragmentBind<FragmentCreateBinding>(FragmentCreateBinding
     //TODO: implement WRITE and READ external file request when first time clicking create button.
 
     private lateinit var createViewModel: CreateViewModel
+    private lateinit var homeViewModel: HomeViewModel
 
     companion object {
         const val DESIGNS = 0
@@ -24,14 +26,15 @@ class CreateFragment : FragmentBind<FragmentCreateBinding>(FragmentCreateBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createViewModel = ViewModelProvider(requireActivity())[CreateViewModel::class.java]
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
     }
 
     override fun onReady() {
         buildTabs()
         mainActivity.renameToolBar("Create")
-        if (!mainActivity.isToolBarVisible()) {
-            mainActivity.showToolBar()
-        }
+        mainActivity.padMainView()
+        mainActivity.showToolBar()
+        homeViewModel.layoutState = HomeViewModel.Layouts.NONE
     }
 
     private fun buildTabs(){

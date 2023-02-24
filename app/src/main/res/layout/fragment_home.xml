@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".home.HomeFragment">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="65dp"
-        android:layout_height="16dp"
-        android:textAlignment="center"
-        android:text="Home"
+
+
+    <include
+        android:id="@+id/authorizationReqInclude"
+        layout="@layout/authorization_req_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        android:elevation="40dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

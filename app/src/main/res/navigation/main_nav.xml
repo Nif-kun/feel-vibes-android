@@ -11,14 +11,11 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_homeLoginFragment"
-            app:destination="@id/homeLoginFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_homeRegisterFragment"
-            app:destination="@id/homeRegisterFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/libraryFragment"
@@ -161,9 +158,6 @@
         <action
             android:id="@+id/action_homeLoginFragment_to_homeRegisterFragment"
             app:destination="@id/homeRegisterFragment" />
-        <action
-            android:id="@+id/action_homeLoginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeRegisterFragment"
@@ -173,9 +167,6 @@
         <action
             android:id="@+id/action_homeRegisterFragment_to_homeLoginFragment"
             app:destination="@id/homeLoginFragment" />
-        <action
-            android:id="@+id/action_homeRegisterFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -191,5 +182,16 @@
         <action
             android:id="@+id/action_settingsFragment_to_createFragment"
             app:destination="@id/createFragment" />
-    </fragment><action android:id="@+id/action_global_homeLoginFragment" app:destination="@id/homeLoginFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.feelvibes.home.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <action android:id="@+id/action_global_homeLoginFragment" app:destination="@id/homeLoginFragment" />
+    <action android:id="@+id/action_global_homeRegisterFragment" app:destination="@id/homeRegisterFragment" />
 </navigation>

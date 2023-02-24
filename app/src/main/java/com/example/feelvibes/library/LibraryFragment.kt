@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.example.feelvibes.databinding.FragmentLibraryBinding
 import com.example.feelvibes.utils.PermissionHandler
+import com.example.feelvibes.view_model.HomeViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.android.material.tabs.TabLayout
@@ -15,6 +16,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBinding::inflate) {
 
     private lateinit var libraryViewModel: LibraryViewModel
+    private lateinit var homeViewModel: HomeViewModel
 
     companion object {
         const val PLAYLISTS = 0
@@ -26,6 +28,7 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         // Check and request permission for media storage or storage in general if lower version.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             PermissionHandler.ReadMediaAudio(requireActivity(), true).check()
@@ -36,9 +39,9 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
     override fun onReady(){
         buildTabs()
         mainActivity.renameToolBar("Library")
-        if (!mainActivity.isToolBarVisible()) {
-            mainActivity.showToolBar()
-        }
+        mainActivity.padMainView()
+        mainActivity.showToolBar()
+        homeViewModel.layoutState = HomeViewModel.Layouts.NONE
     }
 
     private fun buildTabs(){

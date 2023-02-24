@@ -85,7 +85,7 @@
     <string name="n_a">N/A</string>
     <string name="timeStampPlaceHolder">00:00</string>
     <string name="design">Design</string>
-    <string name="longTextTest">Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here.</string>
+    <string name="longTextTest">Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here. Your long text goes here. Text</string>
     <string name="create_lyrics">Create lyrics</string>
     <string name="create_chords">Create chords</string>
     <string name="clear">Clear</string>
@@ -93,7 +93,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="sign_up">Sign-up</string>
+    <string name="sign_up">Sign up</string>
     <string name="confirm_password">Confirm password</string>
     <string name="username">Username</string>
     <string name="agree_to_terms"><![CDATA[I have read and agree to the terms & conditions and the privacy policy.]]></string>
@@ -184,5 +184,12 @@
     </string>
     <string name="sign_out">Sign out</string>
     <string name="provide_email_registration">Provide the email you used during registration.</string>
+    <string name="str_continue">Continue</string>
+    <string name="register">Register</string>
+    <string name="entice_signup">─── Don\'t have an account? ───</string>
+    <string name="feature_warn">An account is needed to unlock extra features such sharing or posting songs and designs. You may login below or sign up for free, and gain the full experience of the app.</string>
+    <string name="skip_feature">Login another time and skip feature</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
 
 </resources>

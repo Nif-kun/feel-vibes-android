@@ -3,6 +3,7 @@ package com.example.feelvibes.account
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentLoginBinding
 import com.example.feelvibes.view_model.AccountViewModel
+import com.example.feelvibes.view_model.OnBoardingViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.AuthResult
@@ -19,16 +21,33 @@ import java.util.regex.Pattern
 class LoginFragment : FragmentBind<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private lateinit var accountViewModel : AccountViewModel
+    private lateinit var onBoardingViewModel: OnBoardingViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accountViewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
+        onBoardingViewModel = ViewModelProvider(requireActivity())[OnBoardingViewModel::class.java]
     }
 
     override fun onReady() {
+        if (accountViewModel.onBoardingFinished) {
+            mainActivity.hideToolBar(true)
+            mainActivity.hideMainMenu()
+        }
+        onCancelEvent()
         onNavRegisterEvent()
         onLoginEvent()
         onForgotPasswordEvent()
+    }
+
+    private fun onCancelEvent() {
+        if (accountViewModel.onBoardingFinished) {
+            binding.cancelBtn.visibility = View.VISIBLE
+            binding.cancelBtn.setOnClickListener {
+                mainActivity.showMainMenu()
+                findNavController().popBackStack()
+            }
+        }
     }
 
     private fun onNavRegisterEvent() {
@@ -47,7 +66,6 @@ class LoginFragment : FragmentBind<FragmentLoginBinding>(FragmentLoginBinding::i
         binding.AccountSignInConfirmBtn.setOnClickListener {
             val email = binding.AccountSignInEmailInput.text.toString()
             val password = binding.AccountSignInPasswordInput.text.toString()
-
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 loginUser(email, password)
             } else {
@@ -65,9 +83,10 @@ class LoginFragment : FragmentBind<FragmentLoginBinding>(FragmentLoginBinding::i
                     accountViewModel.currentUser = user
                     user?.let {
                         if (accountViewModel.onBoardingFinished) {
-                            findNavController().navigate(R.id.action_homeLoginFragment_to_homeFragment)
+                            findNavController().popBackStack()
+                            mainActivity.showMainMenu()
                         } else {
-                            findNavController().navigate(R.id.action_onBoardingFragment_to_main_nav)
+                            onBoardingViewModel.loginListener?.invoke()
                         }
                     }
                 } else {

@@ -15,6 +15,7 @@ import com.example.feelvibes.model.TextModel
 import com.example.feelvibes.utils.PermissionHandler
 import com.example.feelvibes.utils.ShortLib
 import com.example.feelvibes.view_model.CreateViewModel
+import com.example.feelvibes.view_model.HomeViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.view_model.PlayerViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
@@ -31,12 +32,14 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
     private lateinit var createViewModel: CreateViewModel
     private lateinit var libraryViewModel: LibraryViewModel
     private lateinit var playerViewModel: PlayerViewModel
+    private lateinit var homeViewModel: HomeViewModel
     private var awake = false // Just follow the usage, tl;dr it is meant to stop updating views when unfocused.
 
     private var musicPropModel: MusicPropModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
         createViewModel = ViewModelProvider(requireActivity())[CreateViewModel::class.java]
         playerViewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
@@ -56,8 +59,12 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
 
     override fun onReady() {
         mainActivity.hideMainMenu()
-        mainActivity.hideToolBar()
-        mainActivity.unpadMainView()
+        if (homeViewModel.layoutState == HomeViewModel.Layouts.NONE) {
+            mainActivity.unpadMainView()
+            mainActivity.hideToolBar()
+        } else {
+            mainActivity.hideToolBar(true)
+        }
         mainActivity.hideStickyPlayer()
 
         val isCurrentPlaylist = if (libraryViewModel.selectedPlaylist != null) {
@@ -411,8 +418,13 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
     override fun onDestroyView() {
         super.onDestroyView()
         mainActivity.showMainMenu()
-        mainActivity.showToolBar()
-        mainActivity.padMainView()
+        // This is such a dirty way of doing it.
+        if (homeViewModel.layoutState == HomeViewModel.Layouts.NONE) {
+            mainActivity.showToolBar()
+            mainActivity.padMainView()
+        } else if (homeViewModel.layoutState == HomeViewModel.Layouts.HOME) {
+            mainActivity.showToolBar(true)
+        }
         mainActivity.setupStickyPlayer()
         if (mainActivity.musicPlayer?.currentMusic != null)
             mainActivity.showStickyPlayer()

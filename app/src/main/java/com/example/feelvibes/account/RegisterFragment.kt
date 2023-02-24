@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -40,9 +41,24 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
     }
 
     override fun onReady() {
+        if (accountViewModel.onBoardingFinished) {
+            mainActivity.hideToolBar(true)
+            mainActivity.hideMainMenu()
+        }
+        onCancelEvent()
         onNavLoginEvent()
         onRegisterEvent()
         onShowTermsEvent()
+    }
+
+    private fun onCancelEvent() {
+        if (accountViewModel.onBoardingFinished) {
+            binding.cancelBtn.visibility = View.VISIBLE
+            binding.cancelBtn.setOnClickListener {
+                mainActivity.showMainMenu()
+                findNavController().popBackStack()
+            }
+        }
     }
 
     private fun onNavLoginEvent() {
@@ -248,7 +264,7 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
     private fun navigateBack() {
         if (accountViewModel.onBoardingFinished) {
             if (accountViewModel.currentUser != null)
-                findNavController().navigate(R.id.action_homeRegisterFragment_to_homeFragment)
+                findNavController().popBackStack()
             else
                 findNavController().navigate(R.id.action_homeRegisterFragment_to_homeLoginFragment)
         } else {

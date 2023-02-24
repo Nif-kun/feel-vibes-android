@@ -7,6 +7,7 @@ import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,8 +22,10 @@ import com.example.feelvibes.services.BackgroundSoundService
 import com.example.feelvibes.utils.MusicPlayer
 import com.example.feelvibes.utils.PermissionHandler
 import com.example.feelvibes.view_model.AccountViewModel
+import com.example.feelvibes.view_model.HomeViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,11 +33,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var backgroundSoundService: BackgroundSoundService
     private lateinit var libraryViewModel: LibraryViewModel
     private lateinit var accountViewModel : AccountViewModel
-    lateinit var mAuth: FirebaseAuth
-    //private var backgroundSoundServiceBounded: Boolean = false
-    private var navController: NavController? = null
+    private lateinit var homeViewModel: HomeViewModel
+
     private var awake = false // onStart/onStop identifier
-    var musicPlayer: MusicPlayer? = null
+    private var navController: NavController? = null
 
     companion object {
         const val HOME_FRAGMENT = 0
@@ -43,6 +45,13 @@ class MainActivity : AppCompatActivity() {
         const val SEARCH_FRAGMENT = 3
     }
 
+    // Account related vars
+    lateinit var mAuth: FirebaseAuth
+    var profileClickedListener: (()->Unit)? = null
+
+    // Music Player related vars
+    //private var backgroundSoundServiceBounded: Boolean = false
+    var musicPlayer: MusicPlayer? = null
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as BackgroundSoundService.BackgroundSoundBinder
@@ -62,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // force dark mode.
         libraryViewModel = ViewModelProvider(this)[LibraryViewModel::class.java]
         accountViewModel = ViewModelProvider(this)[AccountViewModel::class.java]
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         mAuth = FirebaseAuth.getInstance()
         supportActionBar?.hide()
 
@@ -86,27 +96,24 @@ class MainActivity : AppCompatActivity() {
             musicPlayer?.notification?.dismiss()
 
         // Setup user
-        checkAuth()
+        checkAuth {
+            accountViewModel.currentUser = it
+            Log.d("Authentication", "logging in as ${mAuth.currentUser}")
+        }
     }
 
-   fun checkAuth(navigate: Boolean = false) {
+   fun checkAuth(callback: (FirebaseUser?)-> Unit) {
         if (mAuth.currentUser != null) {
             mAuth.currentUser?.reload()?.addOnCompleteListener {
                 if (it.isSuccessful) {
-                    accountViewModel.currentUser = mAuth.currentUser
-                    Log.d("Authentication", "logging in as ${mAuth.currentUser}")
+                    callback(mAuth.currentUser)
                 }
             }?.addOnFailureListener { e ->
                 e.printStackTrace()
-                accountViewModel.currentUser = null
-                if (navigate) {
-                    navController?.navigate(R.id.action_global_homeLoginFragment)
-                    hideToolBar()
-                }
+                callback(null)
             }
-        } else if (navigate) {
-            navController?.navigate(R.id.action_global_homeLoginFragment)
-            hideToolBar()
+        } else {
+            callback(null)
         }
     }
 
@@ -172,14 +179,16 @@ class MainActivity : AppCompatActivity() {
         /*--Home ToolBar--*/
         // Profile Button
         binding.homeToolbar.profileBtn.setOnClickListener {
-
+            profileClickedListener?.invoke()
         }
         // Search Button
         binding.homeToolbar.searchBtn.setOnClickListener {
-            if (binding.searchBar.visibility == View.VISIBLE) {
-                hideSearchBar()
-            } else {
-                showSearchBar()
+            if (homeViewModel.layoutState == HomeViewModel.Layouts.HOME) {
+                if (binding.searchBar.visibility == View.VISIBLE) {
+                    hideSearchBar()
+                } else {
+                    showSearchBar()
+                }
             }
         }
         // Logo Button
@@ -220,9 +229,12 @@ class MainActivity : AppCompatActivity() {
             binding.customToolbar.toolBar.visibility = View.VISIBLE
         }
     }
-    fun hideToolBar(isHome: Boolean = false, includeLayout: Boolean = true) {
-        if (includeLayout)
+    fun hideToolBar(isHome: Boolean = false, includeLayout: Boolean = true, onlyLayout: Boolean = false) {
+        if (includeLayout) {
             binding.toolBarLayout.visibility = View.GONE
+            if (onlyLayout)
+                return
+        }
         if (isHome)
             binding.homeToolbar.toolBar.visibility = View.GONE
         else

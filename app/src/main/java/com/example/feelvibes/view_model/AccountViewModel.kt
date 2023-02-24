@@ -6,6 +6,9 @@ import com.google.firebase.auth.FirebaseUser
 class AccountViewModel: ViewModel() {
 
     var onBoardingFinished = false
-    var currentUser : FirebaseUser? = null
+    var currentUser: FirebaseUser? = null
+
+    var selectedUserId: String? = null
+
 
 }
