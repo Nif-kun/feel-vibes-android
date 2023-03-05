@@ -6,13 +6,10 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.marginStart
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -21,7 +18,6 @@ import com.example.feelvibes.databinding.ActivityMainBinding
 import com.example.feelvibes.services.BackgroundSoundService
 import com.example.feelvibes.utils.MusicPlayer
 import com.example.feelvibes.utils.PermissionHandler
-import com.example.feelvibes.utils.ShortLib
 import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.view_model.HomeViewModel
 import com.example.feelvibes.view_model.LibraryViewModel

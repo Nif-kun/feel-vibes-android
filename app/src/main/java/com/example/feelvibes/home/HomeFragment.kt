@@ -31,7 +31,6 @@ import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 import java.time.LocalDateTime

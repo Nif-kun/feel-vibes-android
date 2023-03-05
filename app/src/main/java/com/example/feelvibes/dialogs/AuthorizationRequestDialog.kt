@@ -2,7 +2,6 @@ package com.example.feelvibes.dialogs
 
 import android.content.DialogInterface
 import androidx.navigation.fragment.findNavController
-import com.example.feelvibes.R
 import com.example.feelvibes.databinding.AuthorizationRequestDialogBinding
 import com.example.feelvibes.viewbinds.FragmentDialogBind
 

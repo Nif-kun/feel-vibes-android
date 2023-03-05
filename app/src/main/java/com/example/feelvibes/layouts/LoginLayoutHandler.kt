@@ -1,6 +1,5 @@
 package com.example.feelvibes.layouts
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View

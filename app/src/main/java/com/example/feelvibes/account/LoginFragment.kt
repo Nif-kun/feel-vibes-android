@@ -14,8 +14,6 @@ import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.view_model.OnBoardingViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import java.util.regex.Pattern
 
 class LoginFragment : FragmentBind<FragmentLoginBinding>(FragmentLoginBinding::inflate) {

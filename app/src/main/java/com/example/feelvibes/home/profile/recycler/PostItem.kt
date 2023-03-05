@@ -1,12 +1,10 @@
 package com.example.feelvibes.home.profile.recycler
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.feelvibes.R
 

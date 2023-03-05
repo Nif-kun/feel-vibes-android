@@ -1,7 +1,5 @@
 package com.example.feelvibes.home.profile.recycler
 
-import java.time.Duration
-
 interface PostRecyclerEvent {
 
     fun onMusicClick(

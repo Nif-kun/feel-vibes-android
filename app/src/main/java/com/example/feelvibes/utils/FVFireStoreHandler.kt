@@ -1,7 +1,6 @@
 package com.example.feelvibes.utils
 
 import android.net.Uri
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 

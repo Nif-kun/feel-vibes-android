@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.feelvibes.R
-import com.example.feelvibes.create.CreateViewPagerAdapter
 import com.example.feelvibes.databinding.FragmentProfileBinding
 import com.example.feelvibes.dialogs.AuthorizationRequestDialog
 import com.example.feelvibes.dialogs.ConfirmationAlertDialog

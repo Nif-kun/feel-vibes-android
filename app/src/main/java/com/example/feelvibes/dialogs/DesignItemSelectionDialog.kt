@@ -1,9 +1,7 @@
 package com.example.feelvibes.dialogs
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import com.example.feelvibes.R
-import com.example.feelvibes.view_model.CreateViewModel
 
 class DesignItemSelectionDialog: ProjectItemSelectionDialog() {
 

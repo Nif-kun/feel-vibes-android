@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentAccountFeatureBinding
-import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.view_model.OnBoardingViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 

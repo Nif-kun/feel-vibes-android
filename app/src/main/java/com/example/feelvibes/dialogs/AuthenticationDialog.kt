@@ -3,7 +3,6 @@ package com.example.feelvibes.dialogs
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.databinding.AuthenticationDialogBinding
 import com.example.feelvibes.layouts.LoginLayoutHandler

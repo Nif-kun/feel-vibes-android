@@ -2,10 +2,8 @@ package com.example.feelvibes.account
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -13,23 +11,11 @@ import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentRegisterBinding
 import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
-import com.google.firebase.FirebaseError
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
-import com.google.firebase.ktx.Firebase
 
 class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterBinding::inflate) {
 

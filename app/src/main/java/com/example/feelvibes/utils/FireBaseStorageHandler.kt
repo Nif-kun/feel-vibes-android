@@ -3,11 +3,8 @@ package com.example.feelvibes.utils
 import android.app.Activity
 import android.net.Uri
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
 
 class FireBaseStorageHandler {
 
