@@ -85,10 +85,11 @@ class PlayerPlaylistBottomSheet : FragmentBottomSheetDialogBind<FragmentPlayerPl
     override fun onItemClick(pos: Int) {
         val safeIndex: Int? = mainActivity.musicPlayer?.currentPlaylist?.indexOf(musicList[pos])
         if (safeIndex != null) {
-            mainActivity.musicPlayer?.setMusic(safeIndex)
-            mainActivity.musicPlayer?.currentIndex = safeIndex
-            playerViewModel.playerFragment?.updateViews()
-            updateAdapter()
+            mainActivity.musicPlayer?.setMusic(safeIndex) {
+                mainActivity.musicPlayer?.currentIndex = safeIndex
+                playerViewModel.playerFragment?.updateViews()
+                updateAdapter()
+            }
         }
     }
 

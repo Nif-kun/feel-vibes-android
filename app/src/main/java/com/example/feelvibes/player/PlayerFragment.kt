@@ -76,6 +76,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
         if (!isCurrentPlaylist)
             libraryViewModel.currentPlaylist = libraryViewModel.selectedPlaylist
 
+
         autoPlay(isCurrentMusic, isCurrentPlaylist)
 
         updateViews()
@@ -174,13 +175,15 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
 
     private fun onMusicCompleteEvent() {
         // Occurs when music automatically moves to the next one.
-        mainActivity.musicPlayer?.onCompletionListener {
-            if (awake) {
+        mainActivity.musicPlayer?.setOnNextListener { playingNext ->
+            // added a binding check because a null binding exception can occur on async.
+            if (playingNext && awake && _binding != null) {
                 updateViews()
-                if (mainActivity.musicPlayer?.isPlaying() != true) {
+                setupDesign()
+            } else {
+                _binding?.let {
                     binding.playBtn.setImageResource(R.drawable.ic_play_arrow_24)
                 }
-                setupDesign()
             }
         }
     }
@@ -325,25 +328,35 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
 
     private fun onSkipPreviousEvent() {
         binding.skipPreviousBtn.setOnClickListener {
-            if (mainActivity.musicPlayer != null && mainActivity.musicPlayer!!.previous(mainActivity.musicPlayer!!.isPlaying())) {
-                libraryViewModel.currentMusic = mainActivity.musicPlayer!!.currentMusic
-                setupLabels()
-                setupCoverArt()
-                setupMusicProp()
-            } else
-                Toast.makeText(mainActivity, "This is the first!", Toast.LENGTH_SHORT).show()
+            if (mainActivity.musicPlayer != null) {
+                mainActivity.musicPlayer!!.previous(mainActivity.musicPlayer!!.isPlaying()) {
+                    if (it) {
+                        libraryViewModel.currentMusic = mainActivity.musicPlayer!!.currentMusic
+                        setupLabels()
+                        setupCoverArt()
+                        setupMusicProp()
+                    } else {
+                        Toast.makeText(mainActivity, "This is the first!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
     private fun onSkipNextEvent() {
         binding.skipNextBtn.setOnClickListener {
-            if (mainActivity.musicPlayer != null && mainActivity.musicPlayer!!.next(mainActivity.musicPlayer!!.isPlaying())) {
-                libraryViewModel.currentMusic = mainActivity.musicPlayer!!.currentMusic
-                setupLabels()
-                setupCoverArt()
-                setupMusicProp()
-            } else
-                Toast.makeText(mainActivity, "This is the last!", Toast.LENGTH_SHORT).show()
+            if (mainActivity.musicPlayer != null) {
+                mainActivity.musicPlayer!!.next(mainActivity.musicPlayer!!.isPlaying()) {
+                    if (it) {
+                        libraryViewModel.currentMusic = mainActivity.musicPlayer!!.currentMusic
+                        setupLabels()
+                        setupCoverArt()
+                        setupMusicProp()
+                    } else {
+                        Toast.makeText(mainActivity, "This is the last!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
@@ -380,17 +393,20 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
     }
 
     private fun autoPlay(isCurrentMusic: Boolean = false, isCurrentPlaylist: Boolean = false) {
+        if (mainActivity.musicPlayer!!.isPlaying())
+            binding.playBtn.setImageResource(R.drawable.ic_pause_24)
         if (!libraryViewModel.navFromSticky) {
             if (!isCurrentPlaylist || !isCurrentMusic) {
                 if (libraryViewModel.currentPlaylist != null) {
-                    mainActivity.musicPlayer?.setPlaylist(libraryViewModel.currentPlaylist!!, libraryViewModel.selectedMusicPos)
-                    mainActivity.musicPlayer?.play()
+                    mainActivity.musicPlayer?.setPlaylist(libraryViewModel.currentPlaylist!!, libraryViewModel.selectedMusicPos) {
+                        if (it) {
+                            mainActivity.musicPlayer?.play()
+                            binding.playBtn.setImageResource(R.drawable.ic_pause_24)
+                        }
+                    }
                     libraryViewModel.selectedMusicPos = 0
                 }
             }
-        }
-        if (mainActivity.musicPlayer != null && mainActivity.musicPlayer!!.isPlaying()) {
-            binding.playBtn.setImageResource(R.drawable.ic_pause_24)
         }
 
          // Autoplay occurs first and sets the value for the currentMusic. This is for when view is being made.

@@ -187,9 +187,27 @@
     <string name="str_continue">Continue</string>
     <string name="register">Register</string>
     <string name="entice_signup">─── Don\'t have an account? ───</string>
-    <string name="feature_warn">An account is needed to unlock extra features such sharing or posting songs and designs. You may login below or sign up for free, and gain the full experience of the app.</string>
-    <string name="skip_feature">Login another time and skip feature</string>
+    <string name="feature_warn">An account is required to access this feature. Please login or signup.</string>
+    <string name="skip_feature">Return to previous page</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
+    <string name="empty_bio">You have not set a bio.</string>
+    <string name="load_error_warn">An error occurred during load!</string>
+    <string name="returnBack">Return</string>
+    <string name="empty_dialog">Dialog is empty…</string>
+    <string name="timeout_error_title">Timeout Error</string>
+    <string name="timeout_error_text">Server took too long to respond.\nPlease press return to leave the page.</string>
+    <string name="timeout_error_text_a">Server took too long to respond.\nPlease press return to close.</string>
+    <string name="follower">Follower</string>
+    <string name="following">Following</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ultricies, ex a luctus posuere, ante nisi efficitur turpis, eget imperdiet sapien lorem id lectus. Vivamus facilisis, massa nec consequat tincidunt, nibh nibh tristique ipsum, vel varius risus augue eget velit augue.</string>
+    <string name="post">Post</string>
+    <string name="got_something_new">Got something new?</string>
+    <string name="no_item_available">No item available...</string>
+    <string name="posts">Posts</string>
+    <string name="shared">Shared</string>
+    <string name="bullet">•</string>
+    <string name="post_time_placeholder">0 seconds ago</string>
+    <string name="user_has_no_post">User has no post...</string>
 
 </resources>

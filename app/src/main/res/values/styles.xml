@@ -4,4 +4,46 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="MaterialAlertDialog" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/rounded_edittext</item>
+    </style>
+
+    <style name="AlertDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/rounded_edittext</item>
+    </style>
+
+    <style name="MaterialNeutralButton" parent="ThemeOverlay.Material3.Button">
+        <item name="backgroundTint">@color/neutral</item>
+        <item name="android:background">@drawable/rounded_neutral_button</item>
+    </style>
+
+    <style name="MaterialDarkButton" parent="ThemeOverlay.Material3.Button">
+        <item name="backgroundTint">@color/blur_white</item>
+        <item name="android:background">@drawable/rounded_neutral_button</item>
+    </style>
+
+    <style name="MaterialPrimaryButton" parent="ThemeOverlay.Material3.Button">
+        <item name="backgroundTint">@color/purple_100</item>
+        <item name="android:background">@drawable/rounded_neutral_button</item>
+    </style>
+
+    <style name="NoBackgroundButton" parent="ThemeOverlay.Material3.Button">
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="DarkOvalButton" parent="ThemeOverlay.Material3.Button">
+        <item name="backgroundTint">@color/blur_black_mild</item>
+        <item name="android:background">@drawable/circle_background</item>
+    </style>
+
+    <style name="BottomSheetDialogStyle" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/bottomSheetBackground</item>
+    </style>
+
+    <style name="bottomSheetBackground" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_bottom_sheet_background</item>
+    </style>
+
 </resources>

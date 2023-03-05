@@ -193,5 +193,5 @@
             app:destination="@id/homeFragment" />
     </fragment>
     <action android:id="@+id/action_global_homeLoginFragment" app:destination="@id/homeLoginFragment" />
-    <action android:id="@+id/action_global_homeRegisterFragment" app:destination="@id/homeRegisterFragment" />
+    <action android:id="@+id/action_global_homeRegisterFragment" app:destination="@id/homeRegisterFragment" /><action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment"/>
 </navigation>

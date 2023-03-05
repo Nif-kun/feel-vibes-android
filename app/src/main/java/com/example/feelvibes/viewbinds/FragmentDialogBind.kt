@@ -1,5 +1,7 @@
 package com.example.feelvibes.viewbinds
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +32,10 @@ abstract class FragmentDialogBind<VB : ViewBinding>(
         _binding = bindingInflater.invoke(inflater)
         if (_binding == null)
             throw IllegalArgumentException("Binding cannot be null!")
+        if (dialog != null && dialog!!.window != null) {
+            val window = dialog!!.window!!
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
         onReady()
         return binding.root
     }

@@ -12,8 +12,6 @@ import com.google.android.material.tabs.TabLayout
 
 class CreateFragment : FragmentBind<FragmentCreateBinding>(FragmentCreateBinding::inflate) {
 
-    //TODO: implement WRITE and READ external file request when first time clicking create button.
-
     private lateinit var createViewModel: CreateViewModel
     private lateinit var homeViewModel: HomeViewModel
 
@@ -33,6 +31,7 @@ class CreateFragment : FragmentBind<FragmentCreateBinding>(FragmentCreateBinding
         buildTabs()
         mainActivity.renameToolBar("Create")
         mainActivity.padMainView()
+        mainActivity.hideToolBarSettings()
         mainActivity.showToolBar()
         homeViewModel.layoutState = HomeViewModel.Layouts.NONE
     }

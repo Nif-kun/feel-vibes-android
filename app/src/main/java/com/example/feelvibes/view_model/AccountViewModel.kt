@@ -10,5 +10,6 @@ class AccountViewModel: ViewModel() {
 
     var selectedUserId: String? = null
 
+    var viewingItem = false
 
 }

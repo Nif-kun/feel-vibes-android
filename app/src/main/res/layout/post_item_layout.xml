@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="13dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_color_night_mode"
+        android:paddingVertical="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="13dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profilePic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/neutral"
+                android:padding="2dp"
+                app:shapeAppearance="@style/roundedImageView"
+                app:strokeColor="@color/white"
+                android:src="@drawable/ic_person_24"
+                android:visibility="visible"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/postUsernameView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/mild_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="@string/username"/>
+
+                <TextView
+                    android:id="@+id/postTimeView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:hint="@string/post_time_placeholder"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/postTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="13dp"
+            android:textSize="16sp"
+            android:textColor="@color/mild_white"
+            android:text="@string/lorem_ipsum"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/uploadItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="13dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/musicItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:background="@drawable/rounded_blur_black_button"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_music_note_24"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/musicTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/mild_white"
+                    android:text="@string/untitled"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/musicDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    style="@style/NoBackgroundButton"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_outline_download_for_offline_24"
+                    tools:ignore="UseAppTint" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/designItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:background="@drawable/rounded_blur_black_button"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_image_24"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/designTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/mild_white"
+                    android:text="@string/untitled"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/designDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    style="@style/NoBackgroundButton"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_outline_download_for_offline_24"
+                    tools:ignore="UseAppTint" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/chordsItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:background="@drawable/rounded_blur_black_button"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_speaker_notes_24"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/chordsTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/mild_white"
+                    android:text="@string/untitled"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/chordsDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    style="@style/NoBackgroundButton"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_outline_download_for_offline_24"
+                    tools:ignore="UseAppTint" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/lyricsItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:background="@drawable/rounded_blur_black_button"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_lyrics_24"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/lyricsTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/mild_white"
+                    android:text="@string/untitled"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/lyricsDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    style="@style/NoBackgroundButton"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_outline_download_for_offline_24"
+                    tools:ignore="UseAppTint" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -21,6 +21,7 @@ import com.example.feelvibes.databinding.ActivityMainBinding
 import com.example.feelvibes.services.BackgroundSoundService
 import com.example.feelvibes.utils.MusicPlayer
 import com.example.feelvibes.utils.PermissionHandler
+import com.example.feelvibes.utils.ShortLib
 import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.view_model.HomeViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
@@ -73,7 +74,6 @@ class MainActivity : AppCompatActivity() {
         accountViewModel = ViewModelProvider(this)[AccountViewModel::class.java]
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         mAuth = FirebaseAuth.getInstance()
-        supportActionBar?.hide()
 
         // Binding process
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -283,7 +283,7 @@ class MainActivity : AppCompatActivity() {
         binding.customToolbar.toolBarSettingsBtn.visibility = View.VISIBLE
     }
     fun hideToolBarSettings() {
-        binding.customToolbar.toolBarSettingsBtn.visibility = View.VISIBLE
+        binding.customToolbar.toolBarSettingsBtn.visibility = View.GONE
     }
 
     fun showMainMenu() {
@@ -299,11 +299,17 @@ class MainActivity : AppCompatActivity() {
             updateStickyPlayerLabel()
             updateStickyPlayerCoverArt()
             updateStickyPlayerProgressBar()
-            musicPlayer!!.onCompletionListener {
-                updateStickyPlayerLabel()
-                updateStickyPlayerCoverArt()
-                if (!musicPlayer!!.isPlaying())
-                    binding.stickyPlayerInclude.playBtn.setImageResource(R.drawable.ic_play_arrow_24)
+            musicPlayer!!.setOnNextListener { playingNext ->
+                try { // A binding null can probably occur due to being async, just playing safe here.
+                    if (playingNext) {
+                        updateStickyPlayerLabel()
+                        updateStickyPlayerCoverArt()
+                    } else {
+                        binding.stickyPlayerInclude.playBtn.setImageResource(R.drawable.ic_play_arrow_24)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
             onStickyPlayerEvent()
             onStickyPlayerPlayEvent()
@@ -347,7 +353,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun onStickyPlayerEvent() {
         binding.stickyPlayerInclude.stickyPlayerLayout.setOnClickListener {
-
             navController?.navigate(R.id.action_global_playerFragment)
             libraryViewModel.navFromSticky = true
         }
@@ -371,21 +376,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun onStickyPlayerNextEvent() {
         binding.stickyPlayerInclude.skipNextBtn.setOnClickListener {
-            if (musicPlayer?.isPlaying()?.let { it1 -> musicPlayer?.next(it1) } == true) {
-                updateStickyPlayerLabel()
-                updateStickyPlayerCoverArt()
-            } else
-                Toast.makeText(this, "This is the last!", Toast.LENGTH_SHORT).show()
+            val isPlaying = musicPlayer?.isPlaying()
+            if (isPlaying != null) {
+                musicPlayer?.next(isPlaying) {
+                    if (it) {
+                        updateStickyPlayerLabel()
+                        updateStickyPlayerCoverArt()
+                    } else
+                        Toast.makeText(this, "This is the last!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
     private fun onStickyPlayerPreviousEvent() {
         binding.stickyPlayerInclude.skipPreviousBtn.setOnClickListener {
-            if (musicPlayer?.isPlaying()?.let { it1 -> musicPlayer?.previous(it1) } == true) {
-                updateStickyPlayerLabel()
-                updateStickyPlayerCoverArt()
-            } else
-                Toast.makeText(this, "This is the first!", Toast.LENGTH_SHORT).show()
+            val isPlaying = musicPlayer?.isPlaying()
+            if (isPlaying != null) {
+                musicPlayer?.previous(isPlaying) {
+                    if (it) {
+                        updateStickyPlayerLabel()
+                        updateStickyPlayerCoverArt()
+                    } else
+                        Toast.makeText(this, "This is the first!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

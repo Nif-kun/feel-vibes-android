@@ -8,10 +8,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.core.graphics.drawable.toBitmap
 import pl.droidsonroids.gif.GifDrawable
-import java.io.BufferedInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
+import java.io.*
 
 
 class InternalStorageHandler {
@@ -124,6 +121,17 @@ class InternalStorageHandler {
             val gifDrawable = GifDrawable(byteArray)
             fileInputStream.close()
             return gifDrawable
+        }
+
+        fun uriToFile(context: Context, uri: Uri): File {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val file = File(context.cacheDir, "temp_file")
+            file.createNewFile()
+            val outputStream = FileOutputStream(file)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+            return file
         }
 
     }

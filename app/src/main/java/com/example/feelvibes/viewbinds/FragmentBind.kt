@@ -13,7 +13,7 @@ abstract class FragmentBind<VB : ViewBinding>(
     private val bindingInflater: (inflater: LayoutInflater) -> VB
 ) : Fragment() {
 
-    private var _binding: VB? = null
+    var _binding: VB? = null
     val binding get() : VB = _binding as VB
     lateinit var mainActivity : MainActivity
 

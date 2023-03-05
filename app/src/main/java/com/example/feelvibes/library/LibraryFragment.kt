@@ -40,6 +40,7 @@ class LibraryFragment : FragmentBind<FragmentLibraryBinding>(FragmentLibraryBind
         buildTabs()
         mainActivity.renameToolBar("Library")
         mainActivity.padMainView()
+        mainActivity.hideToolBarSettings()
         mainActivity.showToolBar()
         homeViewModel.layoutState = HomeViewModel.Layouts.NONE
     }

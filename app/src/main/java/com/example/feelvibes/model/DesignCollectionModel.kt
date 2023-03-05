@@ -49,6 +49,11 @@ class DesignCollectionModel(
         list.addAll(newList)
     }
 
+    fun rawUpdate(newList: ArrayList<ProjectModel>) {
+        list.clear()
+        list.addAll(newList)
+    }
+
     fun remove(model: DesignModel): Boolean {
         return list.remove(model)
     }
