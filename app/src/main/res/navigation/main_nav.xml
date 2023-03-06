@@ -194,4 +194,16 @@
     </fragment>
     <action android:id="@+id/action_global_homeLoginFragment" app:destination="@id/homeLoginFragment" />
     <action android:id="@+id/action_global_homeRegisterFragment" app:destination="@id/homeRegisterFragment" /><action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment"/>
+    <fragment
+        android:id="@+id/designViewerFragment"
+        android:name="com.example.feelvibes.home.viewer.DesignViewerFragment"
+        android:label="fragment_design_viewer"
+        tools:layout="@layout/fragment_design_viewer" />
+    <action android:id="@+id/action_global_designViewerFragment" app:destination="@id/designViewerFragment" />
+    <action android:id="@+id/action_global_profileFragment" app:destination="@id/profileFragment" />
+    <fragment
+        android:id="@+id/textViewerFragment"
+        android:name="com.example.feelvibes.home.viewer.TextViewerFragment"
+        android:label="fragment_text_viewer"
+        tools:layout="@layout/fragment_text_viewer" /><action android:id="@+id/action_global_textViewerFragment" app:destination="@id/textViewerFragment"/>
 </navigation>

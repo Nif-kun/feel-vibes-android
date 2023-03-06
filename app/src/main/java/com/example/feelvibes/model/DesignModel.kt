@@ -1,6 +1,11 @@
 package com.example.feelvibes.model
 
 import android.app.Activity
+import android.content.Context
+import android.net.Uri
+import com.example.feelvibes.utils.ExternalStorageHandler
+import com.example.feelvibes.utils.InternalStorageHandler
+import com.example.feelvibes.utils.ShortLib
 import kotlinx.parcelize.Parcelize
 import java.io.File
 
@@ -40,6 +45,21 @@ class DesignModel(
         } catch (e: Exception) {
             e.printStackTrace()
             null
+        }
+    }
+
+    fun saveImagesToInternal(activity: Activity, rename: Boolean = false) {
+        val foregroundType = ShortLib.fileTypeFromUrl(foregroundImagePath) ?: "png"
+        val foregroundFilename = "${id}_fg.$foregroundType"
+        InternalStorageHandler.saveImageInBackground(activity, foregroundImagePath, foregroundFilename)
+
+        val backgroundType = ShortLib.fileTypeFromUrl(backgroundImagePath) ?: "png"
+        val backgroundFilename = "${id}_bg.$backgroundType"
+        InternalStorageHandler.saveImageInBackground(activity, backgroundImagePath, backgroundFilename)
+
+        if (rename) {
+            foregroundImagePath = foregroundFilename
+            backgroundImagePath = backgroundFilename
         }
     }
 

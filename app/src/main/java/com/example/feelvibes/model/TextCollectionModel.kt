@@ -42,8 +42,26 @@ class TextCollectionModel(
         list.addAll(newList)
     }
 
+    fun add(model: TextModel): Boolean {
+        return list.add(model)
+    }
+
     fun remove(model: TextModel): Boolean {
         return list.remove(model)
+    }
+
+    fun find(projectModel: ProjectModel): ProjectModel? {
+        for (model in list) {
+            if (model.id == projectModel.id)
+                return model
+        }
+        return null
+    }
+
+    fun has(projectModel: ProjectModel): Boolean {
+        if (find(projectModel) != null)
+            return true
+        return false
     }
 
     fun findLyrics(musicPropModel: MusicPropModel?): TextModel? {
@@ -66,6 +84,10 @@ class TextCollectionModel(
             }
         }
         return null
+    }
+
+    fun isEmpty(): Boolean {
+        return list.isEmpty()
     }
 
 }

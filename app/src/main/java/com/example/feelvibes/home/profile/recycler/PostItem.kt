@@ -1,12 +1,14 @@
 package com.example.feelvibes.home.profile.recycler
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.feelvibes.R
+import com.example.feelvibes.utils.ShortLib
 
 class PostItem(
     private val musicItem: LinearLayout,
@@ -45,11 +47,29 @@ class PostItem(
     }
 
     @SuppressLint("CheckResult")
-    fun setDownloadButtonState(state:Int) {
+    fun setDownloadButtonState(context: Context, state:Int) {
         when (state) {
-            DownloadStates.DEFAULT -> Glide.with(musicDownload).load(R.drawable.ic_outline_download_for_offline_24)
-            DownloadStates.DOWNLOADING -> Glide.with(musicDownload).load(R.drawable.ic_outline_downloading_24)
-            DownloadStates.DOWNLOADED -> Glide.with(musicDownload).load(R.drawable.ic_download_for_offline_24)
+            DownloadStates.DEFAULT -> {
+                Glide
+                    .with(context)
+                    .load(R.drawable.ic_outline_download_for_offline_24)
+                    .override(ShortLib.dpToPx(24f, context).toInt(), ShortLib.dpToPx(24f, context).toInt())
+                    .into(musicDownload)
+            }
+            DownloadStates.DOWNLOADING -> {
+                Glide
+                    .with(context)
+                    .load(R.drawable.ic_outline_downloading_24)
+                    .override(ShortLib.dpToPx(24f, context).toInt(), ShortLib.dpToPx(24f, context).toInt())
+                    .into(musicDownload)
+            }
+            DownloadStates.DOWNLOADED -> {
+                Glide
+                    .with(context)
+                    .load(R.drawable.ic_download_for_offline_24)
+                    .override(ShortLib.dpToPx(24f, context).toInt(), ShortLib.dpToPx(24f, context).toInt())
+                    .into(musicDownload)
+            }
         }
     }
 

@@ -47,12 +47,6 @@ class MusicDataHandler {
                 }
             }
 
-            // TODO
-            //  playlistDataList will be populated if playlistPreset exists, it will refer PlaylistModel value from it.
-            //  If already implemented, playlistModel should have a settable preset array of Strings to store paths.
-            //  Or better yet, have the playlistModel load then use it as playlistPreset, turning playlistDataList into a var
-            //  Refer to PlaylistFragment ^^^
-
             // Construct cursor arguments
             val projection = arrayListOf(
                 MediaStore.Audio.Media.DATA,
@@ -65,15 +59,15 @@ class MusicDataHandler {
                 MediaStore.Audio.Media.ALBUM_ID)
             val selection : String = MediaStore.Audio.Media.IS_MUSIC+" != 0"
             val sortOrder : String = MediaStore.Audio.Media.TRACK+" ASC"
-            val cursor : Cursor = activity.contentResolver.query(
+            val cursor : Cursor? = activity.contentResolver.query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection.toTypedArray(),
                 selection,
                 null,
-                sortOrder)!!
+                sortOrder)
 
             // Start file scan
-            while (cursor.moveToNext()) {
+            while (cursor != null && cursor.moveToNext()) {
                 val musicData = MusicModel(
                     path = cursor.getString(0),
                     track = cursor.getString(1),
@@ -108,7 +102,7 @@ class MusicDataHandler {
                         musicDataList.add(musicData)
                 }
             }
-            cursor.close()
+            cursor?.close()
 
             // Apply gathered data
             if (sortFilter != PlaylistModel.Type.NONE)

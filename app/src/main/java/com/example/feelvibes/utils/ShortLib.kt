@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.ParcelFileDescriptor
+import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import java.io.FileDescriptor
 import java.io.IOException
@@ -51,8 +52,27 @@ class ShortLib {
             }
         }
 
-        fun getFileType(activity: Activity, uri: Uri): String? {
+        fun getImageFileType(activity: Activity, uri: Uri): String? {
             val mimeType = activity.contentResolver?.getType(uri)
+            if (mimeType != null) {
+                if (mimeType.contains("jpg", true) || mimeType.contains("jpeg", true)) {
+                    return "jpg"
+                } else if (mimeType.contains("png", true)) {
+                    return "png"
+                } else if (mimeType.contains("gif", true)) {
+                    return "gif"
+                }
+            }
+            return null
+        }
+
+        fun fileTypeFromUrlRaw(url: String): String? {
+            val fileExtension = MimeTypeMap.getFileExtensionFromUrl(url)
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension)
+        }
+
+        fun fileTypeFromUrl(url: String): String? {
+            val mimeType = fileTypeFromUrlRaw(url)
             if (mimeType != null) {
                 if (mimeType.contains("jpg", true) || mimeType.contains("jpeg", true)) {
                     return "jpg"

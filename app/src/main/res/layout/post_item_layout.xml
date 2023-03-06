@@ -111,10 +111,11 @@
                     android:id="@+id/musicDownload"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:maxWidth="24dp"
                     android:scaleType="centerCrop"
                     style="@style/NoBackgroundButton"
                     android:tint="@color/mild_white"
-                    android:src="@drawable/ic_outline_download_for_offline_24"
+                    android:src="@drawable/ic_outline_file_download_24"
                     tools:ignore="UseAppTint" />
             </LinearLayout>
             <LinearLayout
@@ -151,6 +152,7 @@
                     android:id="@+id/designDownload"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:maxWidth="24dp"
                     android:scaleType="centerCrop"
                     style="@style/NoBackgroundButton"
                     android:tint="@color/mild_white"
@@ -191,6 +193,7 @@
                     android:id="@+id/chordsDownload"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:maxWidth="24dp"
                     android:scaleType="centerCrop"
                     style="@style/NoBackgroundButton"
                     android:tint="@color/mild_white"
@@ -231,6 +234,7 @@
                     android:id="@+id/lyricsDownload"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:maxWidth="24dp"
                     android:scaleType="centerCrop"
                     style="@style/NoBackgroundButton"
                     android:tint="@color/mild_white"

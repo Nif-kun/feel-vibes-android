@@ -8,15 +8,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.feelvibes.R
+import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.model.PostModel
+import com.example.feelvibes.model.TextModel
 import com.example.feelvibes.utils.FVFireStoreHandler
 import com.example.feelvibes.utils.ShortLib
+import com.example.feelvibes.view_model.CreateViewModel
 import com.google.android.material.imageview.ShapeableImageView
+import org.w3c.dom.Text
 
 class PostsRecyclerAdapter(
     private val activity : Activity,
     private val postRecyclerEvent: PostRecyclerEvent,
-    private val posts : ArrayList<PostModel>
+    private val posts : ArrayList<PostModel>,
+    private val createViewModel: CreateViewModel? = null
 ): RecyclerView.Adapter<PostsRecyclerAdapter.ItemViewHolder>() {
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -63,6 +68,12 @@ class PostsRecyclerAdapter(
                         .into(postUserPic);
                 }
             }
+            postUserPic.setOnClickListener {
+                postRecyclerEvent.onUserClick(userId)
+            }
+            postUsername.setOnClickListener {
+                postRecyclerEvent.onUserClick(userId)
+            }
         }
 
         fun loadPost(userId: String, postId: String) {
@@ -108,6 +119,13 @@ class PostsRecyclerAdapter(
                             )
                         }
                     }
+
+                    // Download event
+                    musicItem.setOnDownloadListener {
+                        val url = music["url"] as? String
+                        if (url != null)
+                            postRecyclerEvent.onMusicDownload(url, title)
+                    }
                 }
 
                 val design = map?.get("design") as? MutableMap<*, *>
@@ -118,7 +136,27 @@ class PostsRecyclerAdapter(
                     } else { "Untitled" }
                     designItem.setName(name)
                     designItem.setOnClickListener {
-                        postRecyclerEvent.onDesignClick(name, postUsername.text.toString(), (design["foreground"] as? String), (design["background"] as? String))
+                        postRecyclerEvent.onDesignClick(postId, name, (design["foreground"] as? String), (design["background"] as? String))
+                    }
+
+                    // Download Event
+                    val designModel = DesignModel(
+                        postId,
+                        name,
+                        "#FFFFFF",
+                        (design["background"] as? String) ?: "",
+                        (design["foreground"] as? String) ?: ""
+
+                    )
+                    if (createViewModel?.designCollection?.isEmpty() == true)
+                        createViewModel.designCollection.populateFromStored(activity)
+                    if (createViewModel?.designCollection?.has(designModel) == true)
+                        designItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                    else {
+                        designItem.setOnDownloadListener {
+                            postRecyclerEvent.onDesignDownload(designModel)
+                            designItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                        }
                     }
                 }
 
@@ -128,9 +166,23 @@ class PostsRecyclerAdapter(
                     val name = if (chords["name"] != null) {
                         chords["name"] as String
                     } else { "Untitled" }
+                    val chordsText = chords["text"] as? String
                     chordsItem.setName(name)
                     chordsItem.setOnClickListener {
-                        postRecyclerEvent.onChordsClick(name, postUsername.text.toString(), chords["text"] as? String)
+                        postRecyclerEvent.onChordsClick(postId, name, chordsText)
+                    }
+
+                    // Download event
+                    val textModel = TextModel(postId, name, chordsText ?: "Error: text is missing!")
+                    if (createViewModel?.chordsCollection?.isEmpty() == true)
+                        createViewModel.chordsCollection.populateFromStored(activity)
+                    if (createViewModel?.chordsCollection?.has(textModel) == true)
+                        chordsItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                    else {
+                        chordsItem.setOnDownloadListener {
+                            postRecyclerEvent.onChordsDownload(textModel)
+                            chordsItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                        }
                     }
                 }
 
@@ -140,9 +192,23 @@ class PostsRecyclerAdapter(
                     val name = if (lyrics["name"] != null) {
                         lyrics["name"] as String
                     } else { "Untitled" }
+                    val lyricsText = lyrics["text"] as? String
                     lyricsItem.setName(name)
                     lyricsItem.setOnClickListener {
-                        postRecyclerEvent.onLyricsClick(name, postUsername.text.toString(), lyrics["text"] as? String)
+                        postRecyclerEvent.onLyricsClick(postId, name, lyricsText)
+                    }
+
+                    // Download event
+                    val textModel = TextModel(postId, name, lyricsText ?: "Error: text is missing!")
+                    if (createViewModel?.lyricsCollection?.isEmpty() == true)
+                        createViewModel.lyricsCollection.populateFromStored(activity)
+                    if (createViewModel?.lyricsCollection?.has(textModel) == true)
+                        lyricsItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                    else {
+                        lyricsItem.setOnDownloadListener {
+                            postRecyclerEvent.onLyricsDownload(textModel)
+                            lyricsItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                        }
                     }
                 }
             }

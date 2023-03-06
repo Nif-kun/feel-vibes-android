@@ -54,6 +54,10 @@ class DesignCollectionModel(
         list.addAll(newList)
     }
 
+    fun add(model: DesignModel): Boolean {
+        return list.add(model)
+    }
+
     fun remove(model: DesignModel): Boolean {
         return list.remove(model)
     }
@@ -67,6 +71,24 @@ class DesignCollectionModel(
             }
         }
         return null
+    }
+
+    fun find(projectModel: ProjectModel): ProjectModel? {
+        for (model in list) {
+            if (model.id == projectModel.id)
+                return model
+        }
+        return null
+    }
+
+    fun has(projectModel: ProjectModel): Boolean {
+        if (find(projectModel) != null)
+            return true
+        return false
+    }
+
+    fun isEmpty(): Boolean {
+        return list.isEmpty()
     }
 
 }

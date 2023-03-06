@@ -1,16 +1,18 @@
 package com.example.feelvibes.home.profile.category
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.R
+import com.example.feelvibes.create.CreateFragment
 import com.example.feelvibes.databinding.FragmentPostsCategoryBinding
 import com.example.feelvibes.home.profile.recycler.PostRecyclerEvent
 import com.example.feelvibes.home.profile.recycler.PostsRecyclerAdapter
-import com.example.feelvibes.model.MusicModel
-import com.example.feelvibes.model.PlaylistModel
-import com.example.feelvibes.model.PostModel
+import com.example.feelvibes.model.*
+import com.example.feelvibes.utils.ExternalStorageHandler
 import com.example.feelvibes.view_model.AccountViewModel
+import com.example.feelvibes.view_model.CreateViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,11 +21,13 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
 
     private lateinit var accountViewModel : AccountViewModel
     private lateinit var libraryViewModel: LibraryViewModel
+    private lateinit var createViewModel: CreateViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accountViewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
+        createViewModel = ViewModelProvider(requireActivity())[CreateViewModel::class.java]
         accountViewModel.viewingItem = false
     }
 
@@ -65,8 +69,14 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
         binding.postsRecyclerView.adapter = PostsRecyclerAdapter(
             requireActivity(),
             this,
-            postModels
+            postModels,
+            createViewModel
         )
+    }
+
+    override fun onUserClick(userId: String) {
+        accountViewModel.selectedUserId = userId
+        findNavController().navigate(R.id.action_global_profileFragment)
     }
 
     override fun onMusicClick(
@@ -85,16 +95,65 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
         findNavController().navigate(R.id.action_global_playerFragment)
     }
 
-    override fun onDesignClick(name: String, author: String, foregroundUrl: String?, backgroundUrl: String?) {
-
+    override fun onMusicDownload(url: String, title: String) {
+        ExternalStorageHandler.downloadAudioFile(requireActivity(), url, title)
+        Toast.makeText(requireContext(), "Starting download...", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onChordsClick(name: String, author: String, chords: String?) {
-
+    override fun onDesignClick(id: String, name: String, foregroundUrl: String?, backgroundUrl: String?) {
+        val safeForegroundUrl = foregroundUrl ?: ""
+        val safeBackgroundUrl = backgroundUrl ?: ""
+        val designModel = DesignModel(id, name, "#FFFFFF", safeBackgroundUrl, safeForegroundUrl)
+        createViewModel.selectedDesignModel = designModel
+        accountViewModel.viewingItem = true
+        findNavController().navigate(R.id.action_global_designViewerFragment)
     }
 
-    override fun onLyricsClick(name: String, author: String, lyrics: String?) {
+    override fun onDesignDownload(designModel: DesignModel) {
+        designModel.saveImagesToInternal(requireActivity(), true)
+        if (createViewModel.designCollection.isEmpty())
+            createViewModel.designCollection.populateFromStored(requireActivity())
+        if (!createViewModel.designCollection.has(designModel)) {
+            createViewModel.designCollection.add(designModel)
+            createViewModel.designCollection.saveToStored(requireActivity())
+            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+        }
+    }
 
+    override fun onChordsClick(id: String, name: String, chords: String?) {
+        val textModel = TextModel(id, name, chords ?: "Error: text is missing!")
+        createViewModel.selectedTextModel = textModel
+        createViewModel.currentCreateTab = CreateFragment.CHORDS
+        accountViewModel.viewingItem = true
+        findNavController().navigate(R.id.action_global_textViewerFragment)
+    }
+
+    override fun onChordsDownload(textModel: TextModel) {
+        if (createViewModel.chordsCollection.isEmpty())
+            createViewModel.chordsCollection.populateFromStored(requireActivity())
+        if (!createViewModel.chordsCollection.has(textModel)) {
+            createViewModel.chordsCollection.add(textModel)
+            createViewModel.chordsCollection.saveToStored(requireActivity())
+            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onLyricsClick(id: String, name: String, lyrics: String?) {
+        val textModel = TextModel(id, name, lyrics ?: "Error: text is missing!")
+        createViewModel.selectedTextModel = textModel
+        createViewModel.currentCreateTab = CreateFragment.LYRICS
+        accountViewModel.viewingItem = true
+        findNavController().navigate(R.id.action_global_textViewerFragment)
+    }
+
+    override fun onLyricsDownload(textModel: TextModel) {
+        if (createViewModel.lyricsCollection.isEmpty())
+            createViewModel.lyricsCollection.populateFromStored(requireActivity())
+        if (!createViewModel.lyricsCollection.has(textModel)) {
+            createViewModel.lyricsCollection.add(textModel)
+            createViewModel.lyricsCollection.saveToStored(requireActivity())
+            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

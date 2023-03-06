@@ -9,6 +9,8 @@ import android.net.Uri
 import androidx.core.graphics.drawable.toBitmap
 import pl.droidsonroids.gif.GifDrawable
 import java.io.*
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class InternalStorageHandler {
@@ -60,6 +62,41 @@ class InternalStorageHandler {
             }
             return completed
         }
+
+        fun saveImageFromUrl(context: Context, imageUrl: String, fileName: String): Boolean {
+            var input: InputStream? = null
+            var output: OutputStream? = null
+            try {
+                val connection = URL(imageUrl).openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                input = connection.inputStream
+
+                output = context.openFileOutput(fileName, MODE_PRIVATE)
+                val buffer = ByteArray(4 * 1024)
+                var read: Int
+                while (input.read(buffer).also { read = it } != -1) {
+                    output.write(buffer, 0, read)
+                }
+                output.flush()
+
+                return true
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                input?.close()
+                output?.close()
+            }
+            return false
+        }
+
+        // Call this function from a background thread
+        fun saveImageInBackground(context: Context, imageUrl: String, fileName: String) {
+            Thread {
+                saveImageFromUrl(context, imageUrl, fileName)
+            }.start()
+        }
+
 
         // Tested: returns a FileNotFoundException
         fun saveFile(context: Context, file: File?, fileName: String) {

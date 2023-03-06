@@ -1,6 +1,11 @@
 package com.example.feelvibes.home.profile.recycler
 
+import com.example.feelvibes.model.DesignModel
+import com.example.feelvibes.model.TextModel
+
 interface PostRecyclerEvent {
+
+    fun onUserClick(userId: String) {}
 
     fun onMusicClick(
         url: String,
@@ -11,13 +16,14 @@ interface PostRecyclerEvent {
         album: String?,
         genre: String?
     ) {}
-    fun onDesignClick(name: String, author: String, foregroundUrl: String?, backgroundUrl: String?) {}
-    fun onChordsClick(name: String, author: String, chords: String?) {}
-    fun onLyricsClick(name: String, author: String, lyrics: String?) {}
+    fun onDesignClick(id: String, name: String, foregroundUrl: String?, backgroundUrl: String?) {}
+    fun onChordsClick(id: String, name: String, chords: String?) {}
+    fun onLyricsClick(id: String, name: String, lyrics: String?) {}
 
-    fun onMusicDownload(title: String, id: String, url: String) {}
-    fun onDesignDownload(name: String, id: String, foregroundUrl: String, backgroundUrl: String) {}
-    fun onChordsDownload(name: String, id: String, chords: String) {}
-    fun onLyricsDownload(name: String, id: String, lyrics: String) {}
+    // Deprecate(?)
+    fun onMusicDownload(url: String, title: String) {}
+    fun onDesignDownload(designModel: DesignModel) {}
+    fun onChordsDownload(textModel:TextModel) {}
+    fun onLyricsDownload(textModel:TextModel) {}
 
 }
