@@ -1,6 +1,7 @@
 package com.example.feelvibes.utils
 
 import android.net.Uri
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
@@ -51,6 +52,18 @@ class FVFireStoreHandler {
                 it.printStackTrace()
                 callback(null)
             }
+        }
+
+        fun deletePost(userId:String, postId:String, callback: (Boolean, Exception?) -> Unit?) {
+            val docRef = FirebaseFirestore.getInstance().collection("usersPost").document(userId)
+            val updates = hashMapOf<String, Any>(
+                postId to FieldValue.delete()
+            )
+            docRef.update(updates)
+                .addOnSuccessListener { callback(true, null) }
+                .addOnFailureListener { e ->
+                    callback(false, e)
+                }
         }
 
         fun getPostTime(userId:String, postId:String, callback: ((String?)->Unit)) {

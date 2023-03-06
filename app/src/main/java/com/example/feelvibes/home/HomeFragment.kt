@@ -285,7 +285,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
 
             designItem?.let { model ->
-                if (!model.getForegroundPath(mainActivity).isNullOrEmpty()) {
+                if (!model.getForegroundPath(mainActivity).isNullOrBlank()) {
                     val foregroundUri = Uri.fromFile(File(model.getForegroundPath(mainActivity)!!))
                     val fileRef = storageRef.child("$userId/$sanitizedFormatted/${foregroundUri.lastPathSegment!!}")
                     FireBaseStorageHandler.putFile(fileRef, foregroundUri) { success ->
@@ -305,7 +305,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
                         }
                     }
                 }
-                if (!model.getBackgroundPath(mainActivity).isNullOrEmpty()) {
+                if (!model.getBackgroundPath(mainActivity).isNullOrBlank()) {
                     val backgroundUri = Uri.fromFile(File(model.getBackgroundPath(mainActivity)!!))
                     val fileRef = storageRef.child("$userId/$sanitizedFormatted/${backgroundUri.lastPathSegment!!}")
                     FireBaseStorageHandler.putFile(fileRef, backgroundUri) { success ->

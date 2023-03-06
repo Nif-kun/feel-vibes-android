@@ -1,4 +1,4 @@
-package com.example.feelvibes.home.profile.recycler
+package com.example.feelvibes.home.recycler
 
 import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.model.TextModel
@@ -25,5 +25,7 @@ interface PostRecyclerEvent {
     fun onDesignDownload(designModel: DesignModel) {}
     fun onChordsDownload(textModel:TextModel) {}
     fun onLyricsDownload(textModel:TextModel) {}
+
+    fun onDeletePostClick(userId: String, postId: String, postFolderId: String) {}
 
 }

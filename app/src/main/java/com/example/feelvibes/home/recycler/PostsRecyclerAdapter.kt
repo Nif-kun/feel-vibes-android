@@ -1,13 +1,16 @@
-package com.example.feelvibes.home.profile.recycler
+package com.example.feelvibes.home.recycler
 
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.feelvibes.R
+import com.example.feelvibes.dialogs.ConfirmationAlertDialog
+import com.example.feelvibes.dialogs.SimpleAlertDialog
 import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.model.PostModel
 import com.example.feelvibes.model.TextModel
@@ -20,6 +23,7 @@ class PostsRecyclerAdapter(
     private val activity : Activity,
     private val postRecyclerEvent: PostRecyclerEvent,
     private val posts : ArrayList<PostModel>,
+    private val userId: String? = null,
     private val createViewModel: CreateViewModel? = null
 ): RecyclerView.Adapter<PostsRecyclerAdapter.ItemViewHolder>() {
 
@@ -30,6 +34,8 @@ class PostsRecyclerAdapter(
 
         val postTime: TextView = itemView.findViewById(R.id.postTimeView)
         val postText: TextView = itemView.findViewById(R.id.postTextView)
+
+        val deleteButton: ImageButton = itemView.findViewById(R.id.deleteBtn)
 
         val musicItem = PostItem(
             itemView.findViewById(R.id.musicItem),
@@ -75,8 +81,9 @@ class PostsRecyclerAdapter(
             }
         }
 
-        fun loadPost(userId: String, postId: String) {
+        fun loadPost(userId: String, postId: String, isOwner: Boolean = false) {
             FVFireStoreHandler.getPost(userId, postId) { map ->
+
 
                 // timeView
                 val time = map?.get("time") as? String
@@ -85,6 +92,17 @@ class PostsRecyclerAdapter(
                     postTime.visibility = View.VISIBLE
                 } else {
                     postTime.visibility = View.GONE
+                }
+
+                // Delete button
+                if (isOwner && map != null) {
+                    deleteButton.visibility = View.VISIBLE
+                    deleteButton.setOnClickListener {
+                        if (time != null) {
+                            val postFolderId = time.replace("-", "").replace(":", "").replace("/", "")
+                            postRecyclerEvent.onDeletePostClick(userId, postId, postFolderId)
+                        }
+                    }
                 }
 
                 // textView
@@ -150,11 +168,15 @@ class PostsRecyclerAdapter(
                     if (createViewModel?.designCollection?.isEmpty() == true)
                         createViewModel.designCollection.populateFromStored(activity)
                     if (createViewModel?.designCollection?.has(designModel) == true)
-                        designItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                        designItem.setDownloadButtonState(activity,
+                            PostItem.DownloadStates.DOWNLOADED
+                        )
                     else {
                         designItem.setOnDownloadListener {
                             postRecyclerEvent.onDesignDownload(designModel)
-                            designItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                            designItem.setDownloadButtonState(activity,
+                                PostItem.DownloadStates.DOWNLOADED
+                            )
                         }
                     }
                 }
@@ -176,11 +198,15 @@ class PostsRecyclerAdapter(
                     if (createViewModel?.chordsCollection?.isEmpty() == true)
                         createViewModel.chordsCollection.populateFromStored(activity)
                     if (createViewModel?.chordsCollection?.has(textModel) == true)
-                        chordsItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                        chordsItem.setDownloadButtonState(activity,
+                            PostItem.DownloadStates.DOWNLOADED
+                        )
                     else {
                         chordsItem.setOnDownloadListener {
                             postRecyclerEvent.onChordsDownload(textModel)
-                            chordsItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                            chordsItem.setDownloadButtonState(activity,
+                                PostItem.DownloadStates.DOWNLOADED
+                            )
                         }
                     }
                 }
@@ -202,11 +228,15 @@ class PostsRecyclerAdapter(
                     if (createViewModel?.lyricsCollection?.isEmpty() == true)
                         createViewModel.lyricsCollection.populateFromStored(activity)
                     if (createViewModel?.lyricsCollection?.has(textModel) == true)
-                        lyricsItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                        lyricsItem.setDownloadButtonState(activity,
+                            PostItem.DownloadStates.DOWNLOADED
+                        )
                     else {
                         lyricsItem.setOnDownloadListener {
                             postRecyclerEvent.onLyricsDownload(textModel)
-                            lyricsItem.setDownloadButtonState(activity, PostItem.DownloadStates.DOWNLOADED)
+                            lyricsItem.setDownloadButtonState(activity,
+                                PostItem.DownloadStates.DOWNLOADED
+                            )
                         }
                     }
                 }
@@ -225,7 +255,7 @@ class PostsRecyclerAdapter(
         val userId = posts[position].userId
         val postId = posts[position].id
         holder.loadUser(userId)
-        holder.loadPost(userId, postId)
+        holder.loadPost(userId, postId, this.userId == userId)
     }
 
     override fun getItemCount(): Int {

@@ -57,6 +57,19 @@
 
             </LinearLayout>
 
+            <!-- Insert delete button here -->
+            <ImageButton
+                android:id="@+id/deleteBtn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                style="@style/NoBackgroundButton"
+                android:scaleType="fitXY"
+                android:padding="10dp"
+                android:tint="@color/warn_red"
+                android:src="@drawable/ic_delete_24"
+                tools:ignore="UseAppTint"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
         <TextView

@@ -1,23 +1,29 @@
 package com.example.feelvibes.home.profile.category
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.R
 import com.example.feelvibes.create.CreateFragment
 import com.example.feelvibes.databinding.FragmentPostsCategoryBinding
-import com.example.feelvibes.home.profile.recycler.PostRecyclerEvent
-import com.example.feelvibes.home.profile.recycler.PostsRecyclerAdapter
+import com.example.feelvibes.dialogs.ConfirmationAlertDialog
+import com.example.feelvibes.home.recycler.PostRecyclerEvent
+import com.example.feelvibes.home.recycler.PostsRecyclerAdapter
 import com.example.feelvibes.model.*
 import com.example.feelvibes.utils.ExternalStorageHandler
+import com.example.feelvibes.utils.FVFireStoreHandler
+import com.example.feelvibes.utils.FireBaseStorageHandler
 import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.view_model.CreateViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
-class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCategoryBinding::inflate), PostRecyclerEvent {
+class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCategoryBinding::inflate),
+    PostRecyclerEvent {
 
     private lateinit var accountViewModel : AccountViewModel
     private lateinit var libraryViewModel: LibraryViewModel
@@ -70,6 +76,7 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
             requireActivity(),
             this,
             postModels,
+            accountViewModel.currentUser?.uid,
             createViewModel
         )
     }
@@ -154,6 +161,39 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
             createViewModel.lyricsCollection.saveToStored(requireActivity())
             Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onDeletePostClick(userId: String, postId: String, postFolderId: String) {
+        // Do delete here.
+        val deleteDialog = ConfirmationAlertDialog()
+        deleteDialog.title = "Remove Post"
+        deleteDialog.text = "You are about to delete your post, are you sure?"
+        deleteDialog.confirmListener = {
+            val folderPath = "userPostFiles/$userId/$postFolderId"
+            FireBaseStorageHandler.deleteFolder(FirebaseStorage.getInstance(), folderPath) { deleted, folderDeleteException ->
+                if (deleted) {
+                    Log.d("PostDelete", "Folder has been deleted!")
+                } else {
+                    Log.d("PostDelete", "Folder deletion failed! (Ignore if success occurred first.)")
+                    folderDeleteException?.printStackTrace()
+                }
+            }
+            FVFireStoreHandler.deletePost(userId, postId) { success, postDeleteException ->
+                if (success) {
+                    getPostModels {
+                        updateAdapter(it)
+                    }
+                    Toast.makeText(requireContext(), "Post has been deleted!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.d("PostDelete", "Post deletion failed!")
+                    postDeleteException?.printStackTrace()
+                }
+            }
+        }
+        deleteDialog.show(requireActivity().supportFragmentManager, "DeletePostConfirmation")
+
+        // delete folder and contents
+        // userId > ${sanitized_datetime}
     }
 
 }

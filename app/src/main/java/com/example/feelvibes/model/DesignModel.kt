@@ -26,23 +26,29 @@ class DesignModel(
     }
 
     fun getBackgroundPath(activity: Activity): String? {
-        return try {
-            val file = File(activity.filesDir, backgroundImagePath)
-            file.absolutePath
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+        if (backgroundImagePath.isNotEmpty()) {
+            return try {
+                val file = File(activity.filesDir, backgroundImagePath)
+                file.absolutePath
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
+        return null
     }
 
     fun getForegroundPath(activity: Activity): String? {
-        return try {
-            val file = File(activity.filesDir, foregroundImagePath)
-            file.absolutePath
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+        if (foregroundImagePath.isNotEmpty()) {
+            return try {
+                val file = File(activity.filesDir, foregroundImagePath)
+                file.absolutePath
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
+        return null
     }
 
     fun saveImagesToInternal(activity: Activity, rename: Boolean = false) {

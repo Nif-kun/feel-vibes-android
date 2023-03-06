@@ -1,4 +1,4 @@
-package com.example.feelvibes.home.profile.recycler
+package com.example.feelvibes.home.recycler
 
 import android.annotation.SuppressLint
 import android.content.Context
