@@ -1,9 +1,6 @@
 package com.example.feelvibes.model
 
 import android.app.Activity
-import android.content.Context
-import android.net.Uri
-import com.example.feelvibes.utils.ExternalStorageHandler
 import com.example.feelvibes.utils.InternalStorageHandler
 import com.example.feelvibes.utils.ShortLib
 import kotlinx.parcelize.Parcelize

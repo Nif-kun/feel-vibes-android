@@ -1,22 +1,13 @@
 package com.example.feelvibes.home.viewer
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings.Global
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentDesignViewerBinding
-import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.view_model.CreateViewModel
-import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 
 class DesignViewerFragment : FragmentBind<FragmentDesignViewerBinding>(FragmentDesignViewerBinding::inflate) {

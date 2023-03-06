@@ -15,7 +15,6 @@ import com.example.feelvibes.utils.FVFireStoreHandler
 import com.example.feelvibes.utils.ShortLib
 import com.example.feelvibes.view_model.CreateViewModel
 import com.google.android.material.imageview.ShapeableImageView
-import org.w3c.dom.Text
 
 class PostsRecyclerAdapter(
     private val activity : Activity,

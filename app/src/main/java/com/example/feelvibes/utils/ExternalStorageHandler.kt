@@ -5,8 +5,6 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 
 class ExternalStorageHandler {
 
