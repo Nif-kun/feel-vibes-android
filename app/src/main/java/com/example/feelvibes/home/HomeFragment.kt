@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -15,16 +16,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.feelvibes.R
+import com.example.feelvibes.create.CreateFragment
 import com.example.feelvibes.databinding.FragmentHomeBinding
 import com.example.feelvibes.dialogs.*
+import com.example.feelvibes.home.recycler.PostRecyclerEvent
+import com.example.feelvibes.home.recycler.PostsRecyclerAdapter
 import com.example.feelvibes.interfaces.RecyclerItemClick
 import com.example.feelvibes.library.recycler.adapters.PlaylistRecyclerAdapter
-import com.example.feelvibes.model.DesignModel
-import com.example.feelvibes.model.MusicModel
-import com.example.feelvibes.model.TextModel
+import com.example.feelvibes.model.*
+import com.example.feelvibes.utils.ExternalStorageHandler
+import com.example.feelvibes.utils.FVFireStoreHandler
 import com.example.feelvibes.utils.FireBaseStorageHandler
 import com.example.feelvibes.utils.ShortLib
 import com.example.feelvibes.view_model.AccountViewModel
+import com.example.feelvibes.view_model.CreateViewModel
 import com.example.feelvibes.view_model.HomeViewModel
 import com.example.feelvibes.view_model.LibraryViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
@@ -36,7 +41,7 @@ import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::inflate), RecyclerItemClick {
+class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::inflate), PostRecyclerEvent {
 
     // Note:
     //  -[vbNull]: A NullPointerException occurs on VB due to spamming of page. Specifically load delay.
@@ -44,6 +49,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var accountViewModel : AccountViewModel
     private lateinit var libraryViewModel : LibraryViewModel
+    private lateinit var createViewModel : CreateViewModel
 
     private var musicItem: MusicModel? = null
     private var designItem: DesignModel? = null
@@ -61,6 +67,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         accountViewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
         libraryViewModel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
+        createViewModel = ViewModelProvider(requireActivity())[CreateViewModel::class.java]
     }
 
     override fun onReady() {
@@ -70,6 +77,10 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         mainActivity.showToolBar(isHome = true)
         onProfileClickedEvent()
         showAppBarLayout()
+        queryNewsfeed {
+            if (it != null)
+                updateAdapter(it)
+        }
     }
 
     private fun showAppBarLayout() {
@@ -95,6 +106,50 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun setupFollowingRecyclerAdapter(user: FirebaseUser) {
         // Don't show if none else show
+    }
+
+    // Edit this
+    private fun updateAdapter(postModels: ArrayList<PostModel>) {
+        binding.postRecyclerView.adapter = PostsRecyclerAdapter(
+            requireActivity(),
+            this,
+            postModels,
+            accountViewModel.currentUser?.uid,
+            createViewModel
+        )
+    }
+
+    private fun queryNewsfeed(callback: (ArrayList<PostModel>?) -> Unit) {
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formatted = currentDateTime.format(formatter)
+        val documentId = formatted.replace("-", "")
+        val postRef = FirebaseFirestore.getInstance().collection("newsfeed").document(documentId)
+        postRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                val postModels = arrayListOf<PostModel>()
+                val keys = documentSnapshot.data?.keys
+                if (keys != null) {
+                    for (userId in keys) {
+                        val postIds = documentSnapshot[userId]
+                        if (postIds is ArrayList<*>) {
+                            for (id in postIds) {
+                                if (id is String) {
+                                    postModels.add(PostModel(userId, id))
+                                }
+                            }
+                        }
+                    }
+                }
+                postModels.reverse()
+                callback(postModels)
+            } else {
+                callback(null)
+            }
+        }.addOnFailureListener {
+            it.printStackTrace()
+            callback(null)
+        }
     }
 
     private fun onPostInputEvent() {
@@ -153,8 +208,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.postButton.setOnClickListener {
             if (hasContent()) {
                 Toast.makeText(mainActivity, "Uploading...", Toast.LENGTH_SHORT).show()
-                binding.postButton.isEnabled = false
-                binding.postInput.isEnabled = false
+                posting(true)
                 // If has music or design, then upload first
                 // Check if success or not, if not, don't post in FireStore
                 val userId = user.uid
@@ -207,15 +261,13 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
                                 tempDesignForegroundUri = null
                                 tempDesignBackgroundUri = null
                                 resetPostViews()
-                                binding.postButton.isEnabled = true
-                                binding.postInput.isEnabled = true
+                                posting(false)
                             }.addOnFailureListener {
                                 warnLoadError()
                                 tempMusicUri = null
                                 tempDesignForegroundUri = null
                                 tempDesignBackgroundUri = null
-                                binding.postButton.isEnabled = true
-                                binding.postInput.isEnabled = true
+                                posting(false)
                             }
 
                         } else {
@@ -223,8 +275,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
                             tempMusicUri = null
                             tempDesignForegroundUri = null
                             tempDesignBackgroundUri = null
-                            binding.postButton.isEnabled = true
-                            binding.postInput.isEnabled = true
+                            posting(false)
                         }
                     }
                 } else {
@@ -235,14 +286,12 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
                         tempDesignForegroundUri = null
                         tempDesignBackgroundUri = null
                         resetPostViews()
-                        binding.postButton.isEnabled = true
-                        binding.postInput.isEnabled = true
+                        posting(false)
                     }.addOnFailureListener {
                         tempMusicUri = null
                         tempDesignForegroundUri = null
                         tempDesignBackgroundUri = null
-                        binding.postButton.isEnabled = true
-                        binding.postInput.isEnabled = true
+                        posting(false)
                     }
                 }
             }
@@ -363,6 +412,12 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
                 newsfeedRef.set(hashMapOf(userId to postList), SetOptions.merge()).addOnFailureListener {
                     it.printStackTrace()
                 }
+            }
+
+            // update adapter
+            queryNewsfeed {
+                if (it != null)
+                    updateAdapter(it)
             }
         }.addOnFailureListener {
             it.printStackTrace()
@@ -500,18 +555,6 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
-
-    // Edit this
-    private fun setupPostsRecyclerAdapter() {
-        if (libraryViewModel.currentPlaylist != null) {
-            binding.postRecyclerView.adapter = PlaylistRecyclerAdapter(
-                requireActivity(),
-                this,
-                libraryViewModel.currentPlaylist!!.list)
-            binding.postRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        }
-    }
-
     private fun onProfileClickedEvent() {
         mainActivity.profileClickedListener = {
             accountViewModel.selectedUserId = accountViewModel.currentUser?.uid
@@ -522,6 +565,144 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun hasContent(): Boolean {
         val hasText = binding.postInput.text.isNotEmpty()
         return hasText || musicItem != null || designItem != null || chordsItem != null || lyricsItem != null
+    }
+
+    override fun onUserClick(userId: String) {
+        accountViewModel.selectedUserId = userId
+        findNavController().navigate(R.id.action_global_profileFragment)
+    }
+
+    private fun posting(isPosting: Boolean) {
+        if (isPosting) {
+            binding.postButton.isEnabled = false
+            binding.postInput.isEnabled = false
+            binding.musicRemove.visibility = View.GONE
+            binding.designRemove.visibility = View.GONE
+            binding.chordsRemove.visibility = View.GONE
+            binding.lyricsRemove.visibility = View.GONE
+        } else {
+            binding.postButton.isEnabled = true
+            binding.postInput.isEnabled = true
+            binding.musicRemove.visibility = View.VISIBLE
+            binding.designRemove.visibility = View.VISIBLE
+            binding.chordsRemove.visibility = View.VISIBLE
+            binding.lyricsRemove.visibility = View.VISIBLE
+        }
+    }
+
+    /// --- Damn, I hate how long this is... but not as long as my diiiick ayyyyyeeee... Fuck I'm tired.
+    // This whole below is a mess since it's a copy paste from PostCategory of profile. It should've been modular.
+    override fun onMusicClick(
+        url: String,
+        track: String?,
+        title: String,
+        duration: String,
+        artist: String?,
+        album: String?,
+        genre: String?
+    ) {
+        val tempPlaylist = PlaylistModel("$title ($duration)")
+        tempPlaylist.add(MusicModel(url, track, title, duration, artist, album, genre))
+        libraryViewModel.selectedPlaylist = tempPlaylist
+        accountViewModel.viewingItem = true
+        findNavController().navigate(R.id.action_global_playerFragment)
+    }
+
+    override fun onMusicDownload(url: String, title: String) {
+        ExternalStorageHandler.downloadAudioFile(requireActivity(), url, title)
+        Toast.makeText(requireContext(), "Starting download...", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDesignClick(id: String, name: String, foregroundUrl: String?, backgroundUrl: String?) {
+        val safeForegroundUrl = foregroundUrl ?: ""
+        val safeBackgroundUrl = backgroundUrl ?: ""
+        val designModel = DesignModel(id, name, "#FFFFFF", safeBackgroundUrl, safeForegroundUrl)
+        createViewModel.selectedDesignModel = designModel
+        accountViewModel.viewingItem = true
+        findNavController().navigate(R.id.action_global_designViewerFragment)
+    }
+
+    override fun onDesignDownload(designModel: DesignModel) {
+        designModel.saveImagesToInternal(requireActivity(), true)
+        if (createViewModel.designCollection.isEmpty())
+            createViewModel.designCollection.populateFromStored(requireActivity())
+        if (!createViewModel.designCollection.has(designModel)) {
+            createViewModel.designCollection.add(designModel)
+            createViewModel.designCollection.saveToStored(requireActivity())
+            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onChordsClick(id: String, name: String, chords: String?) {
+        val textModel = TextModel(id, name, chords ?: "Error: text is missing!")
+        createViewModel.selectedTextModel = textModel
+        createViewModel.currentCreateTab = CreateFragment.CHORDS
+        accountViewModel.viewingItem = true
+        findNavController().navigate(R.id.action_global_textViewerFragment)
+    }
+
+    override fun onChordsDownload(textModel: TextModel) {
+        if (createViewModel.chordsCollection.isEmpty())
+            createViewModel.chordsCollection.populateFromStored(requireActivity())
+        if (!createViewModel.chordsCollection.has(textModel)) {
+            createViewModel.chordsCollection.add(textModel)
+            createViewModel.chordsCollection.saveToStored(requireActivity())
+            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onLyricsClick(id: String, name: String, lyrics: String?) {
+        val textModel = TextModel(id, name, lyrics ?: "Error: text is missing!")
+        createViewModel.selectedTextModel = textModel
+        createViewModel.currentCreateTab = CreateFragment.LYRICS
+        accountViewModel.viewingItem = true
+        findNavController().navigate(R.id.action_global_textViewerFragment)
+    }
+
+    override fun onLyricsDownload(textModel: TextModel) {
+        if (createViewModel.lyricsCollection.isEmpty())
+            createViewModel.lyricsCollection.populateFromStored(requireActivity())
+        if (!createViewModel.lyricsCollection.has(textModel)) {
+            createViewModel.lyricsCollection.add(textModel)
+            createViewModel.lyricsCollection.saveToStored(requireActivity())
+            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDeletePostClick(userId: String, postId: String, postFolderId: String) {
+        // Do delete here.
+        val deleteDialog = ConfirmationAlertDialog()
+        deleteDialog.title = "Remove Post"
+        deleteDialog.text = "You are about to delete your post, are you sure?"
+        deleteDialog.confirmListener = {
+            val folderPath = "userPostFiles/$userId/$postFolderId"
+            FireBaseStorageHandler.deleteFolder(FirebaseStorage.getInstance(), folderPath) { deleted, folderDeleteException ->
+                if (deleted) {
+                    Log.d("PostDelete", "Folder has been deleted!")
+                } else {
+                    Log.d("PostDelete", "Folder deletion failed! (Ignore if success occurred first.)")
+                    folderDeleteException?.printStackTrace()
+                }
+            }
+            FVFireStoreHandler.deletePost(userId, postId) { success, postDeleteException ->
+                if (success) {
+                    FVFireStoreHandler.deleteNewsfeed(userId, postId){ deleted, exception ->
+                        if (deleted) {
+                            queryNewsfeed {
+                                if (it != null)
+                                    updateAdapter(it)
+                            }
+                        } else
+                            exception?.printStackTrace()
+                    }
+                    Toast.makeText(requireContext(), "Post has been deleted!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.d("PostDelete", "Post deletion failed!")
+                    postDeleteException?.printStackTrace()
+                }
+            }
+        }
+        deleteDialog.show(requireActivity().supportFragmentManager, "DeletePostConfirmation")
     }
 
 }

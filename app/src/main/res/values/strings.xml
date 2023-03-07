@@ -191,7 +191,7 @@
     <string name="skip_feature">Return to previous page</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
-    <string name="empty_bio">You have not set a bio.</string>
+    <string name="empty_bio">User has no bio.</string>
     <string name="load_error_warn">An error occurred during load!</string>
     <string name="returnBack">Return</string>
     <string name="empty_dialog">Dialog is empty…</string>

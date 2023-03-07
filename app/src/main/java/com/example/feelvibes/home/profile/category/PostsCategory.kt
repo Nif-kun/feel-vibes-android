@@ -191,9 +191,6 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
             }
         }
         deleteDialog.show(requireActivity().supportFragmentManager, "DeletePostConfirmation")
-
-        // delete folder and contents
-        // userId > ${sanitized_datetime}
     }
 
 }

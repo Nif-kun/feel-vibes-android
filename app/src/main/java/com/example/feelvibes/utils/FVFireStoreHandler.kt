@@ -4,6 +4,8 @@ import android.net.Uri
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class FVFireStoreHandler {
     companion object {
@@ -63,6 +65,21 @@ class FVFireStoreHandler {
                 .addOnSuccessListener { callback(true, null) }
                 .addOnFailureListener { e ->
                     callback(false, e)
+                }
+        }
+
+        fun deleteNewsfeed(userId:String, postId:String, callback: (Boolean, Exception?) -> Unit?) {
+            val currentDateTime = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val formatted = currentDateTime.format(formatter)
+            val documentId = formatted.replace("-", "")
+            val documentRef = FirebaseFirestore.getInstance().collection("newsfeed").document(documentId)
+            documentRef.update(userId, FieldValue.arrayRemove(postId))
+                .addOnSuccessListener {
+                    callback(true, null)
+                }
+                .addOnFailureListener { e ->
+                    callback(true, e)
                 }
         }
 
