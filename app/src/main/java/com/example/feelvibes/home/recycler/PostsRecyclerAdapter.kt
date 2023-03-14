@@ -1,16 +1,17 @@
 package com.example.feelvibes.home.recycler
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.feelvibes.R
-import com.example.feelvibes.dialogs.ConfirmationAlertDialog
-import com.example.feelvibes.dialogs.SimpleAlertDialog
+import com.example.feelvibes.dialogs.AuthorizationRequestDialog
 import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.model.PostModel
 import com.example.feelvibes.model.TextModel
@@ -29,33 +30,38 @@ class PostsRecyclerAdapter(
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        val postUserPic: ShapeableImageView = itemView.findViewById(R.id.profilePic)
-        val postUsername: TextView = itemView.findViewById(R.id.postUsernameView)
+        private val postUserPic: ShapeableImageView = itemView.findViewById(R.id.profilePic)
+        private val postUsername: TextView = itemView.findViewById(R.id.postUsernameView)
 
-        val postTime: TextView = itemView.findViewById(R.id.postTimeView)
-        val postText: TextView = itemView.findViewById(R.id.postTextView)
+        private val postTime: TextView = itemView.findViewById(R.id.postTimeView)
+        private val postText: TextView = itemView.findViewById(R.id.postTextView)
 
-        val deleteButton: ImageButton = itemView.findViewById(R.id.deleteBtn)
+        private val deleteButton: ImageButton = itemView.findViewById(R.id.deleteBtn)
+        private val likeButton: ImageButton = itemView.findViewById(R.id.likeBtn)
+        private val commentButton: ImageButton = itemView.findViewById(R.id.commentBtn)
 
-        val musicItem = PostItem(
+        private val likeCount: TextView = itemView.findViewById(R.id.likeCount)
+        private val commentCount: TextView = itemView.findViewById(R.id.commentCount)
+
+        private val musicItem = PostItem(
             itemView.findViewById(R.id.musicItem),
             itemView.findViewById(R.id.musicTitle),
             itemView.findViewById(R.id.musicDownload)
         )
 
-        val designItem = PostItem(
+        private val designItem = PostItem(
             itemView.findViewById(R.id.designItem),
             itemView.findViewById(R.id.designTitle),
             itemView.findViewById(R.id.designDownload)
         )
 
-        val chordsItem = PostItem(
+        private val chordsItem = PostItem(
             itemView.findViewById(R.id.chordsItem),
             itemView.findViewById(R.id.chordsTitle),
             itemView.findViewById(R.id.chordsDownload)
         )
 
-        val lyricsItem = PostItem(
+        private val lyricsItem = PostItem(
             itemView.findViewById(R.id.lyricsItem),
             itemView.findViewById(R.id.lyricsTitle),
             itemView.findViewById(R.id.lyricsDownload)
@@ -70,7 +76,7 @@ class PostsRecyclerAdapter(
                 if (uri != null) {
                     Glide.with(activity.baseContext)
                         .load(uri)
-                        .into(postUserPic);
+                        .into(postUserPic)
                 }
             }
             postUserPic.setOnClickListener {
@@ -81,9 +87,9 @@ class PostsRecyclerAdapter(
             }
         }
 
-        fun loadPost(userId: String, postId: String, isOwner: Boolean = false) {
-            FVFireStoreHandler.getPost(userId, postId) { map ->
-
+        @SuppressLint("SetTextI18n")
+        fun loadPost(ownerId: String, postId: String, userId: String?, isOwner: Boolean = false) {
+            FVFireStoreHandler.getPost(ownerId, postId) { map ->
 
                 // timeView
                 val time = map?.get("time") as? String
@@ -94,17 +100,6 @@ class PostsRecyclerAdapter(
                     postTime.visibility = View.GONE
                 }
 
-                // Delete button
-                if (isOwner && map != null) {
-                    deleteButton.visibility = View.VISIBLE
-                    deleteButton.setOnClickListener {
-                        if (time != null) {
-                            val postFolderId = time.replace("-", "").replace(":", "").replace("/", "")
-                            postRecyclerEvent.onDeletePostClick(userId, postId, postFolderId)
-                        }
-                    }
-                }
-
                 // textView
                 val text = map?.get("text") as? String
                 if (text != null) {
@@ -112,6 +107,83 @@ class PostsRecyclerAdapter(
                     postText.visibility = View.VISIBLE
                 } else {
                     postText.visibility = View.GONE
+                }
+
+                // Delete button
+                if (isOwner && map != null) {
+                    deleteButton.visibility = View.VISIBLE
+                    deleteButton.setOnClickListener {
+                        if (time != null) {
+                            val postFolderId = time.replace("-", "").replace(":", "").replace("/", "")
+                            postRecyclerEvent.onDeletePostClick(ownerId, postId, postFolderId)
+                        }
+                    }
+                }
+
+                // Like button
+                val likes = map?.get("likes") as? ArrayList<*>
+                var likeSize = likes?.size ?: 0
+                var liked = false
+                if (!likes.isNullOrEmpty()) {
+                    likeCount.text = likes.size.toString()
+                    for (like in likes) {
+                        if (like is String && like.equals(userId)) {
+                            Glide.with(activity.baseContext).load(R.drawable.ic_favorite_24).into(likeButton)
+                            liked = true
+                        }
+                    }
+                }
+                likeButton.setOnClickListener {
+                    if (userId != null) {
+                        // Inorder to look responsive, the value is instantly applied visually and does not wait for success.
+                        if (liked) {
+                            FVFireStoreHandler.removePostLike(ownerId, postId, userId) { success, exception ->
+                                if (!success) {
+                                    exception?.printStackTrace()
+                                }
+                            }
+                            Glide.with(activity.baseContext).load(R.drawable.ic_favorite_border_24).into(likeButton)
+                            if (likes != null) {
+                                likeSize--
+                                likeCount.text = likeSize.toString()
+                            } else {
+                                likeCount.text = likeSize.toString()
+                            }
+                            liked = false
+                        } else {
+                            FVFireStoreHandler.addPostLike(ownerId, postId, userId) { success, exception ->
+                                if (!success) {
+                                    exception?.printStackTrace()
+                                }
+                            }
+                            Glide.with(activity.baseContext).load(R.drawable.ic_favorite_24).into(likeButton)
+                            if (likes != null) {
+                                likeSize++
+                                likeCount.text = likeSize.toString()
+                            } else {
+                                likeCount.text = likeSize.toString()
+                            }
+                            liked = true
+
+                        }
+                    } else {
+                        val authorizationRequestDialog = AuthorizationRequestDialog()
+                        if (activity is AppCompatActivity) {
+                            authorizationRequestDialog.show(activity.supportFragmentManager, "AuthorizationRequestDialog")
+                            authorizationRequestDialog.onDismissListener = {
+                                postRecyclerEvent.onQueueRefresh()
+                            }
+                        }
+                    }
+                }
+
+                // Comment button
+                val comments = map?.get("comments") as? HashMap<*,*>
+                if (!comments.isNullOrEmpty()) {
+                    commentCount.text = comments.size.toString()
+                }
+                commentButton.setOnClickListener {
+                    postRecyclerEvent.onCommentClick(ownerId, postId, userId, comments)
                 }
 
                 // musicItem
@@ -252,10 +324,10 @@ class PostsRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val userId = posts[position].userId
+        val ownerId = posts[position].userId
         val postId = posts[position].id
-        holder.loadUser(userId)
-        holder.loadPost(userId, postId, this.userId == userId)
+        holder.loadUser(ownerId)
+        holder.loadPost(ownerId, postId, this.userId, this.userId == ownerId)
     }
 
     override fun getItemCount(): Int {

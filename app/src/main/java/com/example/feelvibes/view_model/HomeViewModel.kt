@@ -12,4 +12,6 @@ class HomeViewModel: ViewModel() {
 
     var layoutState = Layouts.NONE
 
+    var searchTextBuffer = ""
+
 }

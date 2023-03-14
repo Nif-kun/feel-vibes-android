@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -44,7 +46,11 @@ class MainActivity : AppCompatActivity() {
 
     // Account related vars
     lateinit var mAuth: FirebaseAuth
-    var profileClickedListener: (()->Unit)? = null
+    private val onProfileClickedListeners = mutableListOf<() -> Unit?>()
+
+    fun onProfileClickedListener(listener: () -> Unit?) {
+        onProfileClickedListeners.add(listener)
+    }
 
     // Music Player related vars
     //private var backgroundSoundServiceBounded: Boolean = false
@@ -175,7 +181,9 @@ class MainActivity : AppCompatActivity() {
         /*--Home ToolBar--*/
         // Profile Button
         binding.homeToolbar.profileBtn.setOnClickListener {
-            profileClickedListener?.invoke()
+            for (listener in onProfileClickedListeners) {
+                listener()
+            }
         }
         // Search Button
         binding.homeToolbar.searchBtn.setOnClickListener {
@@ -237,6 +245,12 @@ class MainActivity : AppCompatActivity() {
             binding.customToolbar.toolBar.visibility = View.GONE
     }
 
+    fun onHomeLogoToolBarClicked(callback: () -> Unit?) {
+        binding.homeToolbar.logoBtn.setOnClickListener {
+            callback()
+        }
+    }
+
     fun showSearchBar() {
         binding.searchBar.visibility = View.VISIBLE
     }
@@ -246,6 +260,13 @@ class MainActivity : AppCompatActivity() {
     }
     fun getSearchBar(): EditText {
         return binding.searchBar
+    }
+
+    fun onSearchEvent(callback: (Boolean) -> Unit) {
+        binding.searchBar.setOnEditorActionListener { _, actionId, _ ->
+            callback(actionId == EditorInfo.IME_ACTION_SEARCH)
+            actionId == EditorInfo.IME_ACTION_SEARCH
+        }
     }
 
     fun renameToolBar(title : String) {

@@ -206,4 +206,9 @@
         android:name="com.example.feelvibes.home.viewer.TextViewerFragment"
         android:label="fragment_text_viewer"
         tools:layout="@layout/fragment_text_viewer" /><action android:id="@+id/action_global_textViewerFragment" app:destination="@id/textViewerFragment"/>
+    <fragment
+        android:id="@+id/postSearchFragment"
+        android:name="com.example.feelvibes.home.search.PostSearchFragment"
+        android:label="fragment_post_search"
+        tools:layout="@layout/fragment_post_search" /><action android:id="@+id/action_global_postSearchFragment" app:destination="@id/postSearchFragment"/>
 </navigation>

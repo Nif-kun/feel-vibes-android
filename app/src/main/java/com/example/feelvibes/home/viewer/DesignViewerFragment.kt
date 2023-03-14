@@ -22,6 +22,9 @@ class DesignViewerFragment : FragmentBind<FragmentDesignViewerBinding>(FragmentD
     override fun onReady() {
         super.onReady()
         mainActivity.hideMainMenu()
+        if (mainActivity.isToolBarVisible(true)) {
+            mainActivity.hideToolBar(true)
+        }
         onBackEvent()
         onDownloadEvent()
         setupImageViews()
@@ -60,6 +63,9 @@ class DesignViewerFragment : FragmentBind<FragmentDesignViewerBinding>(FragmentD
         super.onDestroyView()
         createViewModel.selectedDesignModel = null
         mainActivity.showMainMenu()
+        if (!mainActivity.isToolBarVisible(true)) {
+            mainActivity.showToolBar(true)
+        }
     }
 
 }

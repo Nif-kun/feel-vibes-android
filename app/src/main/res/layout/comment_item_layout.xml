@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="15dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profilePic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/neutral"
+            android:padding="2dp"
+            app:shapeAppearance="@style/roundedImageView"
+            app:strokeColor="@color/white"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_person_24"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/postUsernameView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/mild_white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="@string/username"/>
+
+            <TextView
+                android:id="@+id/postTimeView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="@string/post_time_placeholder"/>
+
+        </LinearLayout>
+
+        <!-- Insert delete button here -->
+        <ImageButton
+            android:id="@+id/deleteBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            style="@style/NoBackgroundButton"
+            android:scaleType="fitXY"
+            android:padding="10dp"
+            android:tint="@color/warn_red"
+            android:src="@drawable/ic_delete_24"
+            tools:ignore="UseAppTint"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/postTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="15dp"
+        android:textSize="16sp"
+        android:textColor="@color/mild_white"
+        android:text="@string/lorem_ipsum"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="15dp"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/likeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                style="@style/NoBackgroundButton"
+                android:src="@drawable/ic_favorite_border_24"
+                tools:ignore="UseAppTint" />
+
+            <TextView
+                android:id="@+id/likeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/favorite_red"
+                android:layout_marginStart="5dp"
+                android:textSize="16sp"
+                android:text="@string/likes_placeholder"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/commentIconsLayout"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/commentBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                style="@style/NoBackgroundButton"
+                android:tint="@color/mild_white"
+                android:src="@drawable/ic_insert_comment_24"
+                tools:ignore="UseAppTint" />
+
+            <TextView
+                android:id="@+id/commentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/mild_white"
+                android:layout_marginStart="5dp"
+                android:textSize="16sp"
+                android:text="@string/likes_placeholder"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/blur_white"/>
+
+</LinearLayout>

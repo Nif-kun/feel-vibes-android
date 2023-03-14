@@ -52,11 +52,11 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
     }
 
     override fun onReady() {
+        onBackEvent()
         buildTabs()
         homeViewModel.layoutState = HomeViewModel.Layouts.PROFILE
         mainActivity.hideToolBar(isHome = true, includeLayout = true)
         pickMedia.setup(this)
-        onBackEvent()
         updateViews()
         onAuthorizationDismissedEvent()
     }
@@ -175,7 +175,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                 }
                 binding.userNameAndBioViewLayout.visibility = View.GONE
                 binding.editBtn.visibility = View.GONE
-                binding.followViewLayout.visibility = View.GONE
+                //binding.followViewLayout.visibility = View.GONE
                 binding.userNameAndBioEditLayout.visibility = View.VISIBLE
             }
         }
@@ -184,7 +184,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             binding.userNameAndBioEditLayout.visibility = View.GONE
             binding.editBtn.visibility = View.VISIBLE
             binding.userNameAndBioViewLayout.visibility = View.VISIBLE
-            binding.followViewLayout.visibility = View.VISIBLE
+            //binding.followViewLayout.visibility = View.VISIBLE
         }
 
         binding.saveEditBtn.setOnClickListener {
@@ -205,14 +205,14 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             binding.userNameAndBioEditLayout.visibility = View.GONE
             binding.editBtn.visibility = View.VISIBLE
             binding.userNameAndBioViewLayout.visibility = View.VISIBLE
-            binding.followViewLayout.visibility = View.VISIBLE
+            //binding.followViewLayout.visibility = View.VISIBLE
         }
 
     }
 
     private fun onFollowEvent() {
         // Check if user or other
-        // then check it if followed or not to change botton chekc state
+        // then check it if followed or not to change button check state
         binding.followBtn.addOnCheckedChangeListener { button, isChecked ->
             if (isChecked) {
                 button.text = getString(R.string.unfollow)

@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.R
 import com.example.feelvibes.create.CreateFragment
 import com.example.feelvibes.databinding.FragmentPostsCategoryBinding
+import com.example.feelvibes.dialogs.CommentsDialog
 import com.example.feelvibes.dialogs.ConfirmationAlertDialog
 import com.example.feelvibes.home.recycler.PostRecyclerEvent
 import com.example.feelvibes.home.recycler.PostsRecyclerAdapter
@@ -72,13 +73,18 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
     }
 
     private fun updateAdapter(postModels: ArrayList<PostModel>) {
-        binding.postsRecyclerView.adapter = PostsRecyclerAdapter(
-            requireActivity(),
-            this,
-            postModels,
-            accountViewModel.currentUser?.uid,
-            createViewModel
-        )
+        try {
+            binding.postsRecyclerView.adapter = PostsRecyclerAdapter(
+                requireActivity(),
+                this,
+                postModels,
+                accountViewModel.currentUser?.uid,
+                createViewModel
+            )
+        } catch (e:Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     override fun onUserClick(userId: String) {
@@ -191,6 +197,25 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
             }
         }
         deleteDialog.show(requireActivity().supportFragmentManager, "DeletePostConfirmation")
+    }
+
+    override fun onCommentClick(
+        ownerId: String,
+        postId: String,
+        userId: String?,
+        comments: HashMap<*, *>?
+    ) {
+        val commentsDialog = CommentsDialog(ownerId, postId, userId, comments)
+        commentsDialog.onQueryListener = { // Occurs when a post comments have been modified
+            onQueueRefresh()
+        }
+        commentsDialog.show(requireActivity().supportFragmentManager, "CommentsDialog")
+    }
+
+    override fun onQueueRefresh() {
+        getPostModels {
+            updateAdapter(it)
+        }
     }
 
 }

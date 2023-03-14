@@ -257,6 +257,79 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/blur_white"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/likeBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="center"
+                    style="@style/NoBackgroundButton"
+                    android:src="@drawable/ic_favorite_border_24"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/likeCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/favorite_red"
+                    android:layout_marginStart="5dp"
+                    android:textSize="16sp"
+                    android:text="@string/likes_placeholder"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/commentBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="center"
+                    style="@style/NoBackgroundButton"
+                    android:tint="@color/mild_white"
+                    android:src="@drawable/ic_insert_comment_24"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/commentCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/mild_white"
+                    android:layout_marginStart="5dp"
+                    android:textSize="16sp"
+                    android:text="@string/likes_placeholder"/>
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
 

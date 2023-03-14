@@ -192,6 +192,7 @@
 
                     </LinearLayout>
 
+                    <!-- TODO Will hide this for now.
                     <LinearLayout
                         android:id="@+id/followViewLayout"
                         android:layout_width="match_parent"
@@ -228,7 +229,7 @@
                             android:text="@string/follower"
                             android:textSize="16sp" />
 
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/createTabLayout"
@@ -237,17 +238,19 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tabIndicatorFullWidth="false">
+                        app:tabIndicatorFullWidth="true">
 
                         <com.google.android.material.tabs.TabItem
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/posts" />
 
+
+                        <!-- TODO Will hide this for now.
                         <com.google.android.material.tabs.TabItem
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/shared" />
+                            android:text="@string/shared" /> -->
 
                     </com.google.android.material.tabs.TabLayout>
 

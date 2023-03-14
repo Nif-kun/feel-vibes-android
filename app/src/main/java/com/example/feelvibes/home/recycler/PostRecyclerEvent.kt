@@ -28,4 +28,8 @@ interface PostRecyclerEvent {
 
     fun onDeletePostClick(userId: String, postId: String, postFolderId: String) {}
 
+    fun onCommentClick(ownerId:String, postId:String, userId:String?, comments: HashMap<*,*>?) {}
+
+    fun onQueueRefresh() {}
+
 }

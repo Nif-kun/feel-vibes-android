@@ -60,6 +60,8 @@
         android:importantForAutofill="no"
         android:inputType="text"
         android:minHeight="36dp"
+        android:imeOptions="actionSearch"
+        android:imeActionLabel="@string/search"
         android:paddingHorizontal="12dp"
         android:textColor="@color/text_color_night_mode"
         android:textColorHint="#757575"

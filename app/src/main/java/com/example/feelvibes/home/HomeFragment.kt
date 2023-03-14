@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -81,6 +82,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
             if (it != null)
                 updateAdapter(it)
         }
+        onSearchEvent()
     }
 
     private fun showAppBarLayout() {
@@ -110,13 +112,17 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     // Edit this
     private fun updateAdapter(postModels: ArrayList<PostModel>) {
-        binding.postRecyclerView.adapter = PostsRecyclerAdapter(
-            requireActivity(),
-            this,
-            postModels,
-            accountViewModel.currentUser?.uid,
-            createViewModel
-        )
+        try {
+            binding.postRecyclerView.adapter = PostsRecyclerAdapter(
+                requireActivity(),
+                this,
+                postModels,
+                accountViewModel.currentUser?.uid,
+                createViewModel
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun queryNewsfeed(callback: (ArrayList<PostModel>?) -> Unit) {
@@ -149,6 +155,15 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         }.addOnFailureListener {
             it.printStackTrace()
             callback(null)
+        }
+    }
+
+    private fun onSearchEvent() {
+        mainActivity.onSearchEvent { pressedSearch ->
+            if (pressedSearch) {
+                homeViewModel.searchTextBuffer = mainActivity.getSearchBar().text.toString()
+                findNavController().navigate(R.id.action_global_postSearchFragment)
+            }
         }
     }
 
@@ -556,9 +571,9 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun onProfileClickedEvent() {
-        mainActivity.profileClickedListener = {
+        mainActivity.onProfileClickedListener {
             accountViewModel.selectedUserId = accountViewModel.currentUser?.uid
-            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+            mainActivity.findNavController(R.id.main_nav_host).navigate(R.id.action_global_profileFragment)
         }
     }
 
@@ -703,6 +718,26 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
         }
         deleteDialog.show(requireActivity().supportFragmentManager, "DeletePostConfirmation")
+    }
+
+    override fun onCommentClick(
+        ownerId: String,
+        postId: String,
+        userId: String?,
+        comments: HashMap<*, *>?
+    ) {
+        val commentsDialog = CommentsDialog(ownerId, postId, userId, comments)
+        commentsDialog.onQueryListener = { // Occurs when a post comments have been modified
+            onQueueRefresh()
+        }
+        commentsDialog.show(requireActivity().supportFragmentManager, "CommentsDialog")
+    }
+
+    override fun onQueueRefresh() {
+        queryNewsfeed {
+            if (it != null)
+                updateAdapter(it)
+        }
     }
 
 }
