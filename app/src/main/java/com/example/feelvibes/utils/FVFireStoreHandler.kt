@@ -328,5 +328,16 @@ class FVFireStoreHandler {
                 }
         }
 
+        fun reportPost(ownerId:String, postId: String, userId:String, callback: (Boolean, Exception?) -> Unit) {
+            val documentRef = FirebaseFirestore.getInstance().collection("usersPost").document(ownerId)
+            documentRef.update(mapOf(
+                "$postId.reports" to FieldValue.arrayUnion(userId)
+            )).addOnSuccessListener {
+                callback(true, null)
+            }.addOnFailureListener {
+                callback(false, it)
+            }
+        }
+
     }
 }

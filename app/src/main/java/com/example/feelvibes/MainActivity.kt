@@ -52,6 +52,12 @@ class MainActivity : AppCompatActivity() {
         onProfileClickedListeners.add(listener)
     }
 
+    // Back related...
+    private val onBackPressedListeners = mutableListOf<() -> Unit?>()
+    fun onBackPressedListener(listener: () -> Unit?) {
+        onProfileClickedListeners.add(listener)
+    }
+
     // Music Player related vars
     //private var backgroundSoundServiceBounded: Boolean = false
     var musicPlayer: MusicPlayer? = null

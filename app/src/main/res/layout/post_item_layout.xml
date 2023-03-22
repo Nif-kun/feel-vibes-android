@@ -71,6 +71,18 @@
                 tools:ignore="UseAppTint"
                 android:visibility="gone"/>
 
+            <ImageButton
+                android:id="@+id/reportBtn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                style="@style/NoBackgroundButton"
+                android:scaleType="fitXY"
+                android:padding="10dp"
+                android:tint="@color/mild_white"
+                android:src="@drawable/ic_outline_report_24"
+                tools:ignore="UseAppTint"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
         <TextView

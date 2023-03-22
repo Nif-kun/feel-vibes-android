@@ -2,8 +2,10 @@ package com.example.feelvibes.home.profile
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -14,6 +16,7 @@ import com.example.feelvibes.databinding.FragmentProfileBinding
 import com.example.feelvibes.dialogs.AuthorizationRequestDialog
 import com.example.feelvibes.dialogs.ConfirmationAlertDialog
 import com.example.feelvibes.dialogs.SimpleAlertDialog
+import com.example.feelvibes.utils.FVFireStoreHandler
 import com.example.feelvibes.utils.FireBaseStorageHandler
 import com.example.feelvibes.utils.PickMedia
 import com.example.feelvibes.view_model.AccountViewModel
@@ -52,6 +55,15 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
     }
 
     override fun onReady() {
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if (accountViewModel.currentNavStackId != null) {
+                    val navId = accountViewModel.currentNavStackId
+                    accountViewModel.currentNavStackId = null
+                    findNavController().navigate(navId!!)
+                }
+            }
+        })
         onBackEvent()
         buildTabs()
         homeViewModel.layoutState = HomeViewModel.Layouts.PROFILE
@@ -81,7 +93,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
     }
 
     private fun updateViews() {
-        mainActivity.checkAuth { currentUser ->
+        FVFireStoreHandler.checkAuth { currentUser ->
             var userIdEmpty = false
             if (accountViewModel.selectedUserId == null && currentUser == null) {
                 userIdEmpty = true
@@ -102,14 +114,16 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                     } else {
                         binding.editBtn.visibility = View.GONE
                         binding.logoutBtn.visibility = View.GONE
-                        binding.followBtn.visibility = View.VISIBLE
-                        onFollowEvent()
+                        // TODO disabling follow for now.
+                        //binding.followBtn.visibility = View.VISIBLE
+                        //onFollowEvent()
                     }
                     updateUsername()
                     updateBio()
                     loadProfilePicture()
                     loadProfileBanner()
                 } catch (e:Exception) {
+                    Log.d("ProfileFragment", "An error occurred on updateViews. (Has current user)")
                     e.printStackTrace()
                 }
             }
@@ -117,6 +131,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                 if (!userIdEmpty)
                     onLoadingComplete()
             } catch (e:Exception) {
+                Log.d("ProfileFragment", "An error occurred on updateViews. (Outside of onLoadingComplete)")
                 e.printStackTrace()
             }
         }
@@ -152,6 +167,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             binding.profileBanner.visibility = View.VISIBLE
             binding.profileViewPager.visibility = View.VISIBLE
         } catch (e: Exception) {
+            Log.d("ProfileFragment", "An error occurred on transitionShimmerOut")
             e.printStackTrace()
         }
     }
@@ -226,7 +242,14 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
 
     private fun onBackEvent() {
         binding.backBtn.setOnClickListener {
-            findNavController().popBackStack()
+            if (accountViewModel.currentNavStackId != null) {
+                val navId = accountViewModel.currentNavStackId
+                accountViewModel.currentNavStackId = null
+                findNavController().navigate(navId!!)
+            } else {
+                Log.d("onBackEvent", "An error occurred, currentNavStackId is null!")
+                findNavController().popBackStack()
+            }
         }
     }
 
@@ -279,6 +302,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                         }
                     }
                 } catch (e: Exception) {
+                    Log.d("ProfileFragment", "An error occurred on updateUsername. (Has username)")
                     e.printStackTrace()
                 }
             }
@@ -311,6 +335,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                         }
                     }
                 } catch (e: Exception) {
+                    Log.d("ProfileFragment", "An error occurred on updateBio. (Bio is null)")
                     e.printStackTrace()
                 }
             }
@@ -319,17 +344,19 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
 
     private fun loadProfilePicture() {
         val storageRef = FirebaseStorage.getInstance().getReference("profilePictures")
-        val imageRef = storageRef.child("${accountViewModel.currentUser?.uid}.png")
+        val imageRef = storageRef.child("${accountViewModel.selectedUserId}.png")
         imageRef.downloadUrl.addOnSuccessListener { uri ->
             try { // [vbNull]
                 Glide.with(this)
                     .load(uri)
                     .into(binding.profilePic);
             } catch (e: Exception) {
+                Log.d("ProfileFragment", "An error occurred on loadProfilePicture. (Download url success)")
                 e.printStackTrace()
             }
             loadingListener?.invoke(1)
         }.addOnFailureListener {
+            Log.d("ProfileFragment", "An error occurred on loadProfilePicture. (Download url failed)")
             it.printStackTrace()
             loadingListener?.invoke(1)
         }
@@ -348,6 +375,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                         try { // [vbNull]
                             binding.profilePic.setImageURI(uri)
                         } catch (e: Exception) {
+                            Log.d("ProfileFragment", "An error occurred on onChangeProfileEvent.")
                             e.printStackTrace()
                         }
                     }
@@ -358,17 +386,19 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
 
     private fun loadProfileBanner() {
         val storageRef = FirebaseStorage.getInstance().getReference("profileBanners")
-        val imageRef = storageRef.child("${accountViewModel.currentUser?.uid}")
+        val imageRef = storageRef.child("${accountViewModel.selectedUserId}")
         imageRef.downloadUrl.addOnSuccessListener { uri ->
             try {
                 Glide.with(this)
                     .load(uri)
                     .into(binding.profileBanner)
             } catch (e: Exception) {
+                Log.d("ProfileFragment", "An error occurred on loadProfileBanner. (Download url success)")
                 e.printStackTrace()
             }
             loadingListener?.invoke(1)
         }.addOnFailureListener {
+            Log.d("ProfileFragment", "An error occurred on loadProfileBanner. (Download url failed)")
             it.printStackTrace()
             loadingListener?.invoke(1)
         }
@@ -388,6 +418,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                             .load(uri)
                             .into(binding.profileBanner)
                     } catch (e: Exception) {
+                        Log.d("ProfileFragment", "An error occurred on onChangeBannerEvent.")
                         e.printStackTrace()
                     }
                 }
@@ -416,6 +447,4 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
         if (!accountViewModel.viewingItem)
             accountViewModel.selectedUserId = null
     }
-
-
 }

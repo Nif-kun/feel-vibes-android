@@ -5,7 +5,7 @@ import com.example.feelvibes.home.recycler.PostRecyclerEvent
 import com.example.feelvibes.model.PostModel
 import com.google.firebase.firestore.QuerySnapshot
 
-class SearchMusicCategory : PostSearchCategory<FragmentPostSearchMusicBinding>(FragmentPostSearchMusicBinding::inflate), PostRecyclerEvent {
+class SearchMusicCategory : PostSearchCategory<FragmentPostSearchMusicBinding>(FragmentPostSearchMusicBinding::inflate) {
 
     override fun filterPosts(querySnapshot: QuerySnapshot): ArrayList<PostModel> {
         val postModels = arrayListOf<PostModel>()

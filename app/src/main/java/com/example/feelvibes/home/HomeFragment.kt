@@ -573,6 +573,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun onProfileClickedEvent() {
         mainActivity.onProfileClickedListener {
             accountViewModel.selectedUserId = accountViewModel.currentUser?.uid
+            accountViewModel.currentNavStackId = R.id.action_global_homeFragment
             mainActivity.findNavController(R.id.main_nav_host).navigate(R.id.action_global_profileFragment)
         }
     }
@@ -584,6 +585,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun onUserClick(userId: String) {
         accountViewModel.selectedUserId = userId
+        accountViewModel.currentNavStackId = R.id.action_global_homeFragment
         findNavController().navigate(R.id.action_global_profileFragment)
     }
 

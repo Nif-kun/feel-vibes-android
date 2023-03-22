@@ -242,5 +242,17 @@
         app:tint="@color/white"
         tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
+    <ImageButton
+        android:id="@+id/backBtn"
+        style="@style/DarkOvalButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_arrow_back_24"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/text_color_night_mode"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

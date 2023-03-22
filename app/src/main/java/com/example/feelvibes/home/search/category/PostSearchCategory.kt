@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.feelvibes.R
@@ -87,6 +88,12 @@ abstract class PostSearchCategory<VB : ViewBinding>(
             onQueueRefresh()
         }
         commentsDialog.show(requireActivity().supportFragmentManager, "CommentsDialog")
+    }
+
+    override fun onUserClick(userId: String) {
+        accountViewModel.selectedUserId = userId
+        accountViewModel.currentNavStackId = R.id.action_global_postSearchFragment
+        findNavController().navigate(R.id.action_global_profileFragment)
     }
 
     override fun onQueueRefresh() {

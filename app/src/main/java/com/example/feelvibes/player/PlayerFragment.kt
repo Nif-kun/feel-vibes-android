@@ -58,6 +58,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
     }
 
     override fun onReady() {
+        onBackEvent()
         mainActivity.hideMainMenu()
         if (homeViewModel.layoutState == HomeViewModel.Layouts.NONE) {
             mainActivity.unpadMainView()
@@ -184,6 +185,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
                 _binding?.let {
                     binding.playBtn.setImageResource(R.drawable.ic_play_arrow_24)
                 }
+                setupDesign(true)
             }
         }
     }
@@ -273,14 +275,12 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
 
     private fun setupDesign(forcePause: Boolean = false) {
         // Do a default for none ones here
-        if (binding.designInclude.backgroundImageView.drawable is GifDrawable) {
-            if (mainActivity.musicPlayer?.isPlaying() == true && !forcePause) {
-                (binding.designInclude.backgroundImageView.drawable as GifDrawable).start()
-                (binding.designInclude.foregroundImageView.drawable as GifDrawable).start()
-            } else {
-                (binding.designInclude.backgroundImageView.drawable as GifDrawable).pause()
-                (binding.designInclude.foregroundImageView.drawable as GifDrawable).pause()
-            }
+        if (mainActivity.musicPlayer?.isPlaying() == true && !forcePause) {
+            (binding.designInclude.backgroundImageView.drawable as? GifDrawable)?.start()
+            (binding.designInclude.foregroundImageView.drawable as? GifDrawable)?.start()
+        } else {
+            (binding.designInclude.backgroundImageView.drawable as? GifDrawable)?.pause()
+            (binding.designInclude.foregroundImageView.drawable as? GifDrawable)?.pause()
         }
     }
 
@@ -317,7 +317,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
             if (mainActivity.musicPlayer?.isPlaying() == true) {
                 binding.playBtn.setImageResource(R.drawable.ic_play_arrow_24)
                 mainActivity.musicPlayer?.pause()
-                setupDesign()
+                setupDesign(true)
             } else {
                 binding.playBtn.setImageResource(R.drawable.ic_pause_24)
                 mainActivity.musicPlayer?.play()
@@ -428,6 +428,12 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
             playerViewModel.backgroundView = binding.designInclude.backgroundImageView
             playerViewModel.foregroundView = binding.designInclude.foregroundImageView
             playerViewModel.textView = binding.textView
+        }
+    }
+
+    private fun onBackEvent() {
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

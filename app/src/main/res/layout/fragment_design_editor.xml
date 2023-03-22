@@ -12,12 +12,12 @@
         android:id="@+id/backgroundImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription"
-        android:scaleType="center"/>
+        tools:ignore="ContentDescription"/>
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/foregroundImageView"
@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:minWidth="50dp"
         android:minHeight="50dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

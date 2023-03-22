@@ -12,4 +12,6 @@ class AccountViewModel: ViewModel() {
 
     var viewingItem = false
 
+    var currentNavStackId : Int? = null
+
 }

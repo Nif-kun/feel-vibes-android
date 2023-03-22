@@ -88,8 +88,13 @@ class PostsCategory : FragmentBind<FragmentPostsCategoryBinding>(FragmentPostsCa
     }
 
     override fun onUserClick(userId: String) {
+        /* TODO | Disabling this for now because of this reason:
+            when checking a profile inside of profile,
+            going back gives the same user recently opened since the previous ones were not saved
         accountViewModel.selectedUserId = userId
+        accountViewModel.currentNavStackId = R.id.action_global_profileFragment
         findNavController().navigate(R.id.action_global_profileFragment)
+        */
     }
 
     override fun onMusicClick(

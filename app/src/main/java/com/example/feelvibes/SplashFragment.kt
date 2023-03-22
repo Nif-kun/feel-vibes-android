@@ -16,9 +16,9 @@ class SplashFragment : FragmentBind<FragmentSplashBinding>(FragmentSplashBinding
 
     private lateinit var accountViewModel : AccountViewModel
 
-    private fun onBoardingFinished() = requireActivity()
+    private fun onBoardingFinished(force:Boolean=false) = requireActivity()
         .getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
-        .getBoolean("finished", false)
+        .getBoolean("finished", false) || force
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

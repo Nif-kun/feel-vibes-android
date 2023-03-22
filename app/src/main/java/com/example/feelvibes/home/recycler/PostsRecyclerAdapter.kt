@@ -2,16 +2,19 @@ package com.example.feelvibes.home.recycler
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.feelvibes.R
 import com.example.feelvibes.dialogs.AuthorizationRequestDialog
+import com.example.feelvibes.dialogs.ConfirmationAlertDialog
 import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.model.PostModel
 import com.example.feelvibes.model.TextModel
@@ -37,6 +40,7 @@ class PostsRecyclerAdapter(
         private val postText: TextView = itemView.findViewById(R.id.postTextView)
 
         private val deleteButton: ImageButton = itemView.findViewById(R.id.deleteBtn)
+        private val reportButton: ImageButton = itemView.findViewById(R.id.reportBtn)
         private val likeButton: ImageButton = itemView.findViewById(R.id.likeBtn)
         private val commentButton: ImageButton = itemView.findViewById(R.id.commentBtn)
 
@@ -116,6 +120,28 @@ class PostsRecyclerAdapter(
                         if (time != null) {
                             val postFolderId = time.replace("-", "").replace(":", "").replace("/", "")
                             postRecyclerEvent.onDeletePostClick(ownerId, postId, postFolderId)
+                        }
+                    }
+                }
+
+                // report button
+                if (!isOwner && userId != null) {
+                    reportButton.visibility = View.VISIBLE
+                    reportButton.setOnClickListener {
+                        val confirmationAlertDialog = ConfirmationAlertDialog()
+                        confirmationAlertDialog.title = "Report Post"
+                        confirmationAlertDialog.text = "You are about to report a post that goes against ToS, are you sure?"
+                        if (activity is AppCompatActivity) {
+                            confirmationAlertDialog.show(activity.supportFragmentManager, "AuthorizationRequestDialog")
+                            confirmationAlertDialog.confirmListener = {
+                                FVFireStoreHandler.reportPost(ownerId, postId, userId) { success, exception ->
+                                    if (success) {
+                                        Toast.makeText(activity.baseContext, "Report submitted!", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        exception?.printStackTrace()
+                                    }
+                                }
+                            }
                         }
                     }
                 }
