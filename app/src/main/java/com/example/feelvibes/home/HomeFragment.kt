@@ -20,10 +20,10 @@ import com.example.feelvibes.R
 import com.example.feelvibes.create.CreateFragment
 import com.example.feelvibes.databinding.FragmentHomeBinding
 import com.example.feelvibes.dialogs.*
+import com.example.feelvibes.home.recycler.FollowingRecyclerAdapter
 import com.example.feelvibes.home.recycler.PostRecyclerEvent
 import com.example.feelvibes.home.recycler.PostsRecyclerAdapter
-import com.example.feelvibes.interfaces.RecyclerItemClick
-import com.example.feelvibes.library.recycler.adapters.PlaylistRecyclerAdapter
+import com.example.feelvibes.home.recycler.UsersRecyclerEvent
 import com.example.feelvibes.model.*
 import com.example.feelvibes.utils.ExternalStorageHandler
 import com.example.feelvibes.utils.FVFireStoreHandler
@@ -42,7 +42,7 @@ import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::inflate), PostRecyclerEvent {
+class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::inflate), PostRecyclerEvent, UsersRecyclerEvent {
 
     // Note:
     //  -[vbNull]: A NullPointerException occurs on VB due to spamming of page. Specifically load delay.
@@ -80,10 +80,11 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         FVFireStoreHandler.checkAuth { user ->
             if (user != null)
                 showPostLayout(user)
-            FVFireStoreHandler.queryNewsfeed {
-                if (it != null)
-                    updateAdapter(it)
-                binding.shimmerInclude.homeShimmerLayout.visibility = View.GONE
+            FVFireStoreHandler.queryNewsfeed { posts, exception ->
+                updateAdapter(posts)
+                exception?.printStackTrace()
+                if (_binding != null)
+                    binding.shimmerInclude.homeShimmerLayout.visibility = View.GONE
             }
         }
         onSearchEvent()
@@ -94,7 +95,6 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
             accountViewModel.currentUser = user
             binding.postLayout.visibility = View.VISIBLE
             setupFollowingRecyclerAdapter(user)
-            loadProfilePicture(user)
             onPostInputEvent()
             onAddMusicEvent()
             onAddDesignEvent()
@@ -107,7 +107,18 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun setupFollowingRecyclerAdapter(user: FirebaseUser) {
-        // Don't show if none else show
+        FVFireStoreHandler.getFollowings(user.uid) { followings, exception ->
+            if (_binding != null && followings.isNotEmpty()) {
+                binding.followingRecyclerView.adapter = FollowingRecyclerAdapter(
+                    requireActivity(),
+                    this,
+                    followings
+                )
+                binding.followingBottomDivider.visibility = View.VISIBLE
+                binding.followingRecyclerView.visibility = View.VISIBLE
+            }
+            exception?.printStackTrace()
+        }
     }
 
     // Edit this
@@ -403,9 +414,9 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
 
             // update adapter
-            FVFireStoreHandler.queryNewsfeed {
-                if (it != null)
-                    updateAdapter(it)
+            FVFireStoreHandler.queryNewsfeed { posts, exception ->
+                updateAdapter(posts)
+                exception?.printStackTrace()
             }
         }.addOnFailureListener {
             it.printStackTrace()
@@ -524,22 +535,6 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
             lyricsItem = null
             if (binding.postButton.visibility == View.VISIBLE && !hasContent())
                 binding.postButton.visibility = View.GONE
-        }
-    }
-
-    private fun loadProfilePicture(user: FirebaseUser) {
-        val storageRef = FirebaseStorage.getInstance().getReference("profilePictures")
-        val imageRef = storageRef.child("${user.uid}.png")
-        imageRef.downloadUrl.addOnSuccessListener { uri ->
-            try { // [vbNull]
-                Glide.with(this)
-                    .load(uri)
-                    .into(binding.profilePic);
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }.addOnFailureListener {
-            it.printStackTrace()
         }
     }
 
@@ -678,9 +673,9 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
                 if (success) {
                     FVFireStoreHandler.deleteNewsfeed(userId, postId){ deleted, exception ->
                         if (deleted) {
-                            FVFireStoreHandler.queryNewsfeed {
-                                if (it != null)
-                                    updateAdapter(it)
+                            FVFireStoreHandler.queryNewsfeed { posts, query_exception ->
+                                updateAdapter(posts)
+                                query_exception?.printStackTrace()
                             }
                         } else
                             exception?.printStackTrace()
@@ -709,9 +704,9 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun onQueueRefresh() {
-        FVFireStoreHandler.queryNewsfeed {
-            if (it != null)
-                updateAdapter(it)
+        FVFireStoreHandler.queryNewsfeed { posts, exception ->
+            updateAdapter(posts)
+            exception?.printStackTrace()
         }
     }
 

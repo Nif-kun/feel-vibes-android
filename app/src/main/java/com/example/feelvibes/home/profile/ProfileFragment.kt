@@ -19,10 +19,12 @@ import com.example.feelvibes.dialogs.SimpleAlertDialog
 import com.example.feelvibes.utils.FVFireStoreHandler
 import com.example.feelvibes.utils.FireBaseStorageHandler
 import com.example.feelvibes.utils.PickMedia
+import com.example.feelvibes.utils.ShortLib
 import com.example.feelvibes.view_model.AccountViewModel
 import com.example.feelvibes.view_model.HomeViewModel
 import com.example.feelvibes.viewbinds.FragmentBind
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
@@ -42,6 +44,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
 
     private var username: String? = null
     private var bio: String? = null
+    private var currentUser: FirebaseUser? = null
 
     private var loadingListener: ((Int) -> Unit )? = null
     private var loadingProgress = 0
@@ -95,6 +98,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
     private fun updateViews() {
         FVFireStoreHandler.checkAuth { currentUser ->
             var userIdEmpty = false
+            this.currentUser = currentUser
             if (accountViewModel.selectedUserId == null && currentUser == null) {
                 userIdEmpty = true
                 accountViewModel.currentUser = null
@@ -114,9 +118,8 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                     } else {
                         binding.editBtn.visibility = View.GONE
                         binding.logoutBtn.visibility = View.GONE
-                        // TODO disabling follow for now.
-                        //binding.followBtn.visibility = View.VISIBLE
-                        //onFollowEvent()
+                        binding.followBtn.visibility = View.VISIBLE
+                        onFollowEvent()
                     }
                     updateUsername()
                     updateBio()
@@ -198,7 +201,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                 }
                 binding.userNameAndBioViewLayout.visibility = View.GONE
                 binding.editBtn.visibility = View.GONE
-                //binding.followViewLayout.visibility = View.GONE
+                binding.followViewLayout.visibility = View.GONE
                 binding.userNameAndBioEditLayout.visibility = View.VISIBLE
             }
         }
@@ -207,7 +210,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             binding.userNameAndBioEditLayout.visibility = View.GONE
             binding.editBtn.visibility = View.VISIBLE
             binding.userNameAndBioViewLayout.visibility = View.VISIBLE
-            //binding.followViewLayout.visibility = View.VISIBLE
+            binding.followViewLayout.visibility = View.VISIBLE
         }
 
         binding.saveEditBtn.setOnClickListener {
@@ -228,21 +231,48 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             binding.userNameAndBioEditLayout.visibility = View.GONE
             binding.editBtn.visibility = View.VISIBLE
             binding.userNameAndBioViewLayout.visibility = View.VISIBLE
-            //binding.followViewLayout.visibility = View.VISIBLE
+            binding.followViewLayout.visibility = View.VISIBLE
         }
 
     }
 
     private fun onFollowEvent() {
-        // Check if user or other
-        // then check it if followed or not to change button check state
-        binding.followBtn.addOnCheckedChangeListener { button, isChecked ->
-            if (isChecked) {
-                button.text = getString(R.string.unfollow)
-                button.backgroundTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.white, null))
-            } else {
-                button.text = getString(R.string.follow)
-                button.backgroundTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.purple_200, null))
+        if (this.currentUser != null && accountViewModel.selectedUserId != null) {
+
+            // Set following/follower count
+            FVFireStoreHandler.getFollowings(accountViewModel.selectedUserId!!) { followings, exception ->
+                if (followings.isNotEmpty()) {
+                    binding.followingNumView.text = ShortLib.simplifyNumFormat(followings.size)
+                }
+                exception?.printStackTrace()
+            }
+            FVFireStoreHandler.getFollowers(accountViewModel.selectedUserId!!) { followers, exception ->
+                if (followers.isNotEmpty()) {
+                    binding.followerNumView.text = ShortLib.simplifyNumFormat(followers.size)
+                }
+                exception?.printStackTrace()
+            }
+
+            // Check if already followed
+            FVFireStoreHandler.isFollowing(this.currentUser!!.uid, accountViewModel.selectedUserId!!) { following, exception ->
+                if (following) {
+                    binding.followBtn.isChecked = true
+                } else {
+                    exception?.printStackTrace()
+                }
+            }
+
+            // On follow/unfollow event listeners
+            binding.followBtn.addOnCheckedChangeListener { button, isChecked ->
+                if (isChecked) {
+                    button.text = getString(R.string.unfollow)
+                    button.backgroundTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.white, null))
+                    FVFireStoreHandler.followUser(this.currentUser!!.uid, accountViewModel.selectedUserId!!)
+                } else {
+                    button.text = getString(R.string.follow)
+                    button.backgroundTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.purple_200, null))
+                    FVFireStoreHandler.unfollowUser(this.currentUser!!.uid, accountViewModel.selectedUserId!!)
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.example.feelvibes.utils
 
 import android.net.Uri
+import android.util.Log
 import com.example.feelvibes.model.CommentModel
 import com.example.feelvibes.model.PostModel
 import com.example.feelvibes.model.ReplyModel
@@ -78,10 +79,10 @@ class FVFireStoreHandler {
             }
         }
 
-        fun queryNewsfeed(callback: ((ArrayList<PostModel>?) -> Unit)? = null) {
+        fun queryNewsfeed(callback: ((ArrayList<PostModel>, Exception?) -> Unit)? = null) {
             val collection = FirebaseFirestore.getInstance().collection("usersPost")
+            val postModels = arrayListOf<PostModel>()
             collection.get().addOnSuccessListener { snapshot ->
-                val postModels = arrayListOf<PostModel>()
                 for (doc in snapshot.documents) {
                     if (doc.data != null) {
                         for (post in doc.data!!) {
@@ -91,12 +92,35 @@ class FVFireStoreHandler {
                 }
                 if (callback != null) {
                     postModels.shuffle()
-                    callback(postModels)
+                    callback(postModels, null)
                 }
             }.addOnFailureListener {
-                it.printStackTrace()
                 if (callback != null) {
-                    callback(null)
+                    callback(postModels, it)
+                }
+            }
+        }
+
+        fun queryUsersDisplayData(filter:String? = null, callback: ((ArrayList<String>, Exception?) -> Unit)? = null) {
+            val collection = FirebaseFirestore.getInstance().collection("usersDisplayData")
+            val users = arrayListOf<String>()
+            collection.get().addOnSuccessListener { snapshot ->
+                for (doc in snapshot.documents) {
+                    if (!filter.isNullOrBlank()) {
+                        val displayName = doc.get("username") as? String
+                        if (displayName?.contains(filter, true) == true) {
+                            users.add(doc.id)
+                        }
+                    } else {
+                        users.add(doc.id)
+                    }
+                }
+                if (callback != null) {
+                    callback(users, null)
+                }
+            }.addOnFailureListener {
+                if (callback != null) {
+                    callback(users, it)
                 }
             }
         }
@@ -198,7 +222,6 @@ class FVFireStoreHandler {
 
         fun getComments(userId:String, postId:String, callback: ((MutableMap<*,*>?)->Unit)) {
             val postRef = FirebaseFirestore.getInstance().collection("usersPost").document(userId)
-
         }
 
         fun parcelizeComments(rawComments: HashMap<*,*>?): ArrayList<CommentModel> {
@@ -394,6 +417,97 @@ class FVFireStoreHandler {
                 callback(true, null)
             }.addOnFailureListener {
                 callback(false, it)
+            }
+        }
+
+        fun followUser(userId:String, followingId:String, callback: ((Boolean, Exception?) -> Unit)? = null) {
+            val documentRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(userId)
+            documentRef.update(mapOf(
+                "followings" to FieldValue.arrayUnion(followingId)
+            )).addOnSuccessListener {
+                val followingDocumentRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(followingId)
+                followingDocumentRef.update(mapOf(
+                    "followers" to FieldValue.arrayUnion(userId)
+                )).addOnSuccessListener {
+                    if (callback != null) {
+                        callback(true, null)
+                    }
+                }.addOnFailureListener {
+                    if (callback != null) {
+                        callback(false, it)
+                    }
+                }
+            }.addOnFailureListener {
+                if (callback != null) {
+                    callback(false, it)
+                }
+            }
+        }
+
+        fun unfollowUser(userId:String, followingId:String, callback: ((Boolean, Exception?) -> Unit)? = null) {
+            val documentRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(userId)
+            documentRef.update(mapOf(
+                "followings" to FieldValue.arrayRemove(followingId)
+            )).addOnSuccessListener {
+                val followingDocumentRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(followingId)
+                followingDocumentRef.update(mapOf(
+                    "followers" to FieldValue.arrayRemove(userId)
+                )).addOnSuccessListener {
+                    if (callback != null) {
+                        callback(true, null)
+                    }
+                }.addOnFailureListener {
+                    if (callback != null) {
+                        callback(false, it)
+                    }
+                }
+            }.addOnFailureListener {
+                if (callback != null) {
+                    callback(false, it)
+                }
+            }
+        }
+
+        fun isFollowing(userId:String, followingId:String, callback: ((Boolean, Exception?) -> Unit)? = null) {
+            val documentRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(userId)
+            var has = false
+            documentRef.get().addOnSuccessListener { snapshot ->
+                val followedUsers = snapshot.get("followings") as? ArrayList<*>
+                if (followedUsers != null) {
+                    for (following in followedUsers) {
+                        if (following is String && following.contains(followingId)) {
+                            has = true
+                            break
+                        }
+                    }
+                }
+                if (callback != null) {
+                    callback(has, null)
+                }
+            }.addOnFailureListener { exception ->
+                if (callback != null) {
+                    callback(has, exception)
+                }
+            }
+        }
+
+        fun getFollowers(userId:String, callback: (ArrayList<String>, Exception?) -> Unit) {
+            val documentRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(userId)
+            documentRef.get().addOnSuccessListener { snapshot ->
+                val followers = ((snapshot.get("followers") as? ArrayList<*>)?.filterIsInstance<String>() ?: arrayListOf()) as ArrayList<String>
+                callback(followers, null)
+            }.addOnFailureListener {
+                callback(arrayListOf(), it)
+            }
+        }
+
+        fun getFollowings(userId:String, callback: (ArrayList<String>, Exception?) -> Unit) {
+            val documentRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(userId)
+            documentRef.get().addOnSuccessListener { snapshot ->
+                val followings = ((snapshot.get("followings") as? ArrayList<*>)?.filterIsInstance<String>() ?: arrayListOf()) as ArrayList<String>
+                callback(followings, null)
+            }.addOnFailureListener {
+                callback(arrayListOf(), it)
             }
         }
 

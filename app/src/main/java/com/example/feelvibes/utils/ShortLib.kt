@@ -153,6 +153,23 @@ class ShortLib {
             return result
         }
 
+        fun simplifyNumFormat(number: Int): String {
+            val suffixes = arrayOf("", "K", "M", "B", "T")
+            var num = number.toDouble()
+            var index = 0
+
+            while (num >= 1000) {
+                num /= 1000
+                index++
+            }
+
+            return if (num < 10) {
+                "${num.toInt()}${suffixes[index]}"
+            } else {
+                "$num${suffixes[index]}"
+            }
+        }
+
     }
 
     class RandomIndexGenerator(private val size: Int) {

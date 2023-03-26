@@ -17,7 +17,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/postLayout"
@@ -27,7 +28,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:visibility="gone">
 
                 <com.google.android.material.divider.MaterialDivider
@@ -44,6 +44,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="horizontal"
                     android:visibility="gone"
+                    tools:listitem="@layout/following_item_layout"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                 <com.google.android.material.divider.MaterialDivider
@@ -57,21 +58,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="25dp">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/profilePic"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@color/neutral"
-                        android:padding="2dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_person_24"
-                        android:visibility="visible"
-                        app:shapeAppearance="@style/roundedImageView"
-                        app:strokeColor="@color/white" />
+                    android:paddingHorizontal="20dp"
+                    android:orientation="horizontal">
 
                     <EditText
                         android:id="@+id/postInput"
@@ -98,15 +86,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:paddingHorizontal="25dp"
                     android:visibility="visible">
 
                     <LinearLayout
                         android:id="@+id/musicItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="85dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_edittext"
                         android:orientation="horizontal"
                         android:paddingHorizontal="10dp"
@@ -139,9 +126,7 @@
                         android:id="@+id/designItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="85dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_edittext"
                         android:orientation="horizontal"
                         android:paddingHorizontal="10dp"
@@ -174,9 +159,7 @@
                         android:id="@+id/chordsItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="85dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_edittext"
                         android:orientation="horizontal"
                         android:paddingHorizontal="10dp"
@@ -209,9 +192,7 @@
                         android:id="@+id/lyricsItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="85dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_edittext"
                         android:orientation="horizontal"
                         android:paddingHorizontal="10dp"
@@ -239,15 +220,15 @@
                             android:src="@drawable/ic_close_24"
                             app:tint="@color/mild_white" />
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="25dp"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:paddingStart="60dp">
+                    android:paddingHorizontal="25dp"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"

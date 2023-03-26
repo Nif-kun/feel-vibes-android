@@ -275,12 +275,14 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
 
     private fun setupDesign(forcePause: Boolean = false) {
         // Do a default for none ones here
-        if (mainActivity.musicPlayer?.isPlaying() == true && !forcePause) {
-            (binding.designInclude.backgroundImageView.drawable as? GifDrawable)?.start()
-            (binding.designInclude.foregroundImageView.drawable as? GifDrawable)?.start()
-        } else {
-            (binding.designInclude.backgroundImageView.drawable as? GifDrawable)?.pause()
-            (binding.designInclude.foregroundImageView.drawable as? GifDrawable)?.pause()
+        if (_binding != null) {
+            if (mainActivity.musicPlayer?.isPlaying() == true && !forcePause) {
+                (binding.designInclude.backgroundImageView.drawable as? GifDrawable)?.start()
+                (binding.designInclude.foregroundImageView.drawable as? GifDrawable)?.start()
+            } else {
+                (binding.designInclude.backgroundImageView.drawable as? GifDrawable)?.pause()
+                (binding.designInclude.foregroundImageView.drawable as? GifDrawable)?.pause()
+            }
         }
     }
 
@@ -401,7 +403,8 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
                     mainActivity.musicPlayer?.setPlaylist(libraryViewModel.currentPlaylist!!, libraryViewModel.selectedMusicPos) {
                         if (it) {
                             mainActivity.musicPlayer?.play()
-                            binding.playBtn.setImageResource(R.drawable.ic_pause_24)
+                            if (_binding != null)
+                                binding.playBtn.setImageResource(R.drawable.ic_pause_24)
                         }
                     }
                     libraryViewModel.selectedMusicPos = 0

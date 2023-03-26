@@ -8,12 +8,13 @@ class PostSearchViewPageAdapter(fragment: Fragment) : FragmentStateAdapter(fragm
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> SearchHashtagCategory()
-            1 -> SearchMusicCategory()
-            2 -> SearchDesignCategory()
-            3 -> SearchChordsCategory()
-            4 -> SearchLyricsCategory()
-            else -> SearchHashtagCategory()
+            0 -> SearchPeopleCategory()
+            1 -> SearchHashtagCategory()
+            2 -> SearchMusicCategory()
+            3 -> SearchDesignCategory()
+            4 -> SearchChordsCategory()
+            5 -> SearchLyricsCategory()
+            else -> SearchPeopleCategory()
         }
     }
 
