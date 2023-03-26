@@ -78,14 +78,18 @@ class LoginFragment : FragmentBind<FragmentLoginBinding>(FragmentLoginBinding::i
                 if (task.isSuccessful) {
                     // Login successful
                     val user = mainActivity.mAuth.currentUser
-                    accountViewModel.currentUser = user
-                    user?.let {
-                        if (accountViewModel.onBoardingFinished) {
-                            findNavController().popBackStack()
-                            mainActivity.showMainMenu()
-                        } else {
-                            onBoardingViewModel.loginListener?.invoke()
+                    if (user?.isEmailVerified == true) {
+                        accountViewModel.currentUser = user
+                        user.let {
+                            if (accountViewModel.onBoardingFinished) {
+                                findNavController().popBackStack()
+                                mainActivity.showMainMenu()
+                            } else {
+                                onBoardingViewModel.loginListener?.invoke()
+                            }
                         }
+                    } else {
+                        Toast.makeText(requireActivity(), "Account has not been verified, please check your email.", Toast.LENGTH_LONG).show()
                     }
                 } else {
                     // Login failed

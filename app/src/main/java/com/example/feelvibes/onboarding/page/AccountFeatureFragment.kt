@@ -44,7 +44,6 @@ class AccountFeatureFragment : FragmentBind<FragmentAccountFeatureBinding>(Fragm
             onBoardingFinish()
             mainActivity.showMainMenu()
             findNavController().navigate(R.id.action_onBoardingFragment_to_main_nav)
-
         }
     }
 

@@ -216,5 +216,8 @@
     <string name="add_a_comment">Add a comment...</string>
     <string name="replies">Replies</string>
     <string name="hashtag">Hashtag</string>
+    <string name="onBoardingCreate">Customize and create your own cover animations, lyrics, or even chords.</string>
+    <string name="onBoardingListen">Listen to your favorite artist and music, with no interruptions.</string>
+    <string name="onBoardingShare">Interact with other users, share your music, design, lyrics, and chords. </string>
 
 </resources>

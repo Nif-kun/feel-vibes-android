@@ -82,6 +82,11 @@ class PostsRecyclerAdapter(
                         .load(uri)
                         .into(postUserPic)
                 }
+                else {
+                    Glide.with(activity.baseContext)
+                        .load(R.drawable.ic_person_24)
+                        .into(postUserPic)
+                }
             }
             postUserPic.setOnClickListener {
                 postRecyclerEvent.onUserClick(userId)

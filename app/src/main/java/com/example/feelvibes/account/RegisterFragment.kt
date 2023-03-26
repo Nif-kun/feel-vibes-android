@@ -234,8 +234,8 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
         userRef.set(userData)
             .addOnSuccessListener {
                 // user data stored successfully
-                accountViewModel.currentUser = user
-                Toast.makeText(requireActivity(), "Account created!", Toast.LENGTH_SHORT).show()
+                user.sendEmailVerification()
+                Toast.makeText(requireActivity(), "Success: an email verification has been sent.", Toast.LENGTH_LONG).show()
                 binding.AccountSignUpConfirmBtn.isEnabled = true
                 navigateBack()
             }

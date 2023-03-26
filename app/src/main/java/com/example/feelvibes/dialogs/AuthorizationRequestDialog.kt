@@ -11,6 +11,7 @@ class AuthorizationRequestDialog: FragmentDialogBind<AuthorizationRequestDialogB
     var onDismissListener: (()->Unit)? = null
 
     var popBack = false
+    var popNav : (() -> Unit)? = null
     private var authenticating = false
 
     override fun onReady() {
@@ -58,8 +59,12 @@ class AuthorizationRequestDialog: FragmentDialogBind<AuthorizationRequestDialogB
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if (popBack && !authenticating) {
-            findNavController().popBackStack()
+        if (!authenticating) {
+            if (popNav != null) {
+                popNav!!()
+            } else if (popBack) {
+                findNavController().popBackStack()
+            }
         }
     }
 

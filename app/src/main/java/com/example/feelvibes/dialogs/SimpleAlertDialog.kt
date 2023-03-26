@@ -13,6 +13,7 @@ class SimpleAlertDialog: FragmentDialogBind<SimpleAlertDialogBinding>(SimpleAler
     var titleEnabled = true
     var returnEnabled = true
     var popBack = false
+    var popNav : (() -> Unit)? = null
     var title = "Untitled"
     var text = ""
     var buttonLabel = "Return"
@@ -40,7 +41,9 @@ class SimpleAlertDialog: FragmentDialogBind<SimpleAlertDialogBinding>(SimpleAler
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if (popBack) {
+        if (popNav != null) {
+            popNav!!()
+        } else if (popBack) {
             findNavController().popBackStack()
         }
     }

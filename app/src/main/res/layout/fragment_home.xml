@@ -13,283 +13,306 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
-        android:background="@color/transparent"
-        android:visibility="gone">
+        android:background="@color/transparent">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="wrap_content">
 
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:dividerColor="@color/blur_white"
-                android:layout_marginBottom="10dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/followingRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_marginBottom="10dp"
-                android:layout_marginStart="10dp"
-                android:visibility="gone"/>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/followingBottomDivider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:dividerColor="@color/blur_white"
-                android:layout_marginBottom="10dp"
-                android:visibility="gone"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="25dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/profilePic"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@color/neutral"
-                    android:padding="2dp"
-                    app:shapeAppearance="@style/roundedImageView"
-                    app:strokeColor="@color/white"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_person_24"
-                    android:visibility="visible"/>
-
-                <EditText
-                    android:id="@+id/postInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:maxHeight="200dp"
-                    android:gravity="center_vertical"
-                    android:backgroundTint="@color/background_color_night_mode"
-                    android:background="@drawable/rounded_background"
-                    android:inputType="textMultiLine"
-                    android:paddingVertical="4dp"
-                    android:paddingHorizontal="10dp"
-                    android:hint="@string/got_something_new"
-                    android:maxLength="280"
-                    android:maxLines="10"
-                    android:overScrollMode="always"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="vertical"/>
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/uploadItems"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/postLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
-                <LinearLayout
-                    android:id="@+id/musicItem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:visibility="gone">
+
+                <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="85dp"
-                    android:layout_marginEnd="25dp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="10dp"
-                    android:background="@drawable/rounded_edittext"
+                    android:layout_marginBottom="10dp"
+                    app:dividerColor="@color/blur_white" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/followingRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                    <TextView
-                        android:id="@+id/musicTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:text="@string/untitled"
-                        android:drawablePadding="5dp"
-                        android:layout_weight="1"
-                        app:drawableTint="@color/mild_white"
-                        app:drawableStartCompat="@drawable/ic_music_note_24" />
-
-                    <ImageButton
-                        android:id="@+id/musicRemove"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        style="@style/NoBackgroundButton"
-                        app:tint="@color/mild_white"
-                        android:src="@drawable/ic_close_24"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/designItem"
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/followingBottomDivider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="85dp"
-                    android:layout_marginEnd="25dp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="10dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
+                    app:dividerColor="@color/blur_white" />
 
-                    <TextView
-                        android:id="@+id/designTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:text="@string/untitled"
-                        android:drawablePadding="5dp"
-                        android:layout_weight="1"
-                        app:drawableTint="@color/mild_white"
-                        app:drawableStartCompat="@drawable/ic_image_24"/>
-
-                    <ImageButton
-                        android:id="@+id/designRemove"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        style="@style/NoBackgroundButton"
-                        app:tint="@color/mild_white"
-                        android:src="@drawable/ic_close_24"/>
-                </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/chordsItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="85dp"
-                    android:layout_marginEnd="25dp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="10dp"
-                    android:background="@drawable/rounded_edittext"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:paddingHorizontal="25dp">
 
-                    <TextView
-                        android:id="@+id/chordsTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:text="@string/untitled"
-                        android:drawablePadding="5dp"
-                        android:layout_weight="1"
-                        app:drawableTint="@color/mild_white"
-                        app:drawableStartCompat="@drawable/ic_speaker_notes_24"/>
-
-                    <ImageButton
-                        android:id="@+id/chordsRemove"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/profilePic"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/neutral"
+                        android:padding="2dp"
                         android:scaleType="centerCrop"
-                        style="@style/NoBackgroundButton"
-                        app:tint="@color/mild_white"
-                        android:src="@drawable/ic_close_24"/>
+                        android:src="@drawable/ic_person_24"
+                        android:visibility="visible"
+                        app:shapeAppearance="@style/roundedImageView"
+                        app:strokeColor="@color/white" />
+
+                    <EditText
+                        android:id="@+id/postInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/rounded_background"
+                        android:backgroundTint="@color/background_color_night_mode"
+                        android:gravity="center_vertical"
+                        android:hint="@string/got_something_new"
+                        android:inputType="textMultiLine"
+                        android:maxHeight="200dp"
+                        android:maxLength="280"
+                        android:maxLines="10"
+                        android:overScrollMode="always"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars="vertical" />
+
                 </LinearLayout>
+
                 <LinearLayout
-                    android:id="@+id/lyricsItem"
+                    android:id="@+id/uploadItems"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="85dp"
-                    android:layout_marginEnd="25dp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="10dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
-                    <TextView
-                        android:id="@+id/lyricsTitle"
+                    <LinearLayout
+                        android:id="@+id/musicItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="85dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="25dp"
+                        android:background="@drawable/rounded_edittext"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/musicTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawablePadding="5dp"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:text="@string/untitled"
+                            app:drawableStartCompat="@drawable/ic_music_note_24"
+                            app:drawableTint="@color/mild_white" />
+
+                        <ImageButton
+                            android:id="@+id/musicRemove"
+                            style="@style/NoBackgroundButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_close_24"
+                            app:tint="@color/mild_white" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/designItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="85dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="25dp"
+                        android:background="@drawable/rounded_edittext"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/designTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawablePadding="5dp"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:text="@string/untitled"
+                            app:drawableStartCompat="@drawable/ic_image_24"
+                            app:drawableTint="@color/mild_white" />
+
+                        <ImageButton
+                            android:id="@+id/designRemove"
+                            style="@style/NoBackgroundButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_close_24"
+                            app:tint="@color/mild_white" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/chordsItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="85dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="25dp"
+                        android:background="@drawable/rounded_edittext"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/chordsTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawablePadding="5dp"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:text="@string/untitled"
+                            app:drawableStartCompat="@drawable/ic_speaker_notes_24"
+                            app:drawableTint="@color/mild_white" />
+
+                        <ImageButton
+                            android:id="@+id/chordsRemove"
+                            style="@style/NoBackgroundButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_close_24"
+                            app:tint="@color/mild_white" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lyricsItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="85dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="25dp"
+                        android:background="@drawable/rounded_edittext"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/lyricsTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawablePadding="5dp"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:text="@string/untitled"
+                            app:drawableStartCompat="@drawable/ic_lyrics_24"
+                            app:drawableTint="@color/mild_white" />
+
+                        <ImageButton
+                            android:id="@+id/lyricsRemove"
+                            style="@style/NoBackgroundButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_close_24"
+                            app:tint="@color/mild_white" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:paddingStart="60dp">
+
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:text="@string/untitled"
-                        android:drawablePadding="5dp"
                         android:layout_weight="1"
-                        app:drawableTint="@color/mild_white"
-                        app:drawableStartCompat="@drawable/ic_lyrics_24"/>
+                        android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/lyricsRemove"
+                        <ImageButton
+                            android:id="@+id/musicButton"
+                            style="@style/NoBackgroundButton"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_outline_library_music_24"
+                            app:tint="@color/mild_white" />
+
+                        <ImageButton
+                            android:id="@+id/designButton"
+                            style="@style/NoBackgroundButton"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_outline_photo_library_24"
+                            app:tint="@color/mild_white" />
+
+                        <ImageButton
+                            android:id="@+id/chordsButton"
+                            style="@style/NoBackgroundButton"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_outline_speaker_notes_24"
+                            app:tint="@color/mild_white" />
+
+                        <ImageButton
+                            android:id="@+id/lyricsButton"
+                            style="@style/NoBackgroundButton"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_outline_lyrics_24"
+                            app:tint="@color/mild_white" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/postButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        style="@style/NoBackgroundButton"
-                        app:tint="@color/mild_white"
-                        android:src="@drawable/ic_close_24"/>
+                        android:layout_height="40dp"
+                        android:background="@drawable/rounded_neutral_button"
+                        android:text="@string/post"
+                        android:visibility="gone" />
+
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <include
+                android:id="@+id/shimmerInclude"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:layout_marginHorizontal="25dp"
-                android:paddingStart="60dp">
+                layout="@layout/home_shimmer_layout"
+                app:layout_constraintTop_toBottomOf="@+id/postLayout" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_weight="1">
-
-                    <ImageButton
-                        android:id="@+id/musicButton"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        style="@style/NoBackgroundButton"
-                        android:scaleType="centerCrop"
-                        app:tint="@color/mild_white"
-                        android:src="@drawable/ic_outline_library_music_24"/>
-
-                    <ImageButton
-                        android:id="@+id/designButton"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        style="@style/NoBackgroundButton"
-                        android:scaleType="centerCrop"
-                        app:tint="@color/mild_white"
-                        android:src="@drawable/ic_outline_photo_library_24"/>
-
-                    <ImageButton
-                        android:id="@+id/chordsButton"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        style="@style/NoBackgroundButton"
-                        android:scaleType="centerCrop"
-                        app:tint="@color/mild_white"
-                        android:src="@drawable/ic_outline_speaker_notes_24"/>
-
-                    <ImageButton
-                        android:id="@+id/lyricsButton"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        style="@style/NoBackgroundButton"
-                        android:scaleType="centerCrop"
-                        app:tint="@color/mild_white"
-                        android:src="@drawable/ic_outline_lyrics_24"/>
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/postButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:background="@drawable/rounded_neutral_button"
-                    android:text="@string/post"
-                    android:visibility="gone"/>
-
-            </LinearLayout>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -72,8 +72,12 @@ class LoginLayoutHandler {
                 if (task.isSuccessful) {
                     // Login successful
                     val user = mainActivity.mAuth.currentUser
-                    accountViewModel.currentUser = user
-                    dialog.dismiss()
+                    if (user?.isEmailVerified == true) {
+                        accountViewModel.currentUser = user
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(mainActivity, "Account has not been verified, please check your email.", Toast.LENGTH_LONG).show()
+                    }
                 } else {
                     // Login failed
                     task.exception?.printStackTrace()

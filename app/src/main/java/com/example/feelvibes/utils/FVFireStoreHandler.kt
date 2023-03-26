@@ -2,6 +2,7 @@ package com.example.feelvibes.utils
 
 import android.net.Uri
 import com.example.feelvibes.model.CommentModel
+import com.example.feelvibes.model.PostModel
 import com.example.feelvibes.model.ReplyModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -76,6 +77,63 @@ class FVFireStoreHandler {
                 callback(null)
             }
         }
+
+        fun queryNewsfeed(callback: ((ArrayList<PostModel>?) -> Unit)? = null) {
+            val collection = FirebaseFirestore.getInstance().collection("usersPost")
+            collection.get().addOnSuccessListener { snapshot ->
+                val postModels = arrayListOf<PostModel>()
+                for (doc in snapshot.documents) {
+                    if (doc.data != null) {
+                        for (post in doc.data!!) {
+                            postModels.add(PostModel(doc.id, post.key))
+                        }
+                    }
+                }
+                if (callback != null) {
+                    postModels.shuffle()
+                    callback(postModels)
+                }
+            }.addOnFailureListener {
+                it.printStackTrace()
+                if (callback != null) {
+                    callback(null)
+                }
+            }
+        }
+
+        /* Note: This queries only one day, which is the current day.
+        private fun queryNewsfeed(callback: (ArrayList<PostModel>?) -> Unit) {
+            val currentDateTime = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val formatted = currentDateTime.format(formatter)
+            val documentId = formatted.replace("-", "")
+            val postRef = FirebaseFirestore.getInstance().collection("newsfeed").document(documentId)
+            postRef.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val postModels = arrayListOf<PostModel>()
+                    val keys = documentSnapshot.data?.keys
+                    if (keys != null) {
+                        for (userId in keys) {
+                            val postIds = documentSnapshot[userId]
+                            if (postIds is ArrayList<*>) {
+                                for (id in postIds) {
+                                    if (id is String) {
+                                        postModels.add(PostModel(userId, id))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    postModels.reverse()
+                    callback(postModels)
+                } else {
+                    callback(null)
+                }
+            }.addOnFailureListener {
+                it.printStackTrace()
+                callback(null)
+            }
+        }*/
 
         fun deletePost(userId:String, postId:String, callback: (Boolean, Exception?) -> Unit?) {
             val docRef = FirebaseFirestore.getInstance().collection("usersPost").document(userId)

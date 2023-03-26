@@ -98,7 +98,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             if (accountViewModel.selectedUserId == null && currentUser == null) {
                 userIdEmpty = true
                 accountViewModel.currentUser = null
-                authorizationRequestDialog.popBack = true
+                authorizationRequestDialog.popNav = { findNavController().navigate(R.id.action_profileFragment_to_homeFragment) }
                 authorizationRequestDialog.show(mainActivity.supportFragmentManager, "AuthorizationRequestDialog")
             } else if (currentUser != null) {
                 if (accountViewModel.selectedUserId == null) {
@@ -126,6 +126,13 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                     Log.d("ProfileFragment", "An error occurred on updateViews. (Has current user)")
                     e.printStackTrace()
                 }
+            } else {
+                binding.editBtn.visibility = View.GONE
+                binding.logoutBtn.visibility = View.GONE
+                updateUsername()
+                updateBio()
+                loadProfilePicture()
+                loadProfileBanner()
             }
             try { // [vbNull]
                 if (!userIdEmpty)
@@ -176,7 +183,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
         val dialog = SimpleAlertDialog()
         dialog.title = mainActivity.getString(R.string.timeout_error_title)
         dialog.text = mainActivity.getString(R.string.timeout_error_text)
-        dialog.popBack = true
+        dialog.popNav = { findNavController().navigate(R.id.action_profileFragment_to_homeFragment) }
         dialog.show(mainActivity.supportFragmentManager, "LoadErrorDialog")
     }
 

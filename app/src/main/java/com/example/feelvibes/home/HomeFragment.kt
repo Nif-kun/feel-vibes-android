@@ -77,32 +77,32 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         mainActivity.unpadMainView()
         mainActivity.showToolBar(isHome = true)
         onProfileClickedEvent()
-        showAppBarLayout()
-        queryNewsfeed {
-            if (it != null)
-                updateAdapter(it)
+        FVFireStoreHandler.checkAuth { user ->
+            if (user != null)
+                showPostLayout(user)
+            FVFireStoreHandler.queryNewsfeed {
+                if (it != null)
+                    updateAdapter(it)
+                binding.shimmerInclude.homeShimmerLayout.visibility = View.GONE
+            }
         }
         onSearchEvent()
     }
 
-    private fun showAppBarLayout() {
-        mainActivity.checkAuth { user ->
-            if (user != null) {
-                try { // [vbNull]
-                    accountViewModel.currentUser = user
-                    binding.appBarLayout.visibility = View.VISIBLE
-                    setupFollowingRecyclerAdapter(user)
-                    loadProfilePicture(user)
-                    onPostInputEvent()
-                    onAddMusicEvent()
-                    onAddDesignEvent()
-                    onAddChordsEvent()
-                    onAddLyricsEvent()
-                    onPostEvent(user)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+    private fun showPostLayout(user:FirebaseUser) {
+        try { // [vbNull]
+            accountViewModel.currentUser = user
+            binding.postLayout.visibility = View.VISIBLE
+            setupFollowingRecyclerAdapter(user)
+            loadProfilePicture(user)
+            onPostInputEvent()
+            onAddMusicEvent()
+            onAddDesignEvent()
+            onAddChordsEvent()
+            onAddLyricsEvent()
+            onPostEvent(user)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -122,39 +122,6 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
             )
         } catch (e: Exception) {
             e.printStackTrace()
-        }
-    }
-
-    private fun queryNewsfeed(callback: (ArrayList<PostModel>?) -> Unit) {
-        val currentDateTime = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val formatted = currentDateTime.format(formatter)
-        val documentId = formatted.replace("-", "")
-        val postRef = FirebaseFirestore.getInstance().collection("newsfeed").document(documentId)
-        postRef.get().addOnSuccessListener { documentSnapshot ->
-            if (documentSnapshot.exists()) {
-                val postModels = arrayListOf<PostModel>()
-                val keys = documentSnapshot.data?.keys
-                if (keys != null) {
-                    for (userId in keys) {
-                        val postIds = documentSnapshot[userId]
-                        if (postIds is ArrayList<*>) {
-                            for (id in postIds) {
-                                if (id is String) {
-                                    postModels.add(PostModel(userId, id))
-                                }
-                            }
-                        }
-                    }
-                }
-                postModels.reverse()
-                callback(postModels)
-            } else {
-                callback(null)
-            }
-        }.addOnFailureListener {
-            it.printStackTrace()
-            callback(null)
         }
     }
 
@@ -221,95 +188,101 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun onPostEvent(user: FirebaseUser) {
         binding.postButton.setOnClickListener {
-            if (hasContent()) {
-                Toast.makeText(mainActivity, "Uploading...", Toast.LENGTH_SHORT).show()
-                posting(true)
-                // If has music or design, then upload first
-                // Check if success or not, if not, don't post in FireStore
-                val userId = user.uid
-                val userRef = FirebaseFirestore.getInstance().collection("usersPost").document(userId)
-                val currentDateTime = LocalDateTime.now()
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss")
-                val formatted = currentDateTime.format(formatter)
-                val sanitizedFormatted = formatted.replace("-", "").replace(":", "").replace("/", "")
-                val postId = sanitizedFormatted+userId
-                val contentData = mutableMapOf<String, Any>()
-                val postData = mutableMapOf<String, Any>(postId to contentData)
+            val confirmPostDialog = ConfirmationAlertDialog()
+            confirmPostDialog.title = "Confirm Post"
+            confirmPostDialog.text = "You are about to publish this post online. Are you sure?"
+            confirmPostDialog.confirmListener = {
+                if (hasContent()) {
+                    Toast.makeText(mainActivity, "Uploading...", Toast.LENGTH_SHORT).show()
+                    posting(true)
+                    // If has music or design, then upload first
+                    // Check if success or not, if not, don't post in FireStore
+                    val userId = user.uid
+                    val userRef = FirebaseFirestore.getInstance().collection("usersPost").document(userId)
+                    val currentDateTime = LocalDateTime.now()
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss")
+                    val formatted = currentDateTime.format(formatter)
+                    val sanitizedFormatted = formatted.replace("-", "").replace(":", "").replace("/", "")
+                    val postId = sanitizedFormatted+userId
+                    val contentData = mutableMapOf<String, Any>()
+                    val postData = mutableMapOf<String, Any>(postId to contentData)
 
-                contentData["time"] = formatted
-                if (binding.postInput.text.isNotEmpty())
-                    contentData["text"] = binding.postInput.text.toString()
-                if (chordsItem != null)
-                    contentData["chords"] = hashMapOf("name" to chordsItem!!.name, "text" to chordsItem!!.text)
-                if (lyricsItem != null)
-                    contentData["lyrics"] = hashMapOf("name" to lyricsItem!!.name, "text" to lyricsItem!!.text)
+                    contentData["time"] = formatted
+                    if (binding.postInput.text.isNotEmpty())
+                        contentData["text"] = binding.postInput.text.toString()
+                    if (chordsItem != null)
+                        contentData["chords"] = hashMapOf("name" to chordsItem!!.name, "text" to chordsItem!!.text)
+                    if (lyricsItem != null)
+                        contentData["lyrics"] = hashMapOf("name" to lyricsItem!!.name, "text" to lyricsItem!!.text)
 
-                if (musicItem != null || designItem != null) {
-                    fileUpload(userId, sanitizedFormatted) { success ->
-                        if (success == true) {
-                            if (tempMusicUri != null) {
-                                contentData["music"] = hashMapOf(
-                                    "url" to tempMusicUri.toString(),
-                                    "track" to musicItem!!.track,
-                                    "title" to musicItem!!.title,
-                                    "duration" to musicItem!!.duration,
-                                    "artist" to musicItem!!.artist,
-                                    "album" to musicItem!!.album,
-                                    "genre" to musicItem!!.genre
-                                )
-                            }
-                            if (designItem != null) {
-                                val designData = mutableMapOf<String, String>()
-                                designData["name"] = designItem!!.name
-                                if (tempDesignForegroundUri != null)
-                                    designData["foreground"] = tempDesignForegroundUri.toString()
-                                if (tempDesignBackgroundUri != null)
-                                    designData["background"] = tempDesignBackgroundUri.toString()
-                                contentData["design"] = designData
-                            }
+                    if (musicItem != null || designItem != null) {
+                        fileUpload(userId, sanitizedFormatted) { success ->
+                            if (success == true) {
+                                if (tempMusicUri != null) {
+                                    contentData["music"] = hashMapOf(
+                                        "url" to tempMusicUri.toString(),
+                                        "track" to musicItem!!.track,
+                                        "title" to musicItem!!.title,
+                                        "duration" to musicItem!!.duration,
+                                        "artist" to musicItem!!.artist,
+                                        "album" to musicItem!!.album,
+                                        "genre" to musicItem!!.genre
+                                    )
+                                }
+                                if (designItem != null) {
+                                    val designData = mutableMapOf<String, String>()
+                                    designData["name"] = designItem!!.name
+                                    if (tempDesignForegroundUri != null)
+                                        designData["foreground"] = tempDesignForegroundUri.toString()
+                                    if (tempDesignBackgroundUri != null)
+                                        designData["background"] = tempDesignBackgroundUri.toString()
+                                    contentData["design"] = designData
+                                }
 
-                            // Upload file
-                            userRef.set(postData, SetOptions.merge()).addOnCompleteListener {
-                                newsfeedUpload(userId, postId)
-                                Toast.makeText(mainActivity, "Posted!", Toast.LENGTH_SHORT).show()
-                                tempMusicUri = null
-                                tempDesignForegroundUri = null
-                                tempDesignBackgroundUri = null
-                                resetPostViews()
-                                posting(false)
-                            }.addOnFailureListener {
+                                // Upload file
+                                userRef.set(postData, SetOptions.merge()).addOnCompleteListener {
+                                    newsfeedUpload(userId, postId)
+                                    Toast.makeText(mainActivity, "Posted!", Toast.LENGTH_SHORT).show()
+                                    tempMusicUri = null
+                                    tempDesignForegroundUri = null
+                                    tempDesignBackgroundUri = null
+                                    resetPostViews()
+                                    posting(false)
+                                }.addOnFailureListener {
+                                    warnLoadError()
+                                    tempMusicUri = null
+                                    tempDesignForegroundUri = null
+                                    tempDesignBackgroundUri = null
+                                    posting(false)
+                                }
+
+                            } else {
                                 warnLoadError()
                                 tempMusicUri = null
                                 tempDesignForegroundUri = null
                                 tempDesignBackgroundUri = null
                                 posting(false)
                             }
-
-                        } else {
-                            warnLoadError()
+                        }
+                    } else {
+                        userRef.set(postData, SetOptions.merge()).addOnCompleteListener {
+                            newsfeedUpload(userId, postId)
+                            Toast.makeText(mainActivity, "Posted!", Toast.LENGTH_SHORT).show()
+                            tempMusicUri = null
+                            tempDesignForegroundUri = null
+                            tempDesignBackgroundUri = null
+                            resetPostViews()
+                            posting(false)
+                        }.addOnFailureListener {
                             tempMusicUri = null
                             tempDesignForegroundUri = null
                             tempDesignBackgroundUri = null
                             posting(false)
                         }
                     }
-                } else {
-                    userRef.set(postData, SetOptions.merge()).addOnCompleteListener {
-                        newsfeedUpload(userId, postId)
-                        Toast.makeText(mainActivity, "Posted!", Toast.LENGTH_SHORT).show()
-                        tempMusicUri = null
-                        tempDesignForegroundUri = null
-                        tempDesignBackgroundUri = null
-                        resetPostViews()
-                        posting(false)
-                    }.addOnFailureListener {
-                        tempMusicUri = null
-                        tempDesignForegroundUri = null
-                        tempDesignBackgroundUri = null
-                        posting(false)
-                    }
                 }
             }
+            confirmPostDialog.show(mainActivity.supportFragmentManager, "ConfirmPostDialog")
         }
     }
 
@@ -430,7 +403,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
 
             // update adapter
-            queryNewsfeed {
+            FVFireStoreHandler.queryNewsfeed {
                 if (it != null)
                     updateAdapter(it)
             }
@@ -705,7 +678,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
                 if (success) {
                     FVFireStoreHandler.deleteNewsfeed(userId, postId){ deleted, exception ->
                         if (deleted) {
-                            queryNewsfeed {
+                            FVFireStoreHandler.queryNewsfeed {
                                 if (it != null)
                                     updateAdapter(it)
                             }
@@ -736,7 +709,7 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun onQueueRefresh() {
-        queryNewsfeed {
+        FVFireStoreHandler.queryNewsfeed {
             if (it != null)
                 updateAdapter(it)
         }

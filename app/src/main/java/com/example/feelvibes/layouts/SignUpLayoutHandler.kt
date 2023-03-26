@@ -224,8 +224,8 @@ class SignUpLayoutHandler {
         userRef.set(userData)
             .addOnSuccessListener {
                 // user data stored successfully
-                accountViewModel.currentUser = user
-                Toast.makeText(mainActivity, "Account created!", Toast.LENGTH_SHORT).show()
+                user.sendEmailVerification()
+                Toast.makeText(mainActivity, "Success: an email verification has been sent.", Toast.LENGTH_LONG).show()
                 binding.AccountSignUpConfirmBtn.isEnabled = true
                 dialog.showLoginLayout() // returns to login once registration is successful
             }
