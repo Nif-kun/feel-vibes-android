@@ -10,6 +10,7 @@ import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import java.io.FileDescriptor
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -91,6 +92,19 @@ class ShortLib {
 
         fun dpToPx(dp: Float, context: Context): Float {
             return dp * context.resources.displayMetrics.density
+        }
+
+        fun getCurrentDateTime(): String {
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            return sdf.format(Date())
+        }
+
+        fun getElapsedTimeInMinutes(dateTimeString: String): Int {
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val startDate = sdf.parse(dateTimeString)
+            val endDate = Date()
+            val diffInMs = endDate.time - (startDate?.time ?: 1)
+            return (diffInMs / (1000 * 60)).toInt()
         }
 
         fun getElapsedTime(dateTimeString: String): String {

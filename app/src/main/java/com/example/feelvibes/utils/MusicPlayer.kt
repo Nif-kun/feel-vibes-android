@@ -2,6 +2,7 @@ package com.example.feelvibes.utils
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.media.PlaybackParams
 import android.net.Uri
 import android.util.Log
 import com.example.feelvibes.model.MusicModel
@@ -25,6 +26,7 @@ class MusicPlayer(
     var currentIndex = 0
     var currentMusic: MusicModel? = null
     var shuffling = false
+    var playbackSpeed = 1.0f
 
     private val onPreparedListeners = mutableListOf<() -> Unit>()
     private val onCompletionListeners = mutableListOf<() -> Unit>()
@@ -161,6 +163,15 @@ class MusicPlayer(
         return 0
     }
 
+    fun setSpeed(speed: Float) {
+        playbackSpeed = speed
+        if (player?.isPlaying == true) {
+            //pause()
+            player!!.playbackParams = player!!.playbackParams.setSpeed(playbackSpeed)
+            //play()
+        }
+    }
+
     fun setPlaylist(playlistModel: PlaylistModel, index: Int) {
         currentPlaylist = playlistModel
         currentIndex = index
@@ -235,6 +246,7 @@ class MusicPlayer(
                         onPreparedEvent()
                         player?.isLooping = false // stop loop by default.
                         if (start) {
+                            //player?.playbackParams = player!!.playbackParams.setSpeed(1f) TODO Playback speed
                             player?.start()
                             Log.d("MusicPlayer", "Currently playing ${currentMusic?.title}...")
                             onPlayEvent()

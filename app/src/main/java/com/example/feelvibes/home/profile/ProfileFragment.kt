@@ -1,5 +1,6 @@
 package com.example.feelvibes.home.profile
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentProfileBinding
 import com.example.feelvibes.dialogs.AuthorizationRequestDialog
 import com.example.feelvibes.dialogs.ConfirmationAlertDialog
+import com.example.feelvibes.dialogs.EditProfileDialog
 import com.example.feelvibes.dialogs.SimpleAlertDialog
 import com.example.feelvibes.utils.FVFireStoreHandler
 import com.example.feelvibes.utils.FireBaseStorageHandler
@@ -42,6 +44,8 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
     private val confirmLogoutDialog = ConfirmationAlertDialog()
     private val pickMedia = PickMedia()
 
+    private var firstName: String? = null
+    private var lastName: String? = null
     private var username: String? = null
     private var bio: String? = null
     private var currentUser: FirebaseUser? = null
@@ -111,7 +115,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                 }
                 try { // [vbNull]
                     if (accountViewModel.selectedUserId == currentUser.uid) {
-                        onEditEvent()
+                        onEditEvent(currentUser.uid)
                         onChangeProfileEvent()
                         onChangeBannerEvent()
                         onLogOutEvent()
@@ -121,6 +125,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
                         binding.followBtn.visibility = View.VISIBLE
                         onFollowEvent()
                     }
+                    updateFullName()
                     updateUsername()
                     updateBio()
                     loadProfilePicture()
@@ -132,6 +137,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             } else {
                 binding.editBtn.visibility = View.GONE
                 binding.logoutBtn.visibility = View.GONE
+                updateFullName()
                 updateUsername()
                 updateBio()
                 loadProfilePicture()
@@ -190,7 +196,42 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
         dialog.show(mainActivity.supportFragmentManager, "LoadErrorDialog")
     }
 
-    private fun onEditEvent() {
+    @SuppressLint("SetTextI18n")
+    private fun onEditEvent(userId: String) {
+        binding.editBtn.setOnClickListener {
+            val editProfileDialog = EditProfileDialog()
+            editProfileDialog.userId = userId
+            editProfileDialog.firstName = firstName ?: ""
+            editProfileDialog.lastName = lastName ?: ""
+            editProfileDialog.username = username ?: ""
+            editProfileDialog.bio = bio ?: ""
+            editProfileDialog.confirmListener = { firstName, lastName, username, bio ->
+                if (firstName.length >= 3) {
+                    binding.fullNameView.text = firstName
+                    this.firstName = firstName
+                }
+                if (lastName.length >= 3) {
+                    if (binding.fullNameView.text.isNotEmpty()) {
+                        binding.fullNameView.text = "${binding.fullNameView.text} $lastName"
+                        this.lastName = lastName
+                    } else {
+                        binding.fullNameView.text = lastName
+                        this.lastName = lastName
+                    }
+                }
+                if (username.length >= 3) {
+                    binding.usernameView.text = username
+                    this.username = username
+                }
+                if (bio.isNotEmpty()) {
+                    binding.bioView.text = bio
+                    this.bio = bio
+                }
+                Toast.makeText(requireActivity(), "Profile updated!", Toast.LENGTH_SHORT).show()
+            }
+            editProfileDialog.show(requireActivity().supportFragmentManager, "EditProfileDialog")
+        }
+        /*
         binding.editBtn.setOnClickListener {
             if (binding.userNameAndBioViewLayout.visibility == View.VISIBLE) {
                 username?.let {
@@ -233,7 +274,7 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             binding.userNameAndBioViewLayout.visibility = View.VISIBLE
             binding.followViewLayout.visibility = View.VISIBLE
         }
-
+        */
     }
 
     private fun onFollowEvent() {
@@ -286,6 +327,43 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
             } else {
                 Log.d("onBackEvent", "An error occurred, currentNavStackId is null!")
                 findNavController().popBackStack()
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateFullName() {
+        val db = FirebaseFirestore.getInstance()
+        val documentDisplayDataRef = accountViewModel.selectedUserId?.let {
+            db.collection("usersDisplayData").document(it)
+        }
+        documentDisplayDataRef?.get()?.addOnSuccessListener { documentSnapshot ->
+            try {
+                if (documentSnapshot.exists()) {
+                    documentSnapshot.getString("firstName")?.let { firstName ->
+                        this.firstName = firstName
+                        loadingListener?.invoke(1)
+                        binding.fullNameView.text = firstName
+                        binding.fullNameView.visibility = View.VISIBLE
+                        documentDisplayDataRef.get().addOnSuccessListener { documentSnapshot ->
+                            try {
+                                if (documentSnapshot.exists()) {
+                                    documentSnapshot.getString("lastName")?.let { lastName ->
+                                        this.lastName = lastName
+                                        loadingListener?.invoke(1)
+                                        binding.fullNameView.text = "${binding.fullNameView.text} $lastName"
+                                    }
+                                }
+                            } catch (e: Exception) {
+                                Log.d("ProfileFragment", "An error occurred on updateFullName. (Unknown: refer to updateUsername exception)")
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("ProfileFragment", "An error occurred on updateFullName. (Unknown: refer to updateUsername exception)")
+                e.printStackTrace()
             }
         }
     }
@@ -474,6 +552,8 @@ class ProfileFragment : FragmentBind<FragmentProfileBinding>(FragmentProfileBind
         confirmLogoutDialog.confirmListener = {
             accountViewModel.currentUser = null
             mainActivity.mAuth.signOut()
+            homeViewModel.newsfeedPostAdapterBuffer = null
+            homeViewModel.refreshTime = null
             findNavController().navigate(R.id.action_global_homeFragment)
         }
     }

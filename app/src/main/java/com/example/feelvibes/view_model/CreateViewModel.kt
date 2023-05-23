@@ -3,6 +3,7 @@ package com.example.feelvibes.view_model
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import com.example.feelvibes.create.CreateFragment
+import com.example.feelvibes.create.editor.DesignEditorFragment
 import com.example.feelvibes.model.DesignCollectionModel
 import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.model.TextCollectionModel
@@ -33,6 +34,7 @@ class CreateViewModel: ViewModel() {
     var selectedForegroundDrawable: GifDrawable? = null
     // probably an adapter for removing or adding idk.
 
-    //
+    // Editor
+    var designEditorFragment: DesignEditorFragment? = null
 
 }

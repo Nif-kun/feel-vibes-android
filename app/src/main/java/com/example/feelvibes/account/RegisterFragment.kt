@@ -72,13 +72,23 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
 
     private fun onRegisterEvent() {
         binding.AccountSignUpConfirmBtn.setOnClickListener {
+            val firstName = binding.AccountSignUpFirstNameInput.text.toString()
+            val lastName = binding.AccountSignUpLastNameInput.text.toString()
             val username = binding.AccountSignUpUsernameInput.text.toString()
             val email = binding.AccountSignUpEmailInput.text.toString()
             val password = binding.AccountSignUpPasswordInput.text.toString()
             val passwordConfirm = binding.AccountSignUpConfirmPasswordInput.text.toString()
             val agreedTerms = binding.agreeTermsBox.isChecked
 
-            if (username.isEmpty()) {
+            val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$".toRegex()
+
+            if (firstName.isEmpty() || lastName.isEmpty()) {
+                Toast.makeText(
+                    mainActivity,
+                    "Full name is required!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (username.isEmpty()) {
                 Toast.makeText(
                     requireActivity(),
                     "Username is required!",
@@ -102,11 +112,11 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
                     "Password is required!",
                     Toast.LENGTH_SHORT
                 ).show()
-            } else if (password.length < 6) {
+            } else if (!password.matches(passwordRegex)) {
                 Toast.makeText(
                     requireActivity(),
-                    "Password must be at least 6 characters long.",
-                    Toast.LENGTH_SHORT
+                    "Password requires 8 alphabetic and numeric characters.",
+                    Toast.LENGTH_LONG
                 ).show()
             } else if (password != passwordConfirm) {
                 Toast.makeText(
@@ -123,19 +133,20 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
             } else {
                 binding.AccountSignUpConfirmBtn.isEnabled = false
                 Toast.makeText(requireActivity(), "Processing, please wait...", Toast.LENGTH_SHORT).show()
-                registerUser(username, email, password)
+                val fullName = arrayListOf(firstName, lastName)
+                registerUser(fullName, username, email, password)
             }
 
         }
     }
 
-    private fun registerUser(username: String, email: String, password: String) {
+    private fun registerUser(fullName: ArrayList<String>, username: String, email: String, password: String) {
         mainActivity.mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 // Registration successful
                 // Note: verify process checks username and stores data if unique.
                 //       if the username is not unique, the newly created account is deleted.
-                verifyUser(username, email)
+                verifyUser(fullName, username, email)
             } else {
                 // Registration failed
                 if (task.exception is FirebaseAuthUserCollisionException) {
@@ -149,7 +160,7 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
         }
     }
 
-    private fun verifyUser(username: String, email: String) {
+    private fun verifyUser(fullName: ArrayList<String>, username: String, email: String) {
         val db = FirebaseFirestore.getInstance()
         val user = mainActivity.mAuth.currentUser
 
@@ -159,7 +170,7 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
             if (task.isSuccessful) {
                 if (task.result?.documents?.isEmpty() == true) {
                     // Username does not exist, proceed to storing extra data.
-                    storeRegistrationData(db, user, username, email)
+                    storeRegistrationData(db, user, username, fullName, email)
                 } else {
                     // Username exists, ending registration
                     task.exception?.printStackTrace()
@@ -177,9 +188,11 @@ class RegisterFragment : FragmentBind<FragmentRegisterBinding>(FragmentRegisterB
         }
     }
 
-    private fun storeRegistrationData(db: FirebaseFirestore, user: FirebaseUser?, username: String, email: String) {
+    private fun storeRegistrationData(db: FirebaseFirestore, user: FirebaseUser?, username: String, fullName: ArrayList<String>, email: String) {
         val userId = mainActivity.mAuth.currentUser?.uid
         val userData = mutableMapOf(
+            "firstName" to fullName[0],
+            "lastName" to fullName[1],
             "username" to username,
             "email" to email
         )

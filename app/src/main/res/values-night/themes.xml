@@ -13,6 +13,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorPrimary">@color/white</item>
@@ -26,5 +27,42 @@
     </style>
     <style name="TintDayNight" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:tint">@color/white</item>
+    </style>
+    <style name="TintDayNight2" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:tint">@color/mild_white</item>
+    </style>
+    <style name="IconButtonDayNight" parent="Widget.AppCompat.Button.Borderless">
+        <item name="tint">@color/white</item>
+    </style>
+    <style name="IconButtonDayNight2" parent="ThemeOverlay.Material3.Button">
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:tint">@color/mild_white</item>
+    </style>
+    <style name="IconDayNight">
+        <item name="tint">@color/white</item>
+    </style>
+    <style name="GenericTintDayNight">
+        <item name="tint">@color/white</item>
+    </style>
+    <style name="BackgroundTintDayNight">
+        <item name="android:backgroundTint">@color/background_color_night_mode</item>
+    </style>
+    <style name="BackgroundDayNight">
+        <item name="android:background">@color/mild_black</item>
+    </style>
+    <style name="BackgroundDayNight2">
+        <item name="android:background">@color/background_color_night_mode</item>
+    </style>
+    <style name="HorizontalLineDayNight">
+        <item name="android:background">@color/blur_white</item>
+    </style>
+    <style name="TextDayNight">
+        <item name="android:textColor">@color/mild_white</item>
+    </style>
+    <style name="TextButtonDayNight">
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:textColor">@color/mild_white</item>
     </style>
 </resources>

@@ -34,6 +34,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="10dp"
+            style="@style/GenericTintDayNight"
             android:src="@drawable/ic_app_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tool_bar_back_btn"

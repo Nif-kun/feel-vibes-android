@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/authenticationLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="100dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingVertical="20dp"
+    android:paddingHorizontal="25dp"
+    style="@style/BackgroundTintDayNight"
+    android:background="@drawable/rounded_background"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:text="@string/select_preset"/>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2">
+
+        <ImageButton
+            android:id="@+id/selectionABtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:src="@drawable/ic_image_24"
+            android:visibility="gone"/>
+        <ImageButton
+            android:id="@+id/selectionBBtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:src="@drawable/ic_image_24"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/selectionCBtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:src="@drawable/ic_image_24"
+            android:visibility="gone"/>
+        <ImageButton
+            android:id="@+id/selectionDBtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:src="@drawable/ic_image_24"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/selectionEBtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:src="@drawable/ic_image_24"
+            android:visibility="gone"/>
+        <ImageButton
+            android:id="@+id/selectionFBtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:src="@drawable/ic_image_24"
+            android:visibility="gone"/>
+
+    </GridLayout>
+
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:textColor="@color/warn_red"
+        android:text="@string/cancel"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

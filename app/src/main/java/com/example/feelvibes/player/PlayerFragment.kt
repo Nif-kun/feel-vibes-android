@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentPlayerBinding
+import com.example.feelvibes.dialogs.PlaybackSpeedDialog
 import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.model.MusicPropModel
 import com.example.feelvibes.model.TextModel
@@ -84,6 +85,7 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
 
         onPlayEvent()
         onSeekerBarEvent()
+        onChangeSpeedEvent()
         onSkipPreviousEvent()
         onSkipNextEvent()
         onRepeatEvent()
@@ -358,6 +360,19 @@ class PlayerFragment : FragmentBind<FragmentPlayerBinding>(FragmentPlayerBinding
                         Toast.makeText(mainActivity, "This is the last!", Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
+        }
+    }
+
+    private fun onChangeSpeedEvent() {
+        binding.speedBtn.setOnClickListener {
+            if (mainActivity.musicPlayer != null) {
+                val playbackSpeedDialog = PlaybackSpeedDialog()
+                playbackSpeedDialog.currentPlaybackSpeed = mainActivity.musicPlayer!!.playbackSpeed.toString() + "x"
+                playbackSpeedDialog.onSelectionListener = { speed ->
+                    mainActivity.musicPlayer!!.setSpeed(speed)
+                }
+                playbackSpeedDialog.show(mainActivity.supportFragmentManager, "playbackSpeedDialog")
             }
         }
     }

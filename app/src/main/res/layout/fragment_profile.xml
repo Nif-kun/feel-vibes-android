@@ -118,6 +118,15 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/fullNameView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/transparent_mild"
+                            android:maxLength="160"
+                            android:textSize="16sp" />
+
+                        <TextView
                             android:id="@+id/bioView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

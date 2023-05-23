@@ -9,4 +9,23 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="word_filter">
+        <item>fuck</item>
+        <item>bitch</item>
+        <item>asshole</item>
+        <item>dick</item>
+        <item>kill</item>
+        <item>rape</item>
+        <item>pussy</item>
+    </string-array>
+
+    <string-array name="background_resources">
+        <item>wobblebg</item>
+        <item>catbg</item>
+        <item>umbrellabg</item>
+        <item>personbg</item>
+        <item>interchangebg</item>
+        <item>musicboxbg</item>
+    </string-array>
 </resources>

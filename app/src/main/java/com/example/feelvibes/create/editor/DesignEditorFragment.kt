@@ -17,6 +17,7 @@ class DesignEditorFragment : FragmentBind<FragmentDesignEditorBinding>(FragmentD
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createViewModel = ViewModelProvider(requireActivity())[CreateViewModel::class.java]
+        createViewModel.designEditorFragment = this
     }
 
     override fun onReady() {

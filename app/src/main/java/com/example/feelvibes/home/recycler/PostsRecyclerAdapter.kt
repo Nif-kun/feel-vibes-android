@@ -112,7 +112,23 @@ class PostsRecyclerAdapter(
                 // textView
                 val text = map?.get("text") as? String
                 if (text != null) {
-                    postText.text = text
+                    val wordFilter = activity.resources.getStringArray(R.array.word_filter)
+                    var limit = false
+                    for (filter in wordFilter) {
+                        if (text.contains(filter, true))
+                            limit = true
+                    }
+                    if (limit) {
+                        postText.setTextColor(activity.resources.getColor(R.color.neutral, null))
+                        postText.text = activity.resources.getString(R.string.post_filter_warn)
+                        postText.setOnClickListener {
+                            postText.setTextAppearance(R.style.TextDayNight)
+                            postText.text = text
+                        }
+                    } else {
+                        postText.setTextAppearance(R.style.TextDayNight)
+                        postText.text = text
+                    }
                     postText.visibility = View.VISIBLE
                 } else {
                     postText.visibility = View.GONE
@@ -127,6 +143,8 @@ class PostsRecyclerAdapter(
                             postRecyclerEvent.onDeletePostClick(ownerId, postId, postFolderId)
                         }
                     }
+                } else {
+                    deleteButton.visibility = View.GONE
                 }
 
                 // report button
@@ -149,6 +167,8 @@ class PostsRecyclerAdapter(
                             }
                         }
                     }
+                } else {
+                    reportButton.visibility = View.GONE
                 }
 
                 // Like button
@@ -212,6 +232,8 @@ class PostsRecyclerAdapter(
                 val comments = map?.get("comments") as? HashMap<*,*>
                 if (!comments.isNullOrEmpty()) {
                     commentCount.text = comments.size.toString()
+                } else {
+                    commentCount.text = "0"
                 }
                 commentButton.setOnClickListener {
                     postRecyclerEvent.onCommentClick(ownerId, postId, userId, comments)
@@ -246,6 +268,8 @@ class PostsRecyclerAdapter(
                         if (url != null)
                             postRecyclerEvent.onMusicDownload(url, title)
                     }
+                } else {
+                    musicItem.hide()
                 }
 
                 val design = map?.get("design") as? MutableMap<*, *>
@@ -282,6 +306,8 @@ class PostsRecyclerAdapter(
                             )
                         }
                     }
+                } else {
+                    designItem.hide()
                 }
 
                 val chords = map?.get("chords") as? MutableMap<*, *>
@@ -312,6 +338,8 @@ class PostsRecyclerAdapter(
                             )
                         }
                     }
+                } else {
+                    chordsItem.hide()
                 }
 
                 val lyrics = map?.get("lyrics") as? MutableMap<*, *>
@@ -342,6 +370,8 @@ class PostsRecyclerAdapter(
                             )
                         }
                     }
+                } else {
+                    lyricsItem.hide()
                 }
             }
         }

@@ -78,6 +78,7 @@ class CommentsDialog(
                 val keyboardEditableDialog = KeyboardEditableDialog()
                 keyboardEditableDialog.onSendListener = { comment ->
                     if (comment != null) {
+                        // Do the apply anon here, change the addPostComment function
                         FVFireStoreHandler.addPostComment(ownerId, postId, userId!!, comment) { success, model, exception ->
                             if (success && model != null) {
                                 comments.add(model)

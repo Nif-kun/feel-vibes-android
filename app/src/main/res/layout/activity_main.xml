@@ -100,9 +100,10 @@
         android:layout_height="wrap_content"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/main_menu"
+        style="@style/BackgroundDayNight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        android:visibility="gone"/> <!-- TODO Return this to gone on production -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

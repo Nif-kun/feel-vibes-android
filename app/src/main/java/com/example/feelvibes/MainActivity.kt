@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // force dark mode.
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // force dark mode.
         libraryViewModel = ViewModelProvider(this)[LibraryViewModel::class.java]
         accountViewModel = ViewModelProvider(this)[AccountViewModel::class.java]
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]

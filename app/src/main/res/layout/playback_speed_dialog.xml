@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/authenticationLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="50dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingVertical="20dp"
+    android:paddingHorizontal="25dp"
+    style="@style/BackgroundTintDayNight"
+    android:background="@drawable/rounded_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="@string/speedLabel"/>
+
+        <TextView
+            android:id="@+id/currentSpeedLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="@string/speedPlaceholder"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/slowestSpeedOptionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:text="@string/slowestSpeedOption"/>
+    <Button
+        android:id="@+id/verySlowSpeedOptionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:text="@string/verySlowSpeedOption"/>
+    <Button
+        android:id="@+id/slowSpeedOptionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:text="@string/slowSpeedOption"/>
+    <Button
+        android:id="@+id/normalSpeedOptionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:text="@string/normalSpeedOption"/>
+    <Button
+        android:id="@+id/fastSpeedOptionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:text="@string/fastSpeedOption"/>
+    <Button
+        android:id="@+id/veryFastSpeedOptionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:text="@string/veryFastSpeedOption"/>
+    <Button
+        android:id="@+id/fastestSpeedOptionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:text="@string/fastestSpeedOption"/>
+    <Button
+        android:id="@+id/ultraFastSpeedOptionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:text="@string/ultraFastSpeedOption"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

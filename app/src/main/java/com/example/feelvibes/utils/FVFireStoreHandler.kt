@@ -2,6 +2,7 @@ package com.example.feelvibes.utils
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import com.example.feelvibes.model.CommentModel
 import com.example.feelvibes.model.PostModel
 import com.example.feelvibes.model.ReplyModel
@@ -48,6 +49,128 @@ class FVFireStoreHandler {
                 it.printStackTrace()
                 callback(null)
             }
+        }
+
+        fun setProfileUsername(userId: String, username: String, callback: (Boolean, Exception?, String?) -> Unit) {
+            val db = FirebaseFirestore.getInstance()
+            val query = db.collection("usersDisplayData").whereEqualTo("username", username)
+            val documentDisplayDataRef = db.collection("usersDisplayData").document(userId)
+            val documentRef = db.collection("users").document(userId)
+            query.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    if (task.result?.documents?.isEmpty() == true) {
+                        // Username does not exist, proceed to storing.
+                        documentRef.set(mutableMapOf("username" to username), SetOptions.merge())
+                            .addOnSuccessListener {
+                                documentDisplayDataRef.set(mutableMapOf("username" to username), SetOptions.merge())
+                                    .addOnSuccessListener {
+                                        callback(true, null, null)
+                                    }.addOnFailureListener {
+                                        callback(false, it, null)
+                                    }
+                            }.addOnFailureListener {
+                                callback(false, it, null)
+                            }
+                    } else {
+                        // Username exists, ending registration
+                        callback(false, null, "Username already taken.")
+                    }
+                } else {
+                    // Handle the exception from the query
+                    callback(false, task.exception, null)
+                }
+            }
+        }
+
+        fun getProfileFullName(userId:String, callback: (ArrayList<String>?, Exception? )->Unit) {
+            val displayDataRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(userId)
+            displayDataRef.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val firstName = documentSnapshot.get("firstName")
+                    val lastName = documentSnapshot.get("lastName")
+                    val fullName = arrayListOf("", "")
+                    if (firstName != null && firstName is String)
+                        fullName[0] = firstName
+                    if (lastName != null && lastName is String) {
+                        fullName[1] = lastName
+                    }
+                    if (fullName[0].isNotEmpty() || fullName[1].isNotEmpty())
+                        callback(fullName, null)
+                    else
+                        callback(null, null)
+                } else
+                    callback(null, null)
+            }.addOnFailureListener {
+                callback(null, it)
+            }
+        }
+
+        fun setProfileFirstName(userId: String, firstName: String, callback: (Boolean, Exception?) -> Unit) {
+            val db = FirebaseFirestore.getInstance()
+            val documentDisplayDataRef = db.collection("usersDisplayData").document(userId)
+            val documentRef = db.collection("users").document(userId)
+            documentRef.set(mutableMapOf("firstName" to firstName), SetOptions.merge())
+                .addOnSuccessListener {
+                    documentDisplayDataRef.set(mutableMapOf("firstName" to firstName), SetOptions.merge())
+                        .addOnSuccessListener {
+                            callback(true, null)
+                        }.addOnFailureListener {
+                            callback(false, it)
+                        }
+                }.addOnFailureListener {
+                    callback(false, it)
+                }
+        }
+
+        fun setProfileLastName(userId: String, lastName: String, callback: (Boolean, Exception?) -> Unit) {
+            val db = FirebaseFirestore.getInstance()
+            val documentDisplayDataRef = db.collection("usersDisplayData").document(userId)
+            val documentRef = db.collection("users").document(userId)
+            documentRef.set(mutableMapOf("lastName" to lastName), SetOptions.merge())
+                .addOnSuccessListener {
+                    documentDisplayDataRef.set(mutableMapOf("lastName" to lastName), SetOptions.merge())
+                        .addOnSuccessListener {
+                            callback(true, null)
+                        }.addOnFailureListener {
+                            callback(false, it)
+                        }
+                }.addOnFailureListener {
+                    callback(false, it)
+                }
+        }
+
+        fun getProfileBio(userId:String, callback: (String?, Exception?)->Unit) {
+            val displayDataRef = FirebaseFirestore.getInstance().collection("usersDisplayData").document(userId)
+            displayDataRef.get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val bio = documentSnapshot.get("bio")
+                        if (bio != null && bio is String)
+                            callback(bio, null)
+                        else
+                            callback(null, null)
+                    } else
+                        callback(null, null)
+                }.addOnFailureListener {
+                    callback(null, it)
+                }
+        }
+
+        fun setProfileBio(userId: String, bio: String, callback: (Boolean, Exception?) -> Unit) {
+            val db = FirebaseFirestore.getInstance()
+            val documentDisplayDataRef = db.collection("usersDisplayData").document(userId)
+            val documentRef = db.collection("users").document(userId)
+            documentRef.set(mutableMapOf("bio" to bio), SetOptions.merge())
+                .addOnSuccessListener {
+                    documentDisplayDataRef.set(mutableMapOf("bio" to bio), SetOptions.merge())
+                        .addOnSuccessListener {
+                            callback(true, null)
+                        }.addOnFailureListener {
+                            callback(false, it)
+                        }
+                }.addOnFailureListener {
+                    callback(false, it)
+                }
         }
 
         fun getProfilePicture(userId:String, callback: ((Uri?)->Unit)) {

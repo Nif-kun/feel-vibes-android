@@ -65,7 +65,23 @@ class CommentRecyclerAdapter(
 
         fun loadComment(comment:CommentModel) {
             commentTime.text = ShortLib.getElapsedTime(comment.time) //setup time
-            commentText.text = comment.text // setup text
+            val wordFilter = activity.resources.getStringArray(R.array.word_filter)
+            var limit = false
+            for (filter in wordFilter) {
+                if (comment.text.contains(filter, true))
+                    limit = true
+            }
+            if (limit) {
+                commentText.setTextColor(activity.resources.getColor(R.color.neutral, null))
+                commentText.text = activity.resources.getString(R.string.comment_filter_warn)
+                commentText.setOnClickListener {
+                    commentText.setTextColor(activity.resources.getColor(R.color.mild_white, null))
+                    commentText.text = comment.text // setup text
+                }
+            } else {
+                commentText.setTextColor(activity.resources.getColor(R.color.mild_white, null))
+                commentText.text = comment.text // setup text
+            }
             commentText.visibility = View.VISIBLE
             likeCount.text = comment.likes.size.toString()
             replyCount.text = (comment.replies?.size ?: 0).toString()

@@ -10,7 +10,10 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.feelvibes.R
 import com.example.feelvibes.databinding.FragmentDesignEditorBottomSheetBinding
+import com.example.feelvibes.dialogs.DualSelectionDialog
+import com.example.feelvibes.dialogs.PresetSelectionDialog
 import com.example.feelvibes.model.DesignModel
 import com.example.feelvibes.utils.InternalStorageHandler
 import com.example.feelvibes.view_model.CreateViewModel
@@ -57,70 +60,74 @@ class DesignEditorBottomSheet : FragmentBottomSheetDialogBind<FragmentDesignEdit
         onSaveEvent()
     }
 
+    fun getImageType(mimeType: String): String {
+        if (mimeType.contains("jpg", true) || mimeType.contains("jpeg", true)) {
+            Log.d("PhotoPicker", "Image type set to JPEG")
+            return ImageType.JPEG
+        } else if (mimeType.contains("png", true)) {
+            Log.d("PhotoPicker", "Image type set to PNG")
+            return ImageType.PNG
+        } else if (mimeType.contains("gif", true)) {
+            Log.d("PhotoPicker", "Image type set to GIF")
+            return ImageType.GIF
+        }
+        return ImageType.PNG
+    }
+
     private fun setupPickMedia() {
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             imageUri = if (uri != null) {
-                Log.d("PhotoPicker", "Selected URI: $uri")
-
-                var imageType = ImageType.PNG
-                val contentResolver = mainActivity.contentResolver
-                val mimeType = contentResolver?.getType(uri)
-
-                Log.d("PhotoPicker", "Extension: $mimeType")
-                if (mimeType != null) {
-                    if (mimeType.contains("jpg", true) || mimeType.contains("jpeg", true)) {
-                        imageType = ImageType.JPEG
-                        Log.d("PhotoPicker", "Image type set to JPEG")
-                    } else if (mimeType.contains("png", true)) {
-                        imageType = ImageType.PNG
-                        Log.d("PhotoPicker", "Image type set to PNG")
-                    } else if (mimeType.contains("gif", true)) {
-                        imageType = ImageType.GIF
-                        Log.d("PhotoPicker", "Image type set to GIF")
-                    }
-                }
-
-                when (imageSelected) {
-                    ImageSelected.BACKGROUND -> {
-                        if (imageType.equals(ImageType.GIF, true)) {
-                            val gifFromUri = GifDrawable(contentResolver, uri)
-                            createViewModel.selectedBackgroundBitmap = null
-                            createViewModel.selectedBackgroundDrawable = gifFromUri
-                            backgroundImageUri = uri
-                            Log.d("PhotoPicker", "Saving image as GIF")
-                        } else {
-                            val source = ImageDecoder.createSource(mainActivity.contentResolver, uri)
-                            createViewModel.selectedBackgroundDrawable = null
-                            backgroundImageUri = null
-                            createViewModel.selectedBackgroundBitmap = ImageDecoder.decodeBitmap(source)
-                            Log.d("PhotoPicker", "Saving image as JPEG/PNG")
-                        }
-                        backgroundImageType = imageType
-                    }
-                    ImageSelected.FOREGROUND -> {
-                        if (imageType.equals(ImageType.GIF, true)) {
-                            val gifFromUri = GifDrawable(contentResolver, uri)
-                            createViewModel.selectedForegroundBitmap = null
-                            createViewModel.selectedForegroundDrawable = gifFromUri
-                            foregroundImageUri = uri
-                            Log.d("PhotoPicker", "Saving image as GIF")
-                        } else {
-                            val source = ImageDecoder.createSource(mainActivity.contentResolver, uri)
-                            createViewModel.selectedForegroundDrawable = null
-                            foregroundImageUri = null
-                            createViewModel.selectedForegroundBitmap = ImageDecoder.decodeBitmap(source)
-                            Log.d("PhotoPicker", "Saving image as JPEG/PNG")
-                        }
-                        foregroundImageType = imageType
-                    }
-                }
-                imageSelected = ImageSelected.NONE
+                applySelectedImage(uri)
                 uri
             } else {
                 Log.d("PhotoPicker", "No media selected")
                 null
             }
         }
+    }
+
+    private fun applySelectedImage(uri: Uri, forceType: String? = null) {
+        Log.d("PhotoPicker", "Selected URI: $uri")
+        val contentResolver = mainActivity.contentResolver
+        val mimeType = contentResolver?.getType(uri)
+        val imageType = mimeType?.let { getImageType(it) } ?: forceType ?: ImageType.PNG
+        Log.d("PhotoPicker", "Extension: $mimeType")
+
+        when (imageSelected) {
+            ImageSelected.BACKGROUND -> {
+                if (imageType.equals(ImageType.GIF, true)) {
+                    val gifFromUri = GifDrawable(contentResolver, uri)
+                    createViewModel.selectedBackgroundBitmap = null
+                    createViewModel.selectedBackgroundDrawable = gifFromUri
+                    backgroundImageUri = uri
+                    Log.d("PhotoPicker", "Saving image as GIF")
+                } else {
+                    val source = ImageDecoder.createSource(mainActivity.contentResolver, uri)
+                    createViewModel.selectedBackgroundDrawable = null
+                    backgroundImageUri = null
+                    createViewModel.selectedBackgroundBitmap = ImageDecoder.decodeBitmap(source)
+                    Log.d("PhotoPicker", "Saving image as JPEG/PNG")
+                }
+                backgroundImageType = imageType
+            }
+            ImageSelected.FOREGROUND -> {
+                if (imageType.equals(ImageType.GIF, true)) {
+                    val gifFromUri = GifDrawable(contentResolver, uri)
+                    createViewModel.selectedForegroundBitmap = null
+                    createViewModel.selectedForegroundDrawable = gifFromUri
+                    foregroundImageUri = uri
+                    Log.d("PhotoPicker", "Saving image as GIF")
+                } else {
+                    val source = ImageDecoder.createSource(mainActivity.contentResolver, uri)
+                    createViewModel.selectedForegroundDrawable = null
+                    foregroundImageUri = null
+                    createViewModel.selectedForegroundBitmap = ImageDecoder.decodeBitmap(source)
+                    Log.d("PhotoPicker", "Saving image as JPEG/PNG")
+                }
+                foregroundImageType = imageType
+            }
+        }
+        imageSelected = ImageSelected.NONE
     }
 
     private fun setupTitleInput() {
@@ -137,15 +144,81 @@ class DesignEditorBottomSheet : FragmentBottomSheetDialogBind<FragmentDesignEdit
 
     private fun onSelectBackgroundEvent() {
         binding.selectBackgroundBtn.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            imageSelected = ImageSelected.BACKGROUND
+            val dualSelectionDialog = DualSelectionDialog()
+            dualSelectionDialog.title = "Select Background"
+            dualSelectionDialog.selectionLabelA = "Preset"
+            dualSelectionDialog.selectionLabelB = "Gallery"
+            dualSelectionDialog.onSelectionListener = { selection ->
+                when (selection) {
+                    1 -> {
+                        imageSelected = ImageSelected.BACKGROUND
+                        val presetSelectionDialog = PresetSelectionDialog()
+                        val packageName = mainActivity.packageName
+                        val bgList = ArrayList<Int>()
+                        bgList.add(R.drawable.wobblebg)
+                        bgList.add(R.drawable.catbg)
+                        bgList.add(R.drawable.umbrellabg)
+                        bgList.add(R.drawable.personbg)
+                        bgList.add(R.drawable.interchangebg)
+                        bgList.add(R.drawable.musicboxbg)
+                        for ((index, id) in bgList.withIndex()) {
+                            val uri = Uri.parse("android.resource://${packageName}/${id}")
+                            presetSelectionDialog.presetSelectionsUri[index] = uri
+                        }
+                        presetSelectionDialog.onSelectionListener = { uri ->
+                            applySelectedImage(uri, ImageType.GIF)
+                            if (createViewModel.designEditorFragment != null)
+                                createViewModel.designEditorFragment!!.onResume()
+                        }
+                        presetSelectionDialog.show(mainActivity.supportFragmentManager, "PresetSelectionDialog")
+                    }
+                    2 -> {
+                        imageSelected = ImageSelected.BACKGROUND
+                        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    }
+                }
+            }
+            dualSelectionDialog.show(mainActivity.supportFragmentManager, "DualSelectionDialog")
         }
     }
 
     private fun onSelectForegroundEvent() {
         binding.selectForegroundBtn.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            imageSelected = ImageSelected.FOREGROUND
+            val dualSelectionDialog = DualSelectionDialog()
+            dualSelectionDialog.title = "Select Foreground"
+            dualSelectionDialog.selectionLabelA = "Preset"
+            dualSelectionDialog.selectionLabelB = "Gallery"
+            dualSelectionDialog.onSelectionListener = { selection ->
+                when (selection) {
+                    1 -> {
+                        imageSelected = ImageSelected.FOREGROUND
+                        val presetSelectionDialog = PresetSelectionDialog()
+                        val packageName = mainActivity.packageName
+                        val bgList = ArrayList<Int>()
+                        bgList.add(R.drawable.wobblebg)
+                        bgList.add(R.drawable.catbg)
+                        bgList.add(R.drawable.umbrellabg)
+                        bgList.add(R.drawable.personbg)
+                        bgList.add(R.drawable.interchangebg)
+                        bgList.add(R.drawable.musicboxbg)
+                        for ((index, id) in bgList.withIndex()) {
+                            val uri = Uri.parse("android.resource://${packageName}/${id}")
+                            presetSelectionDialog.presetSelectionsUri[index] = uri
+                        }
+                        presetSelectionDialog.onSelectionListener = { uri ->
+                            applySelectedImage(uri, ImageType.GIF)
+                            if (createViewModel.designEditorFragment != null)
+                                createViewModel.designEditorFragment!!.onResume()
+                        }
+                        presetSelectionDialog.show(mainActivity.supportFragmentManager, "PresetSelectionDialog")
+                    }
+                    2 -> {
+                        imageSelected = ImageSelected.FOREGROUND
+                        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    }
+                }
+            }
+            dualSelectionDialog.show(mainActivity.supportFragmentManager, "DualSelectionDialog")
         }
     }
 

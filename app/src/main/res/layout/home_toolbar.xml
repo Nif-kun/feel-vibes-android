@@ -30,7 +30,7 @@
 
     <ImageButton
         android:id="@+id/logoBtn"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/BGTintDayNight"
         android:layout_width="40dp"
         android:layout_height="match_parent"
         android:background="@drawable/ic_app_icon"

@@ -9,7 +9,7 @@
     android:layout_gravity="center"
     android:paddingVertical="20dp"
     android:paddingHorizontal="25dp"
-    android:backgroundTint="@color/background_color_night_mode"
+    style="@style/BackgroundTintDayNight"
     android:background="@drawable/rounded_background"
     android:orientation="vertical">
 

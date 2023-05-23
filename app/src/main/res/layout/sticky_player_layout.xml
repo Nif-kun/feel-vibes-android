@@ -8,7 +8,8 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        style="@style/BackgroundDayNight">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -37,25 +38,22 @@
                 android:id="@+id/skipPreviousBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:src="@drawable/ic_skip_previous_24"
-                app:tint="@color/white" />
+                style="@style/IconButtonDayNight"
+                android:src="@drawable/ic_skip_previous_24"/>
 
             <ImageButton
                 android:id="@+id/playBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:src="@drawable/ic_play_arrow_24"
-                app:tint="@color/white" />
+                style="@style/IconButtonDayNight"
+                android:src="@drawable/ic_play_arrow_24"/>
 
             <ImageButton
                 android:id="@+id/skipNextBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:src="@drawable/ic_skip_next_24"
-                app:tint="@color/white" />
+                style="@style/IconButtonDayNight"
+                android:src="@drawable/ic_skip_next_24"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -14,7 +14,7 @@ abstract class FragmentDialogBind<VB : ViewBinding>(
     private val bindingInflater: (inflater: LayoutInflater) -> VB,
 ) : DialogFragment() {
 
-    private var _binding: VB? = null
+    var _binding: VB? = null
     val binding get() : VB = _binding as VB
     lateinit var mainActivity : MainActivity
 

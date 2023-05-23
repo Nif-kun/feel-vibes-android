@@ -219,5 +219,22 @@
     <string name="onBoardingCreate">Customize and create your own cover animations, lyrics, or even chords.</string>
     <string name="onBoardingListen">Listen to your favorite artist and music, with no interruptions.</string>
     <string name="onBoardingShare">Interact with other users, share your music, design, lyrics, and chords. </string>
-
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="bio">Bio</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="comment_filter_warn">The comment contains mature words. Click to view.</string>
+    <string name="post_filter_warn">The post contains mature words. Click to view.</string>
+    <string name="speedLabel">Speed • </string>
+    <string name="speedPlaceholder">1.0x</string>
+    <string name="slowestSpeedOption">0.25x</string>
+    <string name="verySlowSpeedOption">0.5x</string>
+    <string name="slowSpeedOption">0.75x</string>
+    <string name="normalSpeedOption">Normal</string>
+    <string name="fastSpeedOption">1.25x</string>
+    <string name="veryFastSpeedOption">1.5x</string>
+    <string name="fastestSpeedOption">1.75x</string>
+    <string name="ultraFastSpeedOption">2.0x</string>
+    <string name="selectionPlaceholder">Selection</string>
+    <string name="select_preset">Select Preset</string>
 </resources>

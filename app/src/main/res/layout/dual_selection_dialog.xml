@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/authenticationLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="100dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingVertical="20dp"
+    android:paddingHorizontal="25dp"
+    style="@style/BackgroundTintDayNight"
+    android:background="@drawable/rounded_background"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/titleView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:text="@string/title_a"/>
+
+    <Button
+        android:id="@+id/selectionABtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:textColor="@color/warn_blue"
+        android:text="@string/selectionPlaceholder"/>
+
+    <Button
+        android:id="@+id/selectionBBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextButtonDayNight"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/warn_blue"
+        android:text="@string/selectionPlaceholder"/>
+
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:textColor="@color/warn_red"
+        android:text="@string/cancel"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,6 +1,7 @@
 package com.example.feelvibes.view_model
 
 import androidx.lifecycle.ViewModel
+import com.example.feelvibes.home.recycler.PostsRecyclerAdapter
 
 class HomeViewModel: ViewModel() {
 
@@ -13,5 +14,10 @@ class HomeViewModel: ViewModel() {
     var layoutState = Layouts.NONE
 
     var searchTextBuffer = ""
+
+    var newsfeedPostAdapterBuffer: PostsRecyclerAdapter? = null
+    var profilePostAdapterBuffer: PostsRecyclerAdapter? = null
+
+    var refreshTime : String? = null
 
 }

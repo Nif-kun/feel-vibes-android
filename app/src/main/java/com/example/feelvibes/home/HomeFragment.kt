@@ -77,14 +77,45 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         mainActivity.unpadMainView()
         mainActivity.showToolBar(isHome = true)
         onProfileClickedEvent()
-        FVFireStoreHandler.checkAuth { user ->
-            if (user != null)
-                showPostLayout(user)
-            FVFireStoreHandler.queryNewsfeed { posts, exception ->
-                updateAdapter(posts)
-                exception?.printStackTrace()
-                if (_binding != null)
+        val refreshTime = ShortLib.getElapsedTimeInMinutes(homeViewModel.refreshTime ?: ShortLib.getCurrentDateTime())
+        if (homeViewModel.refreshTime == null || refreshTime > 5) {
+            homeViewModel.refreshTime = ShortLib.getCurrentDateTime()
+            FVFireStoreHandler.checkAuth { user ->
+                if (user != null) {
+                    accountViewModel.currentUser = user
+                    showPostLayout(user)
+                }
+                if (homeViewModel.newsfeedPostAdapterBuffer != null) {
+                    if (_binding != null) {
+                        binding.postRecyclerView.adapter = homeViewModel.newsfeedPostAdapterBuffer
+                        homeViewModel.newsfeedPostAdapterBuffer = null
+                        binding.shimmerInclude.homeShimmerLayout.visibility = View.GONE
+                    }
+                } else {
+                    FVFireStoreHandler.queryNewsfeed { posts, exception ->
+                        updateAdapter(posts)
+                        exception?.printStackTrace()
+                        if (_binding != null)
+                            binding.shimmerInclude.homeShimmerLayout.visibility = View.GONE
+                    }
+                }
+            }
+        } else {
+            if (accountViewModel.currentUser != null)
+                showPostLayout(accountViewModel.currentUser!!)
+            if (homeViewModel.newsfeedPostAdapterBuffer != null) {
+                if (_binding != null) {
+                    binding.postRecyclerView.adapter = homeViewModel.newsfeedPostAdapterBuffer
+                    homeViewModel.newsfeedPostAdapterBuffer = null
                     binding.shimmerInclude.homeShimmerLayout.visibility = View.GONE
+                }
+            } else {
+                FVFireStoreHandler.queryNewsfeed { posts, exception ->
+                    updateAdapter(posts)
+                    exception?.printStackTrace()
+                    if (_binding != null)
+                        binding.shimmerInclude.homeShimmerLayout.visibility = View.GONE
+                }
             }
         }
         onSearchEvent()
@@ -604,6 +635,8 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         val designModel = DesignModel(id, name, "#FFFFFF", safeBackgroundUrl, safeForegroundUrl)
         createViewModel.selectedDesignModel = designModel
         accountViewModel.viewingItem = true
+        if (_binding != null)
+            homeViewModel.newsfeedPostAdapterBuffer = binding.postRecyclerView.adapter as PostsRecyclerAdapter?
         findNavController().navigate(R.id.action_global_designViewerFragment)
     }
 
@@ -623,6 +656,8 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         createViewModel.selectedTextModel = textModel
         createViewModel.currentCreateTab = CreateFragment.CHORDS
         accountViewModel.viewingItem = true
+        if (_binding != null)
+            homeViewModel.newsfeedPostAdapterBuffer = binding.postRecyclerView.adapter as PostsRecyclerAdapter?
         findNavController().navigate(R.id.action_global_textViewerFragment)
     }
 
@@ -641,6 +676,8 @@ class HomeFragment : FragmentBind<FragmentHomeBinding>(FragmentHomeBinding::infl
         createViewModel.selectedTextModel = textModel
         createViewModel.currentCreateTab = CreateFragment.LYRICS
         accountViewModel.viewingItem = true
+        if (_binding != null)
+            homeViewModel.newsfeedPostAdapterBuffer = binding.postRecyclerView.adapter as PostsRecyclerAdapter?
         findNavController().navigate(R.id.action_global_textViewerFragment)
     }
 
